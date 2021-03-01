@@ -1,0 +1,22 @@
+{
+    "name": "kak/benchmark-useragent-parser",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Tutik Alexsandr",
+            "email": "sanchezzzhak@yandex.ru"
+        }
+    ],
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "consolidation/robo": "^1.0.0",
+        "matomo/device-detector": "@dev",
+        "whichbrowser/parser": "@dev"
+
+    },
+    "autoload": {
+        "psr-4": {"App\\": "src/"}
+    }
+}
