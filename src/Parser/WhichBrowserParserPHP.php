@@ -14,10 +14,12 @@ class WhichBrowserParserPHP extends AbstractParser
 
     public function parseUserAgent(string $useragent): array
     {
+        $start = microtime(true);
         $parser = new Parser($useragent);
+        $time = microtime(true) - $start;
 
         return [
-            'useragent' => $useragent,
+            'user_agent' => $useragent,
             'browser' => [
                 'name' => !empty($parser->browser->name) ? $parser->browser->name : null,
                 'version' => !empty($parser->browser->version) ? $parser->browser->version->value : null,
@@ -32,7 +34,7 @@ class WhichBrowserParserPHP extends AbstractParser
                 'type' => !empty($parser->device->type) ? $parser->device->type : null,
                 'ismobile' => $parser->isMobile() ? true : false,
             ],
-//            'time' => $end,
+           'time' => $time,
         ];
     }
 

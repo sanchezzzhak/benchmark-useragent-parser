@@ -19,11 +19,17 @@ class Mimmi20BrowserDetector extends AbstractParser
 
     public function parseUserAgent(string $useragent): array
     {
+        $start = microtime(true);
         $result = $this->parser($useragent);
-        return [];
+        $time = microtime(true) - $start;
+
+        return [
+            'user_agent' => $useragent,
+            'time' => $time
+        ];
     }
 
-    public function getFixtures(): array
+    public static function getFixtures(): array
     {
         $basePath = realpath(__DIR__ . '/../../vendor/mimmi20/browser-detector/tests/data');
         $dirs = glob($basePath . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);

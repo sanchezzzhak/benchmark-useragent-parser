@@ -21,18 +21,23 @@ class MatomoDeviceDetector extends AbstractParser
 
     public function parseUserAgent(string $useragent): array
     {
+        $start = microtime(true);
         $this->parser->setUserAgent($useragent);
         $this->parser->parse();
+        $time = microtime(true) - $start;
 
         if ($this->parser->isBot()) {
             return [
                 'user_agent' => $useragent,
                 'bot' => $this->parser->getBot(),
+                'time' => $time,
             ];
         }
 
         $osFamily = OperatingSystem::getOsFamily($this->parser->getOsAttribute('name')) ?? '';
         $browserFamily = Browser::getBrowserFamily($this->parser->getClientAttribute('name')) ?? '';
+
+
 
         return [
             'user_agent' => $useragent,
@@ -45,6 +50,7 @@ class MatomoDeviceDetector extends AbstractParser
             ],
             'os_family' => $osFamily,
             'browser_family' => $browserFamily,
+            'time' => $time,
         ];
     }
 
@@ -53,7 +59,7 @@ class MatomoDeviceDetector extends AbstractParser
         return $data['user_agent'] ?? '';
     }
 
-    public function getFixtures(): array
+    public static function getFixtures(): array
     {
         $basePath = __DIR__ . '/../../vendor/matomo/device-detector/Tests';
         return [
