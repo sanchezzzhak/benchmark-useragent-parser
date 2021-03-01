@@ -53,15 +53,15 @@ class RoboFile extends Tasks
         // Matomo get all paths
         $basePath = $path . self::PROJECT_MATOMO_DEVICE_DETECTOR;
         $matomoFixtures = [
-            ...glob($basePath . '/fixtures/*.yml'),
-            ...glob($basePath . '/Parser/Client/fixtures/*.yml'),
-            ...glob($basePath . '/Parser/Device/fixtures/*.yml'),
-            ...glob($basePath . '/Parser/fixtures/*.yml'),
+            ...glob($basePath . '/Tests/fixtures/*.yml'),
+            ...glob($basePath . '/Tests/Parser/Client/fixtures/*.yml'),
+            ...glob($basePath . '/Tests/Parser/Device/fixtures/*.yml'),
+            ...glob($basePath . '/Tests/Parser/fixtures/*.yml'),
         ];
 
         // WhichBrowser get all paths
         $basePath = $path . self::PROJECT_WHICHBROWSER_PARSER;
-        $dirs = glob($basePath . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
+        $dirs = glob($basePath . DIRECTORY_SEPARATOR . 'tests/*', GLOB_ONLYDIR);
         $whichbrowserFixtures = [];
         foreach ($dirs as $dir) {
             $whichbrowserFixtures = array_merge($whichbrowserFixtures, [...glob($dir . DIRECTORY_SEPARATOR . '*.{yaml,yml}', GLOB_BRACE)]);
