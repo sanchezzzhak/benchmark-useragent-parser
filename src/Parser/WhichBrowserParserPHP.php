@@ -49,13 +49,7 @@ class WhichBrowserParserPHP extends AbstractParser
 
     public function getFixtures(): array
     {
-        $basePath = realpath(__DIR__ . '/../../vendor/whichbrowser/parser/tests/data');
-        $dirs = glob($basePath . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
-        $result = [];
-        foreach ($dirs as $dir) {
-            $result = array_merge($result, [...glob($dir . DIRECTORY_SEPARATOR . '*.{yaml,yml}', GLOB_BRACE)]);
-        }
-        return $result;
+
     }
 
 }

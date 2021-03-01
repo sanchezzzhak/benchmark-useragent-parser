@@ -58,15 +58,4 @@ class MatomoDeviceDetector extends AbstractParser
     {
         return $data['user_agent'] ?? '';
     }
-
-    public static function getFixtures(): array
-    {
-        $basePath = __DIR__ . '/../../vendor/matomo/device-detector/Tests';
-        return [
-            ...glob($basePath . '/fixtures/*.yml'),
-            ...glob($basePath . '/Parser/Client/fixtures/*.yml'),
-            ...glob($basePath . '/Parser/Device/fixtures/*.yml'),
-            ...glob($basePath . '/Parser/fixtures/*.yml'),
-        ];
-    }
 }
