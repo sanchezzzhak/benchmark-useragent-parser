@@ -14,14 +14,18 @@ scoring points when parsing useragent
     * brand = 1
     * model = 1
     
+ 
+    
+    
 Before start    
 ---
- `composer install --dev`
+* 1 `composer install --dev`
  
 Commands  
 ---
-`php src/app app:start` - start benchmarks
-
+* 2 `php src/robo.php init:repositories` - update all repositories
+* 3 `php src/robo.php init:fixtures`     - generate paths fixtures
+* 
 
 who wants to contribute.
 ---
