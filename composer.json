@@ -13,7 +13,8 @@
     "require-dev": {
         "consolidation/robo": "^1.0.0",
         "matomo/device-detector": "@dev",
-        "whichbrowser/parser": "@dev"
+        "whichbrowser/parser": "@dev",
+        "mimmi20/browser-detector": "@dev"
 
     },
     "autoload": {

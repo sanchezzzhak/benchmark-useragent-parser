@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "df2f94df9f0c2363f7439cc38732402b",
+    "content-hash": "84418f1e339c041947acd3e0223c74fb",
     "packages": [],
     "packages-dev": [
         {
@@ -440,6 +440,44 @@
             "time": "2017-02-14T19:40:03+00:00"
         },
         {
+            "name": "daverandom/exceptional-json",
+            "version": "v1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/DaveRandom/ExceptionalJSON.git",
+                "reference": "fed957142b4687b079495c80975666dd1a67d61d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/DaveRandom/ExceptionalJSON/zipball/fed957142b4687b079495c80975666dd1a67d61d",
+                "reference": "fed957142b4687b079495c80975666dd1a67d61d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ExceptionalJSON\\": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Wright"
+                }
+            ],
+            "description": "JSON encoding and decoding that throws exceptions on failure",
+            "time": "2018-06-11T11:25:57+00:00"
+        },
+        {
             "name": "dflydev/dot-access-data",
             "version": "v1.1.0",
             "source": {
@@ -594,6 +632,154 @@
             "time": "2017-12-16T16:06:03+00:00"
         },
         {
+            "name": "laminas/laminas-diactoros",
+            "version": "2.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laminas/laminas-diactoros.git",
+                "reference": "4ff7400c1c12e404144992ef43c8b733fd9ad516"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laminas/laminas-diactoros/zipball/4ff7400c1c12e404144992ef43c8b733fd9ad516",
+                "reference": "4ff7400c1c12e404144992ef43c8b733fd9ad516",
+                "shasum": ""
+            },
+            "require": {
+                "laminas/laminas-zendframework-bridge": "^1.0",
+                "php": "^7.3 || ~8.0.0",
+                "psr/http-factory": "^1.0",
+                "psr/http-message": "^1.0"
+            },
+            "conflict": {
+                "phpspec/prophecy": "<1.9.0"
+            },
+            "provide": {
+                "psr/http-factory-implementation": "1.0",
+                "psr/http-message-implementation": "1.0"
+            },
+            "replace": {
+                "zendframework/zend-diactoros": "^2.2.1"
+            },
+            "require-dev": {
+                "ext-curl": "*",
+                "ext-dom": "*",
+                "ext-gd": "*",
+                "ext-libxml": "*",
+                "http-interop/http-factory-tests": "^0.8.0",
+                "laminas/laminas-coding-standard": "~1.0.0",
+                "php-http/psr7-integration-tests": "^1.1",
+                "phpspec/prophecy-phpunit": "^2.0",
+                "phpunit/phpunit": "^9.1"
+            },
+            "type": "library",
+            "extra": {
+                "laminas": {
+                    "config-provider": "Laminas\\Diactoros\\ConfigProvider",
+                    "module": "Laminas\\Diactoros"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/functions/create_uploaded_file.php",
+                    "src/functions/marshal_headers_from_sapi.php",
+                    "src/functions/marshal_method_from_sapi.php",
+                    "src/functions/marshal_protocol_version_from_sapi.php",
+                    "src/functions/marshal_uri_from_sapi.php",
+                    "src/functions/normalize_server.php",
+                    "src/functions/normalize_uploaded_files.php",
+                    "src/functions/parse_cookie_header.php",
+                    "src/functions/create_uploaded_file.legacy.php",
+                    "src/functions/marshal_headers_from_sapi.legacy.php",
+                    "src/functions/marshal_method_from_sapi.legacy.php",
+                    "src/functions/marshal_protocol_version_from_sapi.legacy.php",
+                    "src/functions/marshal_uri_from_sapi.legacy.php",
+                    "src/functions/normalize_server.legacy.php",
+                    "src/functions/normalize_uploaded_files.legacy.php",
+                    "src/functions/parse_cookie_header.legacy.php"
+                ],
+                "psr-4": {
+                    "Laminas\\Diactoros\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "PSR HTTP Message implementations",
+            "homepage": "https://laminas.dev",
+            "keywords": [
+                "http",
+                "laminas",
+                "psr",
+                "psr-17",
+                "psr-7"
+            ],
+            "funding": [
+                {
+                    "url": "https://funding.communitybridge.org/projects/laminas-project",
+                    "type": "community_bridge"
+                }
+            ],
+            "time": "2020-11-18T18:39:28+00:00"
+        },
+        {
+            "name": "laminas/laminas-zendframework-bridge",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laminas/laminas-zendframework-bridge.git",
+                "reference": "6cccbddfcfc742eb02158d6137ca5687d92cee32"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laminas/laminas-zendframework-bridge/zipball/6cccbddfcfc742eb02158d6137ca5687d92cee32",
+                "reference": "6cccbddfcfc742eb02158d6137ca5687d92cee32",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3 || ^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7 || ^6.5 || ^7.5 || ^8.1 || ^9.3",
+                "psalm/plugin-phpunit": "^0.15.1",
+                "squizlabs/php_codesniffer": "^3.5",
+                "vimeo/psalm": "^4.6"
+            },
+            "type": "library",
+            "extra": {
+                "laminas": {
+                    "module": "Laminas\\ZendFrameworkBridge"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/autoload.php"
+                ],
+                "psr-4": {
+                    "Laminas\\ZendFrameworkBridge\\": "src//"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Alias legacy ZF class names to Laminas Project equivalents.",
+            "keywords": [
+                "ZendFramework",
+                "autoloading",
+                "laminas",
+                "zf"
+            ],
+            "funding": [
+                {
+                    "url": "https://funding.communitybridge.org/projects/laminas-project",
+                    "type": "community_bridge"
+                }
+            ],
+            "time": "2021-02-25T21:54:58+00:00"
+        },
+        {
             "name": "league/container",
             "version": "2.5.0",
             "source": {
@@ -728,6 +914,711 @@
                 "useragent"
             ],
             "time": "2021-02-28T15:18:43+00:00"
+        },
+        {
+            "name": "mimmi20/browser-detector",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mimmi20/BrowserDetector.git",
+                "reference": "e791d6eecc7df2b76b9aa32d0c5eb313d76dfc48"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mimmi20/BrowserDetector/zipball/e791d6eecc7df2b76b9aa32d0c5eb313d76dfc48",
+                "reference": "e791d6eecc7df2b76b9aa32d0c5eb313d76dfc48",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "mimmi20/browser-detector-loader-interface": "^3.0.14",
+                "mimmi20/browser-detector-version": "^6.0.18",
+                "mimmi20/ios-build": "^1.0.13",
+                "mimmi20/json-class": "^2.0.17",
+                "mimmi20/macos-build": "^1.0.12",
+                "mimmi20/ua-browser-type": "^7.0.16",
+                "mimmi20/ua-device-type": "^7.1.15",
+                "mimmi20/ua-display-size": "^2.0.31",
+                "mimmi20/ua-generic-request": "^5.0.13",
+                "mimmi20/ua-normalizer": "^4.0.12",
+                "mimmi20/ua-result": "^7.1.8",
+                "php": "^7.1.3 || ^8.0.0",
+                "psr/http-message": "^1.0.1",
+                "psr/log": "^1.1.3",
+                "psr/simple-cache": "^1.0.1"
+            },
+            "require-dev": {
+                "infection/infection": "^0.13.6 || ^0.18 || ~0.21.0",
+                "laminas/laminas-diactoros": "^2.4.1",
+                "mikey179/vfsstream": "^1.6.8",
+                "mimmi20/coding-standard": "^1.0.10",
+                "mimmi20/json-normalizer": "^1.0.11",
+                "pepakriz/phpstan-exception-rules": "^0.11.6",
+                "phpstan/extension-installer": "^1.1.0",
+                "phpstan/phpstan": "^0.12.78",
+                "phpstan/phpstan-deprecation-rules": "^0.12.6",
+                "phpstan/phpstan-phpunit": "^0.12.17",
+                "phpunit/phpunit": "^7.5.20 || ~8.5.14 || ~9.5.2",
+                "symfony/finder": "^4.4.19 || ^5.2.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "BrowserDetector\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Müller",
+                    "homepage": "https://github.com/mimmi20",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/mimmi20/BrowserDetector/graphs/contributors"
+                }
+            ],
+            "description": "Library to detect Browsers and Devices",
+            "homepage": "https://github.com/mimmi20/BrowserDetector",
+            "keywords": [
+                "browser",
+                "http",
+                "parser",
+                "user agent",
+                "user-agent"
+            ],
+            "time": "2021-02-25T08:45:30+00:00"
+        },
+        {
+            "name": "mimmi20/browser-detector-loader-interface",
+            "version": "3.0.14",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mimmi20/browser-detector-loader-interface.git",
+                "reference": "49df45215051d767635276b379301351f021cb46"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mimmi20/browser-detector-loader-interface/zipball/49df45215051d767635276b379301351f021cb46",
+                "reference": "49df45215051d767635276b379301351f021cb46",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1.3 || ^8.0.0"
+            },
+            "require-dev": {
+                "mimmi20/coding-standard": "^1.0.9",
+                "pepakriz/phpstan-exception-rules": "^0.11.6",
+                "phpstan/extension-installer": "^1.1.0",
+                "phpstan/phpstan": "^0.12.78",
+                "phpstan/phpstan-deprecation-rules": "^0.12.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "BrowserDetector\\Loader\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Müller",
+                    "homepage": "https://github.com/mimmi20",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/mimmi20/browser-detector-loader-interface/graphs/contributors"
+                }
+            ],
+            "description": "the source interface for the browscap helper",
+            "time": "2021-02-21T18:36:57+00:00"
+        },
+        {
+            "name": "mimmi20/browser-detector-version",
+            "version": "6.0.18",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mimmi20/version.git",
+                "reference": "cf161f36a981e4113580110ac5802caba018d2c9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mimmi20/version/zipball/cf161f36a981e4113580110ac5802caba018d2c9",
+                "reference": "cf161f36a981e4113580110ac5802caba018d2c9",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": "^7.1.3 || ^8.0.0"
+            },
+            "require-dev": {
+                "infection/infection": "~0.13.6 || ~0.18 || ~0.20.2",
+                "mimmi20/coding-standard": "~1.0.9",
+                "pepakriz/phpstan-exception-rules": "~0.11.4",
+                "phpstan/extension-installer": "~1.1.0",
+                "phpstan/phpstan": "~0.12.68",
+                "phpstan/phpstan-deprecation-rules": "~0.12.6",
+                "phpstan/phpstan-phpunit": "~0.12.17",
+                "phpunit/phpunit": "~7.5.20 || ~8.5.13 || ~9.5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "BrowserDetector\\Version\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Müller",
+                    "homepage": "https://github.com/mimmi20",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/mimmi20/version/graphs/contributors"
+                }
+            ],
+            "description": "Version Class for the Browser Detector",
+            "homepage": "https://github.com/mimmi20/version",
+            "keywords": [
+                "version"
+            ],
+            "time": "2021-01-19T10:16:56+00:00"
+        },
+        {
+            "name": "mimmi20/ios-build",
+            "version": "1.0.13",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mimmi20/ios-build.git",
+                "reference": "7c4da1648d0982e187abf3b9f6ba5d9b8b496cf7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mimmi20/ios-build/zipball/7c4da1648d0982e187abf3b9f6ba5d9b8b496cf7",
+                "reference": "7c4da1648d0982e187abf3b9f6ba5d9b8b496cf7",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^7.1.3 || ^8.0.0"
+            },
+            "require-dev": {
+                "infection/infection": "~0.13.6 || ~0.18 || ~0.20.2",
+                "mimmi20/coding-standard": "~1.0.9",
+                "pepakriz/phpstan-exception-rules": "~0.11.4",
+                "phpstan/extension-installer": "~1.1.0",
+                "phpstan/phpstan": "~0.12.68",
+                "phpstan/phpstan-deprecation-rules": "~0.12.6",
+                "phpstan/phpstan-phpunit": "~0.12.17",
+                "phpunit/phpunit": "~7.5.20 || ~8.5.13 || ~9.5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "IosBuild\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Müller",
+                    "homepage": "https://github.com/mimmi20",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/mimmi20/ios-build/graphs/contributors"
+                }
+            ],
+            "description": "Class wrapper for peterkahl/apple-ios-build-version",
+            "homepage": "https://github.com/mimmi20/ios-build",
+            "time": "2021-01-19T10:53:15+00:00"
+        },
+        {
+            "name": "mimmi20/json-class",
+            "version": "2.0.17",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mimmi20/json-class.git",
+                "reference": "b45b88efcfb481684bcde0345dbf631044f16af3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mimmi20/json-class/zipball/b45b88efcfb481684bcde0345dbf631044f16af3",
+                "reference": "b45b88efcfb481684bcde0345dbf631044f16af3",
+                "shasum": ""
+            },
+            "require": {
+                "daverandom/exceptional-json": "~1.0.4",
+                "ext-json": "*",
+                "php": "^7.1.3 || ^8.0.0"
+            },
+            "require-dev": {
+                "infection/infection": "~0.13.6 || ~0.18 || ~0.20.2",
+                "mimmi20/coding-standard": "~1.0.9",
+                "pepakriz/phpstan-exception-rules": "~0.11.4",
+                "phpstan/extension-installer": "~1.1.0",
+                "phpstan/phpstan": "~0.12.68",
+                "phpstan/phpstan-deprecation-rules": "~0.12.6",
+                "phpstan/phpstan-phpunit": "~0.12.17",
+                "phpunit/phpunit": "~7.5.20 || ~8.5.13 || ~9.5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "JsonClass\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Müller",
+                    "homepage": "https://github.com/mimmi20",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/mimmi20/json-class/graphs/contributors"
+                }
+            ],
+            "description": "Class wrapper for daverandom/exceptional-json",
+            "homepage": "https://github.com/mimmi20/json-class",
+            "time": "2021-01-19T10:14:50+00:00"
+        },
+        {
+            "name": "mimmi20/macos-build",
+            "version": "1.0.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mimmi20/macos-build.git",
+                "reference": "e63ddd11d390405f50fdb8fd4cfce1f8dd6a9ae9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mimmi20/macos-build/zipball/e63ddd11d390405f50fdb8fd4cfce1f8dd6a9ae9",
+                "reference": "e63ddd11d390405f50fdb8fd4cfce1f8dd6a9ae9",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^7.1.3 || ^8.0.0"
+            },
+            "require-dev": {
+                "infection/infection": "~0.13.6 || ~0.18 || ~0.20.2",
+                "mimmi20/coding-standard": "~1.0.9",
+                "pepakriz/phpstan-exception-rules": "~0.11.4",
+                "phpstan/extension-installer": "~1.1.0",
+                "phpstan/phpstan": "~0.12.68",
+                "phpstan/phpstan-deprecation-rules": "~0.12.6",
+                "phpstan/phpstan-phpunit": "~0.12.17",
+                "phpunit/phpunit": "~7.5.20 || ~8.5.13 || ~9.5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MacosBuild\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Müller",
+                    "homepage": "https://github.com/mimmi20",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/mimmi20/macos-build/graphs/contributors"
+                }
+            ],
+            "description": "Class wrapper for peterkahl/apple-os-x-build-version",
+            "homepage": "https://github.com/mimmi20/macos-build",
+            "time": "2021-01-19T10:21:54+00:00"
+        },
+        {
+            "name": "mimmi20/ua-browser-type",
+            "version": "7.0.16",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mimmi20/ua-browser-type.git",
+                "reference": "39ec11ff6804d7cb2b80f49deaf30e96b4738d85"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mimmi20/ua-browser-type/zipball/39ec11ff6804d7cb2b80f49deaf30e96b4738d85",
+                "reference": "39ec11ff6804d7cb2b80f49deaf30e96b4738d85",
+                "shasum": ""
+            },
+            "require": {
+                "mimmi20/browser-detector-loader-interface": "~3.0.13",
+                "php": "^7.1.3 || ^8.0.0"
+            },
+            "require-dev": {
+                "infection/infection": "~0.13.6 || ~0.18 || ~0.20.2",
+                "mimmi20/coding-standard": "~1.0.9",
+                "pepakriz/phpstan-exception-rules": "~0.11.4",
+                "phpstan/extension-installer": "~1.1.0",
+                "phpstan/phpstan": "~0.12.68",
+                "phpstan/phpstan-deprecation-rules": "~0.12.6",
+                "phpstan/phpstan-phpunit": "~0.12.17",
+                "phpunit/phpunit": "~7.5.20 || ~8.5.13 || ~9.5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "UaBrowserType\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Müller",
+                    "homepage": "https://github.com/mimmi20",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/mimmi20/ua-browser-type/graphs/contributors"
+                }
+            ],
+            "description": "a class collection for different browser types",
+            "homepage": "https://github.com/mimmi20/ua-browser-type",
+            "keywords": [
+                "browser",
+                "http",
+                "parser",
+                "user agent",
+                "user-agent"
+            ],
+            "time": "2021-01-19T10:42:24+00:00"
+        },
+        {
+            "name": "mimmi20/ua-device-type",
+            "version": "7.1.15",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mimmi20/ua-device-type.git",
+                "reference": "a805eaf0e2fbbaa595d463b2d1f612027d2c8f09"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mimmi20/ua-device-type/zipball/a805eaf0e2fbbaa595d463b2d1f612027d2c8f09",
+                "reference": "a805eaf0e2fbbaa595d463b2d1f612027d2c8f09",
+                "shasum": ""
+            },
+            "require": {
+                "mimmi20/browser-detector-loader-interface": "~3.0.13",
+                "php": "^7.1.3 || ^8.0.0"
+            },
+            "require-dev": {
+                "infection/infection": "~0.13.6 || ~0.18 || ~0.20.2",
+                "mimmi20/coding-standard": "~1.0.9",
+                "pepakriz/phpstan-exception-rules": "~0.11.4",
+                "phpstan/extension-installer": "~1.1.0",
+                "phpstan/phpstan": "~0.12.68",
+                "phpstan/phpstan-deprecation-rules": "~0.12.6",
+                "phpstan/phpstan-phpunit": "~0.12.17",
+                "phpunit/phpunit": "~7.5.20 || ~8.5.13 || ~9.5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "UaDeviceType\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Müller",
+                    "homepage": "https://github.com/mimmi20",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/mimmi20/ua-device-type/graphs/contributors"
+                }
+            ],
+            "description": "a class collection for different device types",
+            "homepage": "https://github.com/mimmi20/ua-device-type",
+            "keywords": [
+                "browser",
+                "http",
+                "parser",
+                "user agent",
+                "user-agent"
+            ],
+            "time": "2021-01-19T10:43:16+00:00"
+        },
+        {
+            "name": "mimmi20/ua-display-size",
+            "version": "2.0.31",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mimmi20/ua-display-size.git",
+                "reference": "5d1f540eb2034ad3fecda2bc3a05d17c5a633866"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mimmi20/ua-display-size/zipball/5d1f540eb2034ad3fecda2bc3a05d17c5a633866",
+                "reference": "5d1f540eb2034ad3fecda2bc3a05d17c5a633866",
+                "shasum": ""
+            },
+            "require": {
+                "mimmi20/browser-detector-loader-interface": "~3.0.13",
+                "php": "^7.1.3 || ^8.0.0"
+            },
+            "require-dev": {
+                "infection/infection": "^0.13.6 || ^0.18 || ^0.21.0",
+                "mimmi20/coding-standard": "^1.0.9",
+                "pepakriz/phpstan-exception-rules": "^0.11.6",
+                "phpstan/extension-installer": "^1.1.0",
+                "phpstan/phpstan": "^0.12.78",
+                "phpstan/phpstan-deprecation-rules": "^0.12.6",
+                "phpstan/phpstan-phpunit": "^0.12.17",
+                "phpunit/phpunit": "^7.5.20 || ~8.5.14 || ^9.5.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "UaDisplaySize\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Müller",
+                    "homepage": "https://github.com/mimmi20",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/mimmi20/ua-display-size/graphs/contributors"
+                }
+            ],
+            "description": "a class collection for different display sizes",
+            "homepage": "https://github.com/mimmi20/ua-display-size",
+            "keywords": [
+                "browser",
+                "http",
+                "parser",
+                "user agent",
+                "user-agent"
+            ],
+            "abandoned": true,
+            "time": "2021-02-21T18:37:43+00:00"
+        },
+        {
+            "name": "mimmi20/ua-generic-request",
+            "version": "5.0.13",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mimmi20/ua-generic-request.git",
+                "reference": "e42eab1c72c94154e7ddf85e8c06965bb77ac8fa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mimmi20/ua-generic-request/zipball/e42eab1c72c94154e7ddf85e8c06965bb77ac8fa",
+                "reference": "e42eab1c72c94154e7ddf85e8c06965bb77ac8fa",
+                "shasum": ""
+            },
+            "require": {
+                "laminas/laminas-diactoros": "~2.4.1 || ~2.5.0",
+                "mimmi20/browser-detector-loader-interface": "~3.0.13",
+                "php": "^7.1.3 || ^8.0.0",
+                "psr/http-message": "~1.0.1"
+            },
+            "require-dev": {
+                "infection/infection": "~0.13.6 || ~0.18 || ~0.20.2",
+                "mimmi20/coding-standard": "~1.0.9",
+                "mimmi20/json-class": "~2.0.16",
+                "pepakriz/phpstan-exception-rules": "~0.11.4",
+                "phpstan/extension-installer": "~1.1.0",
+                "phpstan/phpstan": "~0.12.68",
+                "phpstan/phpstan-deprecation-rules": "~0.12.6",
+                "phpstan/phpstan-phpunit": "~0.12.17",
+                "phpunit/phpunit": "~7.5.20 || ~8.5.13 || ~9.5.0",
+                "symfony/finder": "~4.4.18 || ~5.2.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "UaRequest\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Müller",
+                    "homepage": "https://github.com/mimmi20",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/mimmi20/ua-generic-request/graphs/contributors"
+                }
+            ],
+            "description": "the Generic Request Object extracted from Wurfl for PHP 7.1+",
+            "homepage": "https://github.com/mimmi20/ua-generic-request",
+            "time": "2021-01-19T10:43:40+00:00"
+        },
+        {
+            "name": "mimmi20/ua-normalizer",
+            "version": "4.0.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mimmi20/ua-normalizer.git",
+                "reference": "2b7a8995a9cfc5d9f0907b60a9f7fa33745a1893"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mimmi20/ua-normalizer/zipball/2b7a8995a9cfc5d9f0907b60a9f7fa33745a1893",
+                "reference": "2b7a8995a9cfc5d9f0907b60a9f7fa33745a1893",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1.3 || ^8.0.0"
+            },
+            "require-dev": {
+                "infection/infection": "~0.13.6 || ~0.18 || ~0.20.2",
+                "mimmi20/coding-standard": "~1.0.9",
+                "pepakriz/phpstan-exception-rules": "~0.11.4",
+                "phpstan/extension-installer": "~1.1.0",
+                "phpstan/phpstan": "~0.12.68",
+                "phpstan/phpstan-deprecation-rules": "~0.12.6",
+                "phpstan/phpstan-phpunit": "~0.12.17",
+                "phpunit/phpunit": "~7.5.20 || ~8.5.13 || ~9.5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "UaNormalizer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Müller",
+                    "homepage": "https://github.com/mimmi20",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/mimmi20/ua-normalizer/graphs/contributors"
+                }
+            ],
+            "description": "the Normalizers extracted from the UaNormalizer PHP Library for PHP 7+",
+            "homepage": "https://github.com/mimmi20/ua-normalizer",
+            "keywords": [
+                "UaNormalizer",
+                "browser",
+                "http",
+                "parser",
+                "user agent",
+                "user-agent"
+            ],
+            "time": "2021-01-19T10:53:00+00:00"
+        },
+        {
+            "name": "mimmi20/ua-result",
+            "version": "7.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mimmi20/ua-result.git",
+                "reference": "1f42609b46ae7816402189864e52ddded1a4f0e4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mimmi20/ua-result/zipball/1f42609b46ae7816402189864e52ddded1a4f0e4",
+                "reference": "1f42609b46ae7816402189864e52ddded1a4f0e4",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "mimmi20/browser-detector-version": "^6.0.18",
+                "mimmi20/ua-browser-type": "^7.0.16",
+                "mimmi20/ua-device-type": "^7.1.15",
+                "php": "^7.1.3 || ^8.0.0",
+                "psr/log": "^1.1.3"
+            },
+            "require-dev": {
+                "infection/infection": "^0.13.6 || ^0.18 || ^0.21.0",
+                "mimmi20/coding-standard": "^1.0.10",
+                "mimmi20/json-class": "^2.0.17",
+                "pepakriz/phpstan-exception-rules": "^0.11.6",
+                "phpstan/extension-installer": "^1.1.0",
+                "phpstan/phpstan": "^0.12.78",
+                "phpstan/phpstan-deprecation-rules": "^0.12.6",
+                "phpstan/phpstan-phpunit": "^0.12.17",
+                "phpunit/phpunit": "^7.5.20 || ^8.5.14 || ^9.5.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "UaResult\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Müller",
+                    "homepage": "https://github.com/mimmi20",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/mimmi20/ua-result/graphs/contributors"
+                }
+            ],
+            "description": "Library for PHP 7.1+ to handle useragent parser results",
+            "homepage": "https://github.com/mimmi20/ua-result",
+            "keywords": [
+                "browser",
+                "http",
+                "parser",
+                "user agent",
+                "user-agent"
+            ],
+            "time": "2021-02-24T19:51:58+00:00"
         },
         {
             "name": "mustangostang/spyc",
@@ -875,6 +1766,108 @@
             "time": "2017-02-14T16:28:37+00:00"
         },
         {
+            "name": "psr/http-factory",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-factory.git",
+                "reference": "12ac7fcd07e5b077433f5f2bee95b3a771bf61be"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-factory/zipball/12ac7fcd07e5b077433f5f2bee95b3a771bf61be",
+                "reference": "12ac7fcd07e5b077433f5f2bee95b3a771bf61be",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0",
+                "psr/http-message": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Message\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interfaces for PSR-7 HTTP message factories",
+            "keywords": [
+                "factory",
+                "http",
+                "message",
+                "psr",
+                "psr-17",
+                "psr-7",
+                "request",
+                "response"
+            ],
+            "time": "2019-04-30T12:38:16+00:00"
+        },
+        {
+            "name": "psr/http-message",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-message.git",
+                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363",
+                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Message\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for HTTP messages",
+            "homepage": "https://github.com/php-fig/http-message",
+            "keywords": [
+                "http",
+                "http-message",
+                "psr",
+                "psr-7",
+                "request",
+                "response"
+            ],
+            "time": "2016-08-06T14:39:51+00:00"
+        },
+        {
             "name": "psr/log",
             "version": "1.1.3",
             "source": {
@@ -920,6 +1913,54 @@
                 "psr-3"
             ],
             "time": "2020-03-23T09:12:05+00:00"
+        },
+        {
+            "name": "psr/simple-cache",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/simple-cache.git",
+                "reference": "408d5eafb83c57f6365a3ca330ff23aa4a5fa39b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/simple-cache/zipball/408d5eafb83c57f6365a3ca330ff23aa4a5fa39b",
+                "reference": "408d5eafb83c57f6365a3ca330ff23aa4a5fa39b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\SimpleCache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interfaces for simple caching",
+            "keywords": [
+                "cache",
+                "caching",
+                "psr",
+                "psr-16",
+                "simple-cache"
+            ],
+            "time": "2017-10-23T01:57:42+00:00"
         },
         {
             "name": "symfony/console",
@@ -1856,7 +2897,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "matomo/device-detector": 20,
-        "whichbrowser/parser": 20
+        "whichbrowser/parser": 20,
+        "mimmi20/browser-detector": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
