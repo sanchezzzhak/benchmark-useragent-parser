@@ -11,7 +11,7 @@ $appVersion = '123';
 
 $discovery = new CommandFileDiscovery();
 $discovery->setSearchPattern('*.php');
-$commandClasses = $discovery->discover('src/Robo', '\App\Robo');
+$commandClasses = $discovery->discover('src/Robo/', '\App\Robo');
 
 $selfUpdateRepository = 'kak/benchmark-useragent-parser';
 $configurationFilename = 'config.yml';

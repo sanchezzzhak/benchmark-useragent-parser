@@ -10,6 +10,7 @@ class RoboFile extends Tasks
 
     private const PROJECT_MATOMO_DEVICE_DETECTOR = 'matomo/device-detector';
     private const PROJECT_WHICHBROWSER_PARSER = 'whichbrowser/parser';
+    private const PROJECT_MIMMI20_BROWSER_DETECTOR = 'mimmi20/browser-detector';
 
 
     private const REPOSITORIES = [
@@ -20,6 +21,10 @@ class RoboFile extends Tasks
         ], [
             self::PROJECT_WHICHBROWSER_PARSER,
             'https://github.com/WhichBrowser/Parser-PHP.git',
+            'master'
+        ], [
+            self::PROJECT_MIMMI20_BROWSER_DETECTOR,
+            'https://github.com/mimmi20/BrowserDetector.git',
             'master'
         ]
     ];
@@ -33,24 +38,32 @@ class RoboFile extends Tasks
             [$prefixPath, $repositoryUrl, $branch] = $repository;
             $path = realpath(__DIR__ . '/../Repository/' . $prefixPath);
 
-            $this->taskGitStack()
-                ->cloneRepo($repositoryUrl, $path, $branch)
-                ->pull()
-                ->run();
+            if (!is_dir($path)) {
+                $this->taskGitStack()
+                    ->cloneRepo($repositoryUrl, $path, $branch)
+                    ->run();
+            } else {
+                $this->taskGitStack()
+                    ->dir($path)
+                    ->pull()
+                    ->run();
+            }
 
             $this->taskComposerUpdate()
-                ->workingDir($path)
+                ->dir($path)
                 ->run();
         }
     }
+
 
     /**
      * Init paths fixtures
      */
     public function initFixtures()
     {
-        $path = __DIR__ . '/../Repository/';
-        // Matomo get all paths
+        $path = realpath(__DIR__ . '/../Repository/');
+        $this->say('get fixtures paths in ' . self::PROJECT_MATOMO_DEVICE_DETECTOR);
+        // MatomoDeviceDetector get all paths
         $basePath = $path . self::PROJECT_MATOMO_DEVICE_DETECTOR;
         $matomoFixtures = [
             ...glob($basePath . '/Tests/fixtures/*.yml'),
@@ -59,7 +72,8 @@ class RoboFile extends Tasks
             ...glob($basePath . '/Tests/Parser/fixtures/*.yml'),
         ];
 
-        // WhichBrowser get all paths
+        // WhichBrowserParser get all paths
+        $this->say('get fixtures paths in ' . self::PROJECT_WHICHBROWSER_PARSER);
         $basePath = $path . self::PROJECT_WHICHBROWSER_PARSER;
         $dirs = glob($basePath . DIRECTORY_SEPARATOR . 'tests/*', GLOB_ONLYDIR);
         $whichbrowserFixtures = [];
@@ -67,12 +81,25 @@ class RoboFile extends Tasks
             $whichbrowserFixtures = array_merge($whichbrowserFixtures, [...glob($dir . DIRECTORY_SEPARATOR . '*.{yaml,yml}', GLOB_BRACE)]);
         }
 
-        $json=  [
+        // Mimmi20BrowserDetector get all paths
+        $this->say('get fixtures paths in ' . self::PROJECT_MIMMI20_BROWSER_DETECTOR);
+        $basePath = $path . self::PROJECT_MIMMI20_BROWSER_DETECTOR;
+        $dirs = glob($basePath . DIRECTORY_SEPARATOR . 'tests/data/*', GLOB_ONLYDIR);
+        $mimmi20Fixtures = [];
+        foreach ($dirs as $dir) {
+            $mimmi20Fixtures = array_merge($mimmi20Fixtures, [...glob($dir . DIRECTORY_SEPARATOR . '*.{json}', GLOB_BRACE)]);
+        }
+
+        // save paths in file;
+        $json = [
             self::PROJECT_MATOMO_DEVICE_DETECTOR => [
                 'files' => [...$matomoFixtures]
             ],
             self::PROJECT_WHICHBROWSER_PARSER => [
                 'files' => [...$whichbrowserFixtures]
+            ],
+            self::PROJECT_MIMMI20_BROWSER_DETECTOR => [
+                'files' => [...$mimmi20Fixtures]
             ],
         ];
 
@@ -85,7 +112,7 @@ class RoboFile extends Tasks
     public function initStat()
     {
         $path = __DIR__ . '/../Parser/';
-        $this->taskExec('php '.  $path  . 'MotamoDeviceDetector.php')->run();
+//        $this->taskExec('php ' . $path . 'MotamoDeviceDetector.php')->run();
     }
 
 }
