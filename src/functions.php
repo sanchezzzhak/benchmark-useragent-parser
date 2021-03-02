@@ -1,10 +1,9 @@
 <?php
+$libPath = __DIR__ . '/../vendor/autoload.php';
 
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Yaml\Yaml;
 
-$libPath = __DIR__ . '/Repository/matomo/device-detector/vendor/mustangostang/spyc/Spyc.php';
-if (!function_exists('spyc_load') && is_file($libPath)) {
-    require_once $libPath;
-}
 
 function webNotSupportedRunning(): void
 {
@@ -17,35 +16,74 @@ function webNotSupportedRunning(): void
 
 function parseFixtureFile(string $repositoryId, string $file): array
 {
-    if ($repositoryId === 'matomo/device-detector') {
-        $data = spyc_load_file($file);
-        if (is_array($data)) {
-            return array_map(fn($item) => $item['user_agent'] ?? '', $data);
+    try {
+        if ($repositoryId === 'matomo/device-detector') {
+            $data = Yaml::parseFile($file);
+            if (is_array($data)) {
+                return array_map(fn($item) => $item['user_agent'] ?? '', $data);
+            }
         }
-    }
 
-    if ($repositoryId === 'whichbrowser/parser') {
-        $data = spyc_load_file($file);
-        if (is_array($data)) {
-            return array_map(function ($item) {
-                $useragent = '';
-                if (is_string($item['headers']) && preg_match('~User-Agent: (.*)$~i', $item['headers'], $match)) {
-                    $useragent = $match[0] ?? '';
-                } else if (is_array($item['headers'])) {
-                    $useragent = $item['headers']['User-Agent'] ?? '';
-                }
-                return $useragent;
-            }, $data);
+        if ($repositoryId === 'whichbrowser/parser') {
+            $data = Yaml::parseFile($file);
+            if (is_array($data)) {
+                return array_map(function ($item) {
+                    $useragent = '';
+                    if (is_string($item['headers']) && preg_match('~User-Agent: (.*)$~i', $item['headers'], $match)) {
+                        $useragent = $match[0] ?? '';
+                    } else if (is_array($item['headers'])) {
+                        $useragent = $item['headers']['User-Agent'] ?? '';
+                    }
+                    return $useragent;
+                }, $data);
+            }
         }
-    }
 
-    if ($repositoryId === 'mimmi20/browser-detector') {
-        $data = json_decode(file_get_contents($file), true);
-        if (is_array($data)) {
-            return array_map(fn($item) => $item['headers']['user-agent'] ?? '', $data);
+        if ($repositoryId === 'mimmi20/browser-detector') {
+            $data = json_decode(file_get_contents($file), true);
+            if (is_array($data)) {
+                return array_map(fn($item) => $item['headers']['user-agent'] ?? '', $data);
+            }
         }
+
+    } catch (Exception $exception) {
+        $message = sprintf(
+            "Error: %s\nFile Parse: %s\nRepositoryId: %s",
+            $exception->getMessage(),
+            $file,
+            $repositoryId
+        );
+        throw new Exception($message, 0, $exception);
     }
 
     return [];
 }
 
+
+function runTestsFixture($fixtureRawPath, $reportName){
+// is fixture
+    if ($fixtureRawPath) {
+        $fixtureContent = file_get_contents($fixtureRawPath);
+        $repositoryFixtures = json_decode($fixtureContent, true);
+
+        foreach ($repositoryFixtures as $repositoryId => $item) {
+
+//            $progressBar = new ProgressBar(count(($item['files']), 50);
+//
+//            $progressBar->start();
+
+            foreach ($item['files'] as $file) {
+                if (empty($file)) {
+                    continue;
+                }
+                $useragents = parseFixtureFile($repositoryId, $file);
+                foreach ($useragents as $useragent) {
+                    if (empty($useragent)) {
+                        continue;
+                    }
+                    createReport($useragent, $reportName);
+                }
+            }
+        }
+    }
+}

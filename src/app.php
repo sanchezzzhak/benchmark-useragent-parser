@@ -4,7 +4,7 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-use App\Command\Start as StartCommand;
+use App\Command\Analyze as StartCommand;
 use Symfony\Component\Console\Application;
 
 $application = new Application();

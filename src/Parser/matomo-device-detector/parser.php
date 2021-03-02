@@ -68,27 +68,5 @@ function createReport(string $useragent, string $reportPath): void
     file_put_contents($reportPath, json_encode($report) . PHP_EOL, FILE_APPEND);
 }
 
-
-// is fixture
-if ($fixtureRawPath) {
-    $fixtureContent = file_get_contents($fixtureRawPath);
-    $repositoryFixtures = json_decode($fixtureContent, true);
-
-    foreach ($repositoryFixtures as $repositoryId => $item) {
-        foreach ($item['files'] as $file) {
-            if (empty($file)) {
-                continue;
-            }
-            $useragents = parseFixtureFile($repositoryId, $file);
-            foreach ($useragents as $useragent) {
-                if (empty($useragent)) {
-                    continue;
-                }
-                createReport($useragent, $reportName);
-            }
-        }
-    }
-}
-
-
+runTestsFixture($fixtureRawPath, $reportName);
 
