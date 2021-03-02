@@ -1,5 +1,5 @@
 <?php
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 use Consolidation\AnnotatedCommand\CommandFileDiscovery;
 use Robo\Runner;
@@ -7,7 +7,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 
 
 $appName = "benchmark-useragent-parser";
-$appVersion = '123';
+$appVersion = 'none';
 
 $discovery = new CommandFileDiscovery();
 $discovery->setSearchPattern('*.php');

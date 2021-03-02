@@ -7,7 +7,7 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Robo\Tasks;
 
-class RoboFile extends Tasks
+class Initialization extends Tasks
 {
 
     private const PROJECT_MATOMO_DEVICE_DETECTOR = 'matomo/device-detector';

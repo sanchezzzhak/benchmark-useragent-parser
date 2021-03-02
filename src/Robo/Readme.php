@@ -1,3 +1,21 @@
+<?php
+
+
+namespace App\Robo;
+
+
+use Robo\Tasks;
+
+class Readme extends Tasks
+{
+    /**
+     * Update readme
+     */
+    public function updateReadme()
+    {
+        $file = __DIR__ . '/../../readme.md';
+        $date = date('Y-m-d');
+        $text = <<<MD
 Info
 ---
 scoring points when parsing useragent
@@ -32,7 +50,7 @@ Single run parser
 * `php src/Parser/matomo-device-detector/parser.php --fixtures="data/paths.json"`
 
 
-Results For 2021-03-02
+Results For {$date}
 ---
 soon...
 
@@ -40,3 +58,8 @@ soon...
 Who wants to contribute.
 ---
 then...
+MD;
+
+        file_put_contents($file, $text);
+    }
+}
