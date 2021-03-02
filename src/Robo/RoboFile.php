@@ -3,6 +3,8 @@
 
 namespace App\Robo;
 
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use Robo\Tasks;
 
 class RoboFile extends Tasks
@@ -11,7 +13,6 @@ class RoboFile extends Tasks
     private const PROJECT_MATOMO_DEVICE_DETECTOR = 'matomo/device-detector';
     private const PROJECT_WHICHBROWSER_PARSER = 'whichbrowser/parser';
     private const PROJECT_MIMMI20_BROWSER_DETECTOR = 'mimmi20/browser-detector';
-
 
     private const REPOSITORIES = [
         [
@@ -30,41 +31,42 @@ class RoboFile extends Tasks
     ];
 
     /**
-     * Init install all repositories parsers
+     * Init install all repositories
      */
     public function initRepositories()
     {
         foreach (self::REPOSITORIES as $repository) {
             [$prefixPath, $repositoryUrl, $branch] = $repository;
-            $path = realpath(__DIR__ . '/../Repository/' . $prefixPath);
+            $path = realpath(__DIR__ . '/../Repository') . DIRECTORY_SEPARATOR . $prefixPath;
 
-            if (!is_dir($path)) {
-                $this->taskGitStack()
-                    ->cloneRepo($repositoryUrl, $path, $branch)
-                    ->run();
-            } else {
-                $this->taskGitStack()
+            $this->say("init repository {$repositoryUrl} into {$path}");
+
+            $hasInstall = !is_dir($path);
+            $hasInstall
+                ? $this->taskGitStack()->cloneRepo($repositoryUrl, $path, $branch)->run()
+                : $this->taskGitStack()->dir($path)->pull()->run();;
+
+            $hasComposer = is_file($path . '/composer.json');
+            $this->say("check composer is exist: " . ($hasComposer ? 'true' : 'false'));
+            if ($hasComposer) {
+                $this->taskComposerUpdate()
                     ->dir($path)
-                    ->pull()
                     ->run();
+                continue;
             }
-
-            $this->taskComposerUpdate()
-                ->dir($path)
-                ->run();
         }
     }
-
 
     /**
      * Init paths fixtures
      */
     public function initFixtures()
     {
-        $path = realpath(__DIR__ . '/../Repository/');
+        $path = realpath(__DIR__ . '/../Repository');
         $this->say('get fixtures paths in ' . self::PROJECT_MATOMO_DEVICE_DETECTOR);
         // MatomoDeviceDetector get all paths
-        $basePath = $path . self::PROJECT_MATOMO_DEVICE_DETECTOR;
+        $basePath = $path . DIRECTORY_SEPARATOR . self::PROJECT_MATOMO_DEVICE_DETECTOR;
+
         $matomoFixtures = [
             ...glob($basePath . '/Tests/fixtures/*.yml'),
             ...glob($basePath . '/Tests/Parser/Client/fixtures/*.yml'),
@@ -74,8 +76,9 @@ class RoboFile extends Tasks
 
         // WhichBrowserParser get all paths
         $this->say('get fixtures paths in ' . self::PROJECT_WHICHBROWSER_PARSER);
-        $basePath = $path . self::PROJECT_WHICHBROWSER_PARSER;
-        $dirs = glob($basePath . DIRECTORY_SEPARATOR . 'tests/*', GLOB_ONLYDIR);
+        $basePath = $path . DIRECTORY_SEPARATOR . self::PROJECT_WHICHBROWSER_PARSER;
+
+        $dirs = glob($basePath . DIRECTORY_SEPARATOR . 'tests/data/*', GLOB_ONLYDIR);
         $whichbrowserFixtures = [];
         foreach ($dirs as $dir) {
             $whichbrowserFixtures = array_merge($whichbrowserFixtures, [...glob($dir . DIRECTORY_SEPARATOR . '*.{yaml,yml}', GLOB_BRACE)]);
@@ -83,11 +86,15 @@ class RoboFile extends Tasks
 
         // Mimmi20BrowserDetector get all paths
         $this->say('get fixtures paths in ' . self::PROJECT_MIMMI20_BROWSER_DETECTOR);
-        $basePath = $path . self::PROJECT_MIMMI20_BROWSER_DETECTOR;
-        $dirs = glob($basePath . DIRECTORY_SEPARATOR . 'tests/data/*', GLOB_ONLYDIR);
+        $basePath = $path . DIRECTORY_SEPARATOR . self::PROJECT_MIMMI20_BROWSER_DETECTOR;
+
+        $ridi = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($basePath . DIRECTORY_SEPARATOR . 'tests/data'));
         $mimmi20Fixtures = [];
-        foreach ($dirs as $dir) {
-            $mimmi20Fixtures = array_merge($mimmi20Fixtures, [...glob($dir . DIRECTORY_SEPARATOR . '*.{json}', GLOB_BRACE)]);
+        foreach ($ridi as $file) {
+            if ($file->isDir()){
+                continue;
+            }
+            $mimmi20Fixtures[] = $file->getPathname();
         }
 
         // save paths in file;
