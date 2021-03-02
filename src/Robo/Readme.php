@@ -46,7 +46,6 @@ Commands
 
 Single run parser
 ---
-* MatomoDeviceDetector
 * `php src/Parser/matomo-device-detector/parser.php --fixtures="data/paths.json"`
 * `php src/Parser/whichbrowser-parser/parser.php --fixtures="data/paths.json"`
 
