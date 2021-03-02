@@ -48,6 +48,7 @@ Single run parser
 ---
 * `php src/Parser/matomo-device-detector/parser.php --fixtures="data/paths.json"`
 * `php src/Parser/whichbrowser-parser/parser.php --fixtures="data/paths.json"`
+* `php src/Parser/mimmi20-browser-detector/parser.php --fixtures="data/paths.json"`
 
 
 Results For {$date}
