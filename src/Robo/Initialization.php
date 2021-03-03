@@ -91,7 +91,10 @@ class Initialization extends Tasks
         $ridi = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($basePath . DIRECTORY_SEPARATOR . 'tests/data'));
         $mimmi20Fixtures = [];
         foreach ($ridi as $file) {
-            if ($file->isDir()){
+            if ($file->isDir()) {
+                continue;
+            }
+            if (pathinfo($file->getPathname(), PATHINFO_EXTENSION) !== 'json') {
                 continue;
             }
             $mimmi20Fixtures[] = $file->getPathname();

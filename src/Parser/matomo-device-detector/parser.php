@@ -9,8 +9,6 @@ use DeviceDetector\DeviceDetector;
 use DeviceDetector\Parser\Client\Browser;
 use DeviceDetector\Parser\OperatingSystem;
 
-webNotSupportedRunning();
-
 $options = getopt(null, [
     "fixtures::", // use paths fixtures useragents
     "files::",    // use files useragents
@@ -25,7 +23,7 @@ if ($fileRawPath === null && $fixtureRawPath === null) {
     throw new InvalidArgumentException('args: fixtures or files not required');
 }
 
-function createReport(string $useragent, string $reportPath): void
+function createReport(string $useragent)
 {
     static $parser;
     if (!$parser) {
@@ -38,23 +36,27 @@ function createReport(string $useragent, string $reportPath): void
     });
 
     if ($parser->isBot()) {
-        $report = array_merge([
+        return array_merge([
             'user_agent' => $useragent,
             'result' => [
                 'bot' => $parser->getBot(),
             ],
         ], $info);
-        file_put_contents($reportPath, json_encode($report) . PHP_EOL, FILE_APPEND);
     }
 
     $osFamily = OperatingSystem::getOsFamily($parser->getOs('name')) ?? '';
     $browserFamily = Browser::getBrowserFamily($parser->getClient('name')) ?? '';
 
-    $report = array_merge([
+    $osData = $parser->getOs();
+    $clientData = $parser->getClient();
+    unset($osData['short_name']);
+    unset($clientData['short_name']);
+
+    return array_merge([
         'user_agent' => $useragent,
         'result' => [
-            'os' => $parser->getOs(),
-            'client' => $parser->getClient(),
+            'os' => $osData,
+            'client' => $clientData,
             'device' => [
                 'type' => $parser->getDeviceName(),
                 'brand' => $parser->getBrandName(),
@@ -64,9 +66,9 @@ function createReport(string $useragent, string $reportPath): void
             'browser_family' => $browserFamily,
         ],
     ], $info);
-
-    file_put_contents($reportPath, json_encode($report) . PHP_EOL, FILE_APPEND);
 }
 
-runTestsFixture($fixtureRawPath, $reportName);
+if ($fixtureRawPath !== null) {
+    runTestsFixture($fixtureRawPath, $reportName);
+}
 

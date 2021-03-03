@@ -7,8 +7,6 @@ use App\Helpers\Benchmark;
 use WhichBrowser\Parser;
 
 
-webNotSupportedRunning();
-
 $options = getopt(null, [
     "fixtures::", // use paths fixtures useragents
     "files::",    // use files useragents
@@ -23,7 +21,7 @@ if ($fileRawPath === null && $fixtureRawPath === null) {
     throw new InvalidArgumentException('args: fixtures or files not required');
 }
 
-function createReport(string $useragent, string $reportPath): void
+function createReport(string $useragent): array
 {
     $parser = null;
     $useragentHeader = 'UserAgent: ' . $useragent;
@@ -31,7 +29,7 @@ function createReport(string $useragent, string $reportPath): void
         $parser = new Parser($useragentHeader);
     });
 
-    $report = array_merge([
+    return array_merge([
         'user_agent' => $useragent,
         'client' => [
             'name' => !empty($parser->browser->name) ? $parser->browser->name : null,
@@ -47,8 +45,8 @@ function createReport(string $useragent, string $reportPath): void
             'type' => !empty($parser->device->type) ? $parser->device->type : null,
         ],
     ], $info);
-
-    file_put_contents($reportPath, json_encode($report) . PHP_EOL, FILE_APPEND);
 }
 
-runTestsFixture($fixtureRawPath, $reportName);
+if ($fixtureRawPath !== null) {
+    runTestsFixture($fixtureRawPath, $reportName);
+}

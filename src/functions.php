@@ -1,9 +1,9 @@
 <?php
-$libPath = __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Yaml\Yaml;
 
+webNotSupportedRunning();
 
 function webNotSupportedRunning(): void
 {
@@ -12,7 +12,6 @@ function webNotSupportedRunning(): void
         exit;
     }
 }
-
 
 function parseFixtureFile(string $repositoryId, string $file): array
 {
@@ -59,31 +58,53 @@ function parseFixtureFile(string $repositoryId, string $file): array
     return [];
 }
 
+function rubTestFile($file, $reportName)
+{
+    $fh = fopen($reportName, "a+");
+    $fn = fopen($file, 'r');
+    while (!feof($fn)) {
+        $useragent = fgets($fn);
 
-function runTestsFixture($fixtureRawPath, $reportName){
-// is fixture
+        if (false === $useragent) {
+            break;
+        }
+
+        $useragent = trim($useragent);
+
+        if (empty($useragent)) {
+            continue;
+        }
+
+        $report = createReport($useragent);
+        fwrite($fh, json_encode($report) . PHP_EOL);
+    }
+    fclose($fn);
+    fclose($fh);
+}
+
+function runTestsFixture($fixtureRawPath, $reportName)
+{
+    $fh = fopen($reportName, "a+");
     if ($fixtureRawPath) {
         $fixtureContent = file_get_contents($fixtureRawPath);
         $repositoryFixtures = json_decode($fixtureContent, true);
-
         foreach ($repositoryFixtures as $repositoryId => $item) {
-
-//            $progressBar = new ProgressBar(count(($item['files']), 50);
-//
-//            $progressBar->start();
-
+            echo "parse {$repositoryId}\n";
             foreach ($item['files'] as $file) {
                 if (empty($file)) {
                     continue;
                 }
+                echo "parse file {$file}\n";
                 $useragents = parseFixtureFile($repositoryId, $file);
                 foreach ($useragents as $useragent) {
                     if (empty($useragent)) {
                         continue;
                     }
-                    createReport($useragent, $reportName);
+                    $report = createReport($useragent);
+                    fwrite($fh, json_encode($report) . PHP_EOL);
                 }
             }
         }
     }
+    fclose($fh);
 }
