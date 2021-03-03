@@ -48,13 +48,13 @@ class Analyze extends Command
 
             $phpScriptPath = realpath($folder . DIRECTORY_SEPARATOR . "parser.php");
             if (is_file($phpScriptPath)) {
-
                 $command = implode(' ', [
                     'php',
                     $phpScriptPath,
                     '--fixtures="data/paths.json"',
                     sprintf('--report="%s/fixture-%s.log"', $reportFolder, $folderName)
                 ]);
+
                 $process = new Process($command);
                 $process->setTimeout(3600);
                 $rawCommand = $process->getCommandLine();

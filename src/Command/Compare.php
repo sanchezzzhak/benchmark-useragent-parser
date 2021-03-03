@@ -45,8 +45,11 @@ class Compare extends Command
         }
 
         // get all log fixtures
-        $fixtureGlobPath =  $absoluteReportPath . DIRECTORY_SEPARATOR . 'fixture-*.log';
+        $fixtureGlobPath = $absoluteReportPath . DIRECTORY_SEPARATOR . 'fixture-*.log';
         $files = glob($fixtureGlobPath, GLOB_BRACE);
+
+
+        $totalResult = [];
 
         // read multi files
         $handles = [];
@@ -54,6 +57,16 @@ class Compare extends Command
             preg_match('~fixture-(.+)\.log$~i', $filePath, $match);
             $parserId = $match[1];
             $handles[$parserId] = fopen(realpath($files[$fileId]), 'r');
+            $totalResult[$parserId] = [
+                'useragents' => 0,
+                'bots' => 0,
+                'devices' => 0,
+                'browsers' => 0,
+                'brands' => 0,
+                'models' => 0,
+                'totalTime' => 0,
+                'scores' => 0,
+            ];
         }
 
         $iterate = 0;
@@ -80,6 +93,10 @@ class Compare extends Command
                 $reportData[$handleParserId]['result'] = $json['result'] ?? [];
                 $reportData[$handleParserId]['memory'] = $helperSize->formatBytes($json['memory']);
                 $reportData[$handleParserId]['time'] = $json['time'];
+
+                $totalResult[$handleParserId]['useragents'] = $iterate;
+                $totalResult[$handleParserId]['totalTime'] += $iterate;
+
             }
 
             if ($reportData === []) {

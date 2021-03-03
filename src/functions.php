@@ -60,10 +60,10 @@ function parseFixtureFile(string $repositoryId, string $file): array
 
 function rubTestFile($file, $reportName)
 {
-    $fh = fopen($reportName, "a+");
-    $fn = fopen($file, 'r');
-    while (!feof($fn)) {
-        $useragent = fgets($fn);
+    $fw = fopen($reportName, "w");
+    $fr = fopen($file, 'r');
+    while (!feof($fr)) {
+        $useragent = fgets($fr);
 
         if (false === $useragent) {
             break;
@@ -76,15 +76,15 @@ function rubTestFile($file, $reportName)
         }
 
         $report = createReport($useragent);
-        fwrite($fh, json_encode($report) . PHP_EOL);
+        fwrite($fw, json_encode($report) . PHP_EOL);
     }
-    fclose($fn);
-    fclose($fh);
+    fclose($fr);
+    fclose($fw);
 }
 
 function runTestsFixture($fixtureRawPath, $reportName)
 {
-    $fh = fopen($reportName, "a+");
+    $fh = fopen($reportName, "w");
     if ($fixtureRawPath) {
         $fixtureContent = file_get_contents($fixtureRawPath);
         $repositoryFixtures = json_decode($fixtureContent, true);
