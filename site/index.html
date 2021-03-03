@@ -15,10 +15,16 @@
 </head>
 
 <body>
-<div id="not-support-indexeddb" class="alert alert-danger">You browser not support IndexedDB</div>
+
+<div id="not-support-indexed-db" class="alert alert-danger">
+    You browser not support IndexedDB
+    <a class="btb btn-dark" href="javascript:history.back()">Back</a>
+</div>
+
 <script type="module">
-  import AppDashboard from "/js/app.js"
-  document.querySelector('#not-support-indexeddb').style.display = 'none';
+  import AppDashboard from "/site/js/app.js"
+
+  document.querySelector('#not-support-indexed-db').style.display = 'none';
 
   const app = new AppDashboard();
   app.renderPage('main');

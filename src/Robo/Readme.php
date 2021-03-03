@@ -32,6 +32,7 @@ scoring points when parsing useragent
     * brand = 1
     * model = 1
     
+[View reports online](https://sanchezzzhak.github.io/benchmark-useragent-parser/site/)
    
 Before start    
 ---
