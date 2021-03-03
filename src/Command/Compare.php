@@ -7,18 +7,13 @@ use App\Helpers\SizeHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Process;
-
-use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class Compare extends Command
 {
-    protected static $defaultName = 'report:compare';
-
     protected function configure()
     {
+        $this->setName('report:compare');
         $this->addArgument(
             'report',
             InputArgument::REQUIRED,
@@ -26,70 +21,74 @@ class Compare extends Command
         );
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int|void
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var SizeHelper $helperSize */
         $helperSize = $this->getHelper('sizeBytes');
+        $reportFolderName = $input->getArgument('report');
 
         $basePath = realpath(__DIR__ . '/../../');
-        $reportFolderName = $input->getArgument('report');
-        $reportFolder = sprintf('data/%s', $reportFolderName);
-        $output->writeln("report folder: {$reportFolder}");
 
-        if (!is_dir($reportFolder)) {
-            $output->writeln("<error>>report folder `{$reportFolder}` not found</error>");
+        $reportPath = 'data' . DIRECTORY_SEPARATOR . $reportFolderName;
+        $absoluteReportPath = $basePath . DIRECTORY_SEPARATOR . $reportPath;
+        $saveComparePath = $reportPath . DIRECTORY_SEPARATOR . 'compare-detail.log';
+
+        $output->writeln("select report folder: {$reportPath}");
+        if (!is_dir($reportPath)) {
+            $output->writeln("<error>>report folder `{$reportPath}` not found</error>");
             return;
         }
-        // get all log fixture
-        $fixtureGlobPatter = $basePath . DIRECTORY_SEPARATOR . $reportFolder . DIRECTORY_SEPARATOR . 'fixture-*.log';
-        $fixtureLogs = glob($fixtureGlobPatter, GLOB_BRACE);
 
-        var_dump($fixtureLogs);
+        // get all log fixtures
+        $fixtureGlobPath =  $absoluteReportPath . DIRECTORY_SEPARATOR . 'fixture-*.log';
+        $files = glob($fixtureGlobPath, GLOB_BRACE);
 
         // read multi files
         $handles = [];
-        foreach ($fixtureLogs as $key => $fileLog) {
-            preg_match('~fixture-(.+)\.log$~i', $fileLog, $math);
-            $parserId = $math[1];
-            $handles[$parserId] = fopen($fixtureLogs[$key], 'r');
+        foreach ($files as $fileId => $filePath) {
+            preg_match('~fixture-(.+)\.log$~i', $filePath, $match);
+            $parserId = $match[1];
+            $handles[$parserId] = fopen(realpath($files[$fileId]), 'r');
         }
-        $iterate = 0;
-        while ($handles !== []) {
 
+        $iterate = 0;
+        $fn = fopen($saveComparePath, 'w');
+        while ($handles !== []) {
+            $iterate++;
             $reportData = [];
             foreach ($handles as $handleParserId => $handle) {
-                if (!feof($handles[$handleParserId])) {
+                if (feof($handles[$handleParserId])) {
                     fclose($handles[$handleParserId]);
                     unset($handles[$handleParserId]);
                     continue;
                 }
-                $line = fgets($handles[$handleParserId]);
 
+                $line = fgets($handles[$handleParserId]);
                 if (empty($line)) {
                     continue;
                 }
+                //
                 $json = json_decode($line, true);
+
+                $reportData['id'] = $iterate;
                 $reportData['user_agent'] = $json['user_agent'];
                 $reportData[$handleParserId]['result'] = $json['result'] ?? [];
                 $reportData[$handleParserId]['memory'] = $helperSize->formatBytes($json['memory']);
                 $reportData[$handleParserId]['time'] = $json['time'];
             }
 
-            // write common file
+            if ($reportData === []) {
+                continue;
+            }
 
-            $iterate++;
+            fwrite($fn, json_encode($reportData, true) . PHP_EOL);
         }
-
-
-        // record detail format
-        /*
-        -
-         useragent:
-         parsers:
-            'parserId': results
-         */
-        // overage parser
-
+        fclose($fn);
     }
 
 }

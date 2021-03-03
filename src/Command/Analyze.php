@@ -18,10 +18,9 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
  */
 class Analyze extends Command
 {
-    protected static $defaultName = 'report:analyze';
-
     protected function configure()
     {
+        $this->setName('report:analyze');
         $this->addArgument(
             'report',
             InputArgument::OPTIONAL,
