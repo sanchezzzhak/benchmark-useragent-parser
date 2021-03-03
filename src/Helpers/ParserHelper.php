@@ -1,14 +1,16 @@
 <?php
 
-
 namespace App\Helpers;
-
 
 use Symfony\Component\Console\Helper\Helper;
 
-
-class SizeHelper extends Helper
+class ParserHelper extends Helper
 {
+    public function getName()
+    {
+        return 'parser';
+    }
+
     public function formatBytes(float $bytes, int $precision = 2): string
     {
         $base = log($bytes, 1024);
@@ -17,8 +19,4 @@ class SizeHelper extends Helper
         return round(pow(1024, $base - floor($base)), $precision) . ' ' . $suffixes[(int)floor($base)];
     }
 
-    public function getName(): string
-    {
-        return 'sizeBytes';
-    }
 }

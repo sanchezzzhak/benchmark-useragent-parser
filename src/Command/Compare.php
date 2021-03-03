@@ -3,12 +3,17 @@
 
 namespace App\Command;
 
-use App\Helpers\SizeHelper;
+use App\Helpers\ParserHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * todo rename report:merge
+ * Class Compare
+ * @package App\Command
+ */
 class Compare extends Command
 {
     protected function configure()
@@ -28,8 +33,8 @@ class Compare extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var SizeHelper $helperSize */
-        $helperSize = $this->getHelper('sizeBytes');
+        /** @var ParserHelper $parserHelper */
+        $parserHelper = $this->getHelper('parser');
         $reportFolderName = $input->getArgument('report');
 
         $basePath = realpath(__DIR__ . '/../../');
@@ -48,25 +53,12 @@ class Compare extends Command
         $fixtureGlobPath = $absoluteReportPath . DIRECTORY_SEPARATOR . 'fixture-*.log';
         $files = glob($fixtureGlobPath, GLOB_BRACE);
 
-
-        $totalResult = [];
-
         // read multi files
         $handles = [];
         foreach ($files as $fileId => $filePath) {
             preg_match('~fixture-(.+)\.log$~i', $filePath, $match);
             $parserId = $match[1];
             $handles[$parserId] = fopen(realpath($files[$fileId]), 'r');
-            $totalResult[$parserId] = [
-                'useragents' => 0,
-                'bots' => 0,
-                'devices' => 0,
-                'browsers' => 0,
-                'brands' => 0,
-                'models' => 0,
-                'totalTime' => 0,
-                'scores' => 0,
-            ];
         }
 
         $iterate = 0;
@@ -91,11 +83,15 @@ class Compare extends Command
                 $reportData['id'] = $iterate;
                 $reportData['user_agent'] = $json['user_agent'];
                 $reportData[$handleParserId]['result'] = $json['result'] ?? [];
-                $reportData[$handleParserId]['memory'] = $helperSize->formatBytes($json['memory']);
+                $reportData[$handleParserId]['memory'] = $parserHelper->formatBytes($json['memory']);
                 $reportData[$handleParserId]['time'] = $json['time'];
 
                 $totalResult[$handleParserId]['useragents'] = $iterate;
                 $totalResult[$handleParserId]['totalTime'] += $iterate;
+
+                if (array_key_exists('bot', $json)) {
+                    $totalResult[$handleParserId]['bots']++;
+                }
 
             }
 
@@ -107,5 +103,6 @@ class Compare extends Command
         }
         fclose($fn);
     }
+
 
 }
