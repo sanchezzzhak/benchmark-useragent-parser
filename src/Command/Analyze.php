@@ -18,8 +18,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
  */
 class Analyze extends Command
 {
-
-    protected static string $defaultName = 'analyze:start';
+    protected static $defaultName = 'analyze:start';
 
     protected function configure()
     {
@@ -33,7 +32,12 @@ class Analyze extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $basePath = realpath(__DIR__ . '/../Parser');
-        $reportFolder = date('Y-m-d');
+        $reportFolderName = date('Y-m-d');
+        $reportFolder = sprintf('data/%s', $reportFolderName);
+        if (!is_dir($reportFolder)) {
+            mkdir($reportFolder, 0777, $recursive = false);
+        }
+
         $scriptFolders = glob($basePath . '/*', GLOB_ONLYDIR);
         foreach ($scriptFolders as $folder) {
             $folderName = pathinfo($folder, PATHINFO_BASENAME);
@@ -47,11 +51,13 @@ class Analyze extends Command
                     'php',
                     $phpScriptPath,
                     '--fixtures="data/paths.json"',
-                    sprintf('--report="data/%s/fixture-%s.log"', $reportFolder, $folderName)
+                    sprintf('--report="%s/fixture-%s.log"', $reportFolder, $folderName)
                 ]);
                 $process = new Process($command);
-                var_dump($process->getCommandLine());
+                $process->setTimeout(3600);
+                $rawCommand = $process->getCommandLine();
 
+                $output->writeln("<info>run process: {$rawCommand}</info>");
                 $process->start();
                 do {
                     $process->checkTimeout();
