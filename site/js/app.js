@@ -1,3 +1,6 @@
+import {unzip, setOptions} from 'https://unpkg.com/unzipit@0.1.9/dist/unzipit.module.js';
+
+
 export default class AppDashboard {
   
   get container(){
@@ -5,7 +8,8 @@ export default class AppDashboard {
   }
   
   async downloadDbById(id) {
-	fetch('/site/reports/' + id + '.zip').then()
+	// const {entries} = unzip('./reports/fixture--browser-detector.zip');
+	// console.log(entries);
   }
   
   renderPage(pageId) {

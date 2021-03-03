@@ -18,7 +18,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
  */
 class Analyze extends Command
 {
-    protected static $defaultName = 'analyze:start';
+    protected static $defaultName = 'report:analyze';
 
     protected function configure()
     {
@@ -34,6 +34,10 @@ class Analyze extends Command
         $basePath = realpath(__DIR__ . '/../Parser');
         $reportFolderName = date('Y-m-d');
         $reportFolder = sprintf('data/%s', $reportFolderName);
+
+        $output->writeln("reportId: {$reportFolderName}");
+        $output->writeln("report folder: {$reportFolder}");
+
         if (!is_dir($reportFolder)) {
             mkdir($reportFolder, 0777, $recursive = false);
         }
@@ -42,7 +46,6 @@ class Analyze extends Command
         foreach ($scriptFolders as $folder) {
             $folderName = pathinfo($folder, PATHINFO_BASENAME);
             $output->writeln("ready to start parser {$folderName}");
-//            continue;
 
             $phpScriptPath = realpath($folder . DIRECTORY_SEPARATOR . "parser.php");
             if (is_file($phpScriptPath)) {
@@ -71,5 +74,4 @@ class Analyze extends Command
             }
         }
     }
-
 }

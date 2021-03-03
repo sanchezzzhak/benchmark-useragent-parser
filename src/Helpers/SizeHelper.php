@@ -19,6 +19,6 @@ class SizeHelper extends Helper
 
     public function getName(): string
     {
-        return 'size';
+        return 'sizeBytes';
     }
 }
