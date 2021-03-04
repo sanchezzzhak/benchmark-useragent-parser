@@ -88,9 +88,14 @@ class Compare extends Command
         // set count useragent iterations and others data
         foreach ($this->total ?? [] as $parserId => $total) {
             $this->total[$parserId]['useragents'] = $this->iterate;
+
+            $this->total[$parserId]['timeAverage'] = round($this->total[$parserId]['time']/  $this->iterate , 4);
+            $this->total[$parserId]['memoryAverage'] = $parserHelper->formatBytes($this->total[$parserId]['memory']/$this->iterate);
+
             $this->total[$parserId]['time'] = round($this->total[$parserId]['time'], 4);
-            $this->total[$parserId]['memoryMin'] = $parserHelper->formatBytes($this->total[$parserId]['memoryMin']);
             $this->total[$parserId]['memoryMax'] = $parserHelper->formatBytes($this->total[$parserId]['memoryMax']);
+
+
         }
 
         /** @var ParserHelper $parserHelper */
@@ -164,9 +169,8 @@ class Compare extends Command
         $this->total[$parserId] = [];
 
         $this->total[$parserId]['time'] = 0;
-        $this->total[$parserId]['memoryMin'] = 0;
+        $this->total[$parserId]['memory'] = 0;
         $this->total[$parserId]['memoryMax'] = 0;
-        $this->total[$parserId]['timeMin'] = 0;
         $this->total[$parserId]['timeMax'] = 0;
 
         $attrTypes = [
@@ -342,18 +346,11 @@ class Compare extends Command
         $this->scoreInitDefaultByParser($parserId);
 
         $this->total[$parserId]['time'] += $json['time'];
+        $this->total[$parserId]['memory'] += $json['memory'];
 
-        if ($this->total[$parserId]['timeMin'] === 0 || $this->total[$parserId]['timeMin'] > $json['time']) {
-            $this->total[$parserId]['timeMin'] = $json['time'];
+        if ($this->total[$parserId]['timeMax'] === 0 || $this->total[$parserId]['timeMax'] < $json['time']) {
+            $this->total[$parserId]['timeMax'] = $json['time'];
         }
-        if ($this->total[$parserId]['timeMin'] === 0 || $this->total[$parserId]['timeMax'] < $json['time']) {
-            $this->total[$parserId]['timeMaxIterate'] = $json['time'];
-        }
-
-        if ($this->total[$parserId]['memoryMin'] === 0 || $this->total[$parserId]['memoryMin'] > $json['memory']) {
-            $this->total[$parserId]['memoryMin'] = $json['memory'];
-        }
-
         if ($this->total[$parserId]['memoryMax'] === 0 || $this->total[$parserId]['memoryMax'] < $json['memory']) {
             $this->total[$parserId]['memoryMax'] = $json['memory'];
         }
