@@ -26,24 +26,17 @@ function createReport(string $useragent): array
     $parser = null;
     $useragentHeader = 'UserAgent: ' . $useragent;
     $info = Benchmark::benchmarkWithCallback(function () use (&$parser, $useragentHeader) {
-        $parser = new Parser($useragentHeader);
+        $parser = new Parser($useragentHeader, ['detectBots' => true]);
     });
 
     return array_merge([
         'user_agent' => $useragent,
-        'client' => [
-            'name' => !empty($parser->browser->name) ? $parser->browser->name : null,
-            'version' => !empty($parser->browser->version) ? $parser->browser->version->value : null,
-        ],
-        'os' => [
-            'name' => !empty($parser->os->name) ? $parser->os->name : null,
-            'version' => !empty($parser->os->version->value) ? $parser->os->version->value : null,
-        ],
-        'device' => [
-            'name' => !empty($parser->device->model) ? $parser->device->model : null,
-            'brand' => !empty($parser->device->manufacturer) ? $parser->device->manufacturer : null,
-            'type' => !empty($parser->device->type) ? $parser->device->type : null,
-        ],
+        'result' => [
+            'browser' => $parser->browser->toArray(),
+            'engine' => $parser->engine->toArray(),
+            'os' => $parser->os->toArray(),
+            'device' => $parser->device->toArray()
+        ]
     ], $info);
 }
 

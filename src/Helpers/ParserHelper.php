@@ -14,7 +14,7 @@ class ParserHelper extends Helper
     public function formatBytes(float $bytes, int $precision = 2): string
     {
         $base = log($bytes, 1024);
-        $suffixes = ['', 'K', 'M', 'G', 'T'];
+        $suffixes = ['byte', 'Kb', 'Mb', 'Gb', 'Tb'];
 
         return round(pow(1024, $base - floor($base)), $precision) . ' ' . $suffixes[(int)floor($base)];
     }
