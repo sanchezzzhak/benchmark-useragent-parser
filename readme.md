@@ -1,21 +1,19 @@
-
 Info
 ---
-scoring points when parsing useragent
+* scoring when parsing a useragent, categories:
+* For each definition 1 point is awarded
 
-* os
-    * name = 1
-    * version = 1
-    * platform = .1
-* client
-   * type = 1
-   * name = 1
-* device:
-    * type = 1
-    * brand = 1
-    * model = 1
-    
-[View reports online](https://sanchezzzhak.github.io/benchmark-useragent-parser/site/)
+##### Basic nomination
+| Parser Name | OS Name | Browser Name | Device Type | Scores |
+
+##### Browser nomination
+| Parser Name | Browser Name | Browser version | Browser engine | Scores |
+
+##### Device nomination
+| Parser Name | Device Type | Device brand | Device model | Scores |
+
+
+[View reports online](https://sanchezzzhak.github.io/benchmark-useragent-parser/site/)  (I'm in the process...)
    
 Before start    
 ---
@@ -35,7 +33,7 @@ Single run parser
 * `php src/Parser/mimmi20-browser-detector/parser.php --fixtures="data/paths.json"`
 
 
-Results For 2021-03-03
+Results For 2021-03-04
 ---
 soon...
 

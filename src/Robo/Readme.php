@@ -5,34 +5,71 @@ namespace App\Robo;
 
 
 use Robo\Tasks;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Helper\TableStyle;
+use Symfony\Component\Console\Output\BufferedOutput;
+
 
 class Readme extends Tasks
 {
+
+    private function renderTableMdStyle($tableData)
+    {
+        $output = new BufferedOutput();
+        $style = new TableStyle();
+        $style->setDefaultCrossingChar('|');
+
+        $style->setCellHeaderFormat('<info>%s</info>');
+
+        $table = new Table($output);
+        $table->setHeaders($tableData['headers']);
+        $table->setRows($tableData['rows'] ?? []);
+        $table->setStyle($style);
+        $table->render();
+        $lines = explode(PHP_EOL, $output->fetch());
+        array_shift($lines);
+        array_pop($lines);
+        array_pop($lines);
+        return implode(PHP_EOL, $lines);
+    }
+
     /**
      * Update readme
      */
     public function updateReadme()
     {
+
+        $basicNominationTable = $this->renderTableMdStyle([
+            'headers' => ['Parser Name', 'OS Name', 'Browser Name', 'Device Type', 'Scores']
+        ]);
+
+        $deviceNominationTable = $this->renderTableMdStyle([
+            'headers' => ['Parser Name', 'Device Type', 'Device brand', 'Device model', 'Scores']
+        ]);
+
+        $browserNominationTable = $this->renderTableMdStyle([
+            'headers' => ['Parser Name', 'Browser Name', 'Browser version', 'Browser engine', 'Scores']
+        ]);
+
         $file = __DIR__ . '/../../readme.md';
         $date = date('Y-m-d');
         $text = <<<MD
 Info
 ---
-scoring points when parsing useragent
+* scoring when parsing a useragent, categories:
+* For each definition 1 point is awarded
 
-* os
-    * name = 1
-    * version = 1
-    * platform = .1
-* client
-   * type = 1
-   * name = 1
-* device:
-    * type = 1
-    * brand = 1
-    * model = 1
-    
-[View reports online](https://sanchezzzhak.github.io/benchmark-useragent-parser/site/)
+##### Basic nomination
+{$basicNominationTable}
+
+##### Browser nomination
+{$browserNominationTable}
+
+##### Device nomination
+{$deviceNominationTable}
+
+
+[View reports online](https://sanchezzzhak.github.io/benchmark-useragent-parser/site/)  (I'm in the process...)
    
 Before start    
 ---
