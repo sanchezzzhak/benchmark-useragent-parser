@@ -20,7 +20,6 @@ class Compare extends Command
     private array $total = [];
     private int $iterate = 0;
 
-
     private const SCORE_BOT = 'bots';
 
     private const SCORE_OS = 'os';
