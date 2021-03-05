@@ -21,14 +21,13 @@
     <a class="btn btn-dark" href="javascript:history.back()">Back</a>
 </div>
 
+<script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
 <script type="module">
   import AppDashboard from "./js/app.js"
-
   document.querySelector('#not-support-indexed-db').style.display = 'none';
 
   const app = new AppDashboard();
   app.renderPage('main');
-  app.downloadDbById('')
 
 </script>
 
