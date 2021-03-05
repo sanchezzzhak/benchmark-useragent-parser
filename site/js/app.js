@@ -1,4 +1,4 @@
-import {unzip, setOptions} from 'https://unpkg.com/unzipit@0.1.9/dist/unzipit.module.js';
+import {unzip} from 'https://unpkg.com/unzipit@0.1.9/dist/unzipit.module.js';
 
 class TextReader {
   CHUNK_SIZE = 8192000; // I FOUND THIS TO BE BEST FOR MY NEEDS, CAN BE ADJUSTED
@@ -122,11 +122,15 @@ function emptyElement(element) {
   }
 }
 
-function createElement(type, attributes) {
+function createElement(type, attributes, text) {
   const element = document.createElement(type);
   if (attributes) {
 	setElementAttrs(element, attributes);
   }
+  if (text) {
+	element.innerText = text;
+  }
+  
   return element;
 }
 
@@ -145,56 +149,13 @@ function appendElement(parent, target) {
   parent.appendChild(target);
 }
 
-function createHtmlElement(html, sanitize = false) {
-  return createHtml(html, sanitize).firstChild;
-}
-
 let parserDom = null;
 
-function createHtml(html, sanitize = false) {
+function createHtml(html) {
   if (!parserDom) {
 	parserDom = new DOMParser();
   }
-  const parsedElement = parserDom.parseFromString(html, 'text/html').body;
-  if (sanitize) {
-	sanitizeScriptNodes(parsedElement);
-	const insecureElements = parsedElement.querySelectorAll('img,svg');
-	for (let i = insecureElements.length; i--;) {
-	  const element = insecureElements[i];
-	  sanitizeElementAttributes(element);
-	}
-  }
-  return parsedElement;
-}
-
-/**
- * Delete script nodes
- * @param element
- * @returns {*}
- */
-function sanitizeScriptNodes(element) {
-  const nodes = element.querySelectorAll('script,object,iframe');
-  for (let i = nodes.length; i--;) {
-	const node = nodes[i];
-	node.parentNode.removeChild(node);
-  }
-  return element;
-}
-
-/**
- * Delete event handler attributes that could execute XSS JavaScript
- * @param element
- * @returns {*}
- */
-function sanitizeElementAttributes(element) {
-  const attributes = element.attributes;
-  for (let i = attributes.length; i--;) {
-	const name = attributes[i].name;
-	if (/^on/.test(name)) {
-	  element.removeAttribute(name);
-	}
-  }
-  return element;
+  return parserDom.parseFromString(html, 'text/html').body;
 }
 
 
@@ -228,19 +189,40 @@ export default class AppDashboard {
 	
 	appendElement(this.container, createHtml(`
 		<div id="status"></div>
+		<hr>
 		<div id="main" class="page" style="display: none">
-		  Select reports
-		  <div id="list-reports"></div>
+		  <h5>Select reports</h5>
+		  <table class="table table-dark table-striped" id="list-reports">
+			<thead>
+			  <tr>
+				<th scope="col">Name</th>
+				<th scope="col">Actions</th>
+			  </tr>
+			</thead>
+			<tbody>
+			</tbody>
+		  </table>
 		</div>
 	`));
 	
-	let container = document.getElementById('list-reports');
+	let container = document.querySelector('#list-reports tbody');
 	reports.forEach((item) => {
-	  let obj = createElement('a', {href: '#'})
-	  obj.innerText = item;
-	  obj.addEventListener('click', this.onSelectReport.bind(this, item))
-	  appendElement(container, obj)
+	  let tr = createElement('tr')
+	  let td1 = createElement('td', {}, item)
+	  let td2 = createElement('td', {})
+	  let viewAction = createElement('a', {class: 'btn btn-primary btn-xs'}, 'View Archive')
+	  
+	  viewAction.addEventListener('click', this.onSelectReport.bind(this, item))
+	  
+	  appendElement(tr, td1)
+	  appendElement(td2, viewAction)
+	  appendElement(tr, td2)
+	  appendElement(container, tr)
 	});
+	
+	// bind events
+	
+	
   }
   
   setTextStatus(text) {
@@ -263,37 +245,45 @@ export default class AppDashboard {
 	
   }
   
+  archiveToInt(name) {
+	return parseInt(name.replaceAll('-', ''));
+  }
+  
+  
   async importArchive(name) {
 	this.stageLock = true;
 	try {
-	  this.setTextStatus('Download archive ' + name)
-	  this.stageLock = true;
+	  
+	  let versionDb = this.archiveToInt(name);
+	  let dbKey = `db_${versionDb}`;
+	  
+	  let db = new Dexie("benchmark-useragent-parser");
+	  this.list[dbKey] = db;
+	  
+	  db.version(versionDb).stores({
+		useragents: "id",
+		details: "++id,parent_id",
+		parsers: "++id,name"
+	  }, true);
+	  
 	  const {entries} = await unzip('./reports/' + name);
-	  
 	  let total = await entries['total.json'].json();
-	  console.log(total);
+	  for (const key of Object.keys(total)) {
+		await db.parsers.add({name: key, data: total[key]});
+	  }
 	  
-	  
-	  /*
+	  this.setTextStatus('Download archive ' + name)
 	  let textReader = new TextReader(await entries['compare-detail.log'].blob());
-  
-  
-	  this.list[db] = new Dexie("name");
-	  db.version(10).stores({
-		friends: "parent_id,"
-	  });
-  
-  
+	  this.setTextStatus('insert records to db ');
+	  
 	  while(true) {
 		let line = await textReader.readLine();
 		if(line === null) break;
-		// PROCESS LINE
-	
-	  
+		let json = JSON.parse(line);
+		await db.useragents.add({id: json.id, user_agent: json.user_agent});
 	  }
-		*/
-	 
-	 
+	  
+	  this.stageLock = true;
 	} catch (e) {
 	  this.stageLock = false;
 	  console.error(e)
