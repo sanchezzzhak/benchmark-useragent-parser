@@ -13,9 +13,25 @@
             integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
             crossorigin="anonymous"></script>
 </head>
+
 <body>
-    <div>
-        <a href="/site/static/page-1.html">Useragent list</a>
-    </div>
+
+<div id="not-support-indexed-db" class="alert alert-danger">
+    You browser not support IndexedDB
+    <a class="btn btn-dark" href="javascript:history.back()">Back</a>
+</div>
+
+<script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+<script type="module">
+  import AppDashboard from "./js/app.js"
+  document.querySelector('#not-support-indexed-db').style.display = 'none';
+
+  const app = new AppDashboard();
+  app.renderPage('main');
+
+</script>
+
+<div id="page"></div>
+
 </body>
 </html>
