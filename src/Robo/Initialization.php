@@ -18,7 +18,7 @@ class Initialization extends Tasks
     {
         foreach (ParserConfig::REPOSITORIES as $prefixPath => $repository) {
             [$repositoryUrl, $branch] = $repository;
-            $path = realpath(__DIR__ . '/../Repository') . DIRECTORY_SEPARATOR . $prefixPath;
+            $path = realpath(__DIR__ . '/../GitRepository') . DIRECTORY_SEPARATOR . $prefixPath;
 
             $this->say("init repository {$repositoryUrl} into {$path}");
 
@@ -43,7 +43,7 @@ class Initialization extends Tasks
      */
     public function initFixtures()
     {
-        $path = realpath(__DIR__ . '/../Repository');
+        $path = realpath(__DIR__ . '/../GitRepository');
         $this->say('get fixtures paths in ' . ParserConfig::PROJECT_MATOMO_DEVICE_DETECTOR);
         // MatomoDeviceDetector get all paths
         $basePath = $path . DIRECTORY_SEPARATOR . ParserConfig::PROJECT_MATOMO_DEVICE_DETECTOR;

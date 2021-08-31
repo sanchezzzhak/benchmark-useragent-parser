@@ -1,7 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../../Helpers/Benchmark.php';
-require_once __DIR__ . '/../../Repository/mimmi20/browser-detector/vendor/autoload.php';
+require_once __DIR__ . '/../../GitRepository/mimmi20/browser-detector/vendor/autoload.php';
 require_once __DIR__ . '/CacheFake.php';
 require_once __DIR__ . '/LoggerFake.php';
 require_once __DIR__ . '/../../functions.php';
