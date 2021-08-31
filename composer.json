@@ -52,7 +52,7 @@
         "symfony/phpunit-bridge": "^5.3",
         "symfony/stopwatch": "5.3.*",
         "symfony/web-profiler-bundle": "5.3.*",
-        "consolidation/robo": "^1.0.0"
+        "consolidation/robo": "*"
     },
     "config": {
         "optimize-autoloader": true,

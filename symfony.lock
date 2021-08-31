@@ -2,6 +2,30 @@
     "composer/package-versions-deprecated": {
         "version": "1.11.99.3"
     },
+    "consolidation/annotated-command": {
+        "version": "4.2.3"
+    },
+    "consolidation/config": {
+        "version": "2.0.1"
+    },
+    "consolidation/log": {
+        "version": "2.0.2"
+    },
+    "consolidation/output-formatters": {
+        "version": "4.1.2"
+    },
+    "consolidation/robo": {
+        "version": "2.2.2"
+    },
+    "consolidation/self-update": {
+        "version": "1.2.0"
+    },
+    "container-interop/container-interop": {
+        "version": "1.2.0"
+    },
+    "dflydev/dot-access-data": {
+        "version": "v1.1.0"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -88,8 +112,14 @@
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
     },
+    "grasmash/expander": {
+        "version": "1.0.0"
+    },
     "laminas/laminas-code": {
         "version": "4.4.2"
+    },
+    "league/container": {
+        "version": "2.5.0"
     },
     "monolog/monolog": {
         "version": "2.3.2"
