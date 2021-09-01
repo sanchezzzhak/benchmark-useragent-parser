@@ -47,6 +47,11 @@ class BenchmarkResult
      */
     private $last_updated_at;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $source_parser_id;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -120,6 +125,18 @@ class BenchmarkResult
     public function setLastUpdatedAt(?\DateTimeImmutable $last_updated_at): self
     {
         $this->last_updated_at = $last_updated_at;
+
+        return $this;
+    }
+
+    public function getSourceParserId(): ?int
+    {
+        return $this->source_parser_id;
+    }
+
+    public function setSourceParserId(int $source_parser_id): self
+    {
+        $this->source_parser_id = $source_parser_id;
 
         return $this;
     }

@@ -21,9 +21,9 @@ Before start
  
 Commands  
 ---
-* 2 `php src/robo.php init:repositories` - update all repositories
-* 3 `php src/robo.php init:fixtures`     - generate paths fixtures
-* 
+* 2 `php src/robo.php init:repositories`     - update all repositories
+* 3 `php src/robo.php init:fixtures`         - generate paths fixtures
+* 4 `php bin/console robbing:useragents`    - robbing new useragents to database
 
 
 Single run parser

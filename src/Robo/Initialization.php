@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Robo;
 
 use RecursiveDirectoryIterator;
@@ -10,6 +9,12 @@ use App\Helper\ParserConfig;
 
 class Initialization extends Tasks
 {
+    private string $repositoriesDir;
+
+    public function __construct()
+    {
+        $this->repositoriesDir = realpath(__DIR__ . '/../GitRepository') . DIRECTORY_SEPARATOR;
+    }
 
     /**
      * Init install all repositories
@@ -18,7 +23,7 @@ class Initialization extends Tasks
     {
         foreach (ParserConfig::REPOSITORIES as $prefixPath => $repository) {
             [$repositoryUrl, $branch] = $repository;
-            $path = realpath(__DIR__ . '/../GitRepository') . DIRECTORY_SEPARATOR . $prefixPath;
+            $path = $this->repositoriesDir . $prefixPath;
 
             $this->say("init repository {$repositoryUrl} into {$path}");
 
@@ -39,35 +44,54 @@ class Initialization extends Tasks
     }
 
     /**
-     * Init paths fixtures
+     * MatomoDeviceDetector get all paths
+     * @return array
      */
-    public function initFixtures()
+    private function getFixturesMatomoDeviceParser(): array
     {
-        $path = realpath(__DIR__ . '/../GitRepository');
+        $path = $this->repositoriesDir;
         $this->say('get fixtures paths in ' . ParserConfig::PROJECT_MATOMO_DEVICE_DETECTOR);
         // MatomoDeviceDetector get all paths
-        $basePath = $path . DIRECTORY_SEPARATOR . ParserConfig::PROJECT_MATOMO_DEVICE_DETECTOR;
+        $basePath = $path . ParserConfig::PROJECT_MATOMO_DEVICE_DETECTOR;
 
-        $matomoFixtures = [
+        return [
             ...glob($basePath . '/Tests/fixtures/*.yml'),
             ...glob($basePath . '/Tests/Parser/Client/fixtures/*.yml'),
             ...glob($basePath . '/Tests/Parser/Device/fixtures/*.yml'),
             ...glob($basePath . '/Tests/Parser/fixtures/*.yml'),
         ];
+    }
 
-        // WhichBrowserParser get all paths
+    /**
+     * WhichBrowserParser get paths
+     * @return array
+     */
+    private function getFixturesWhichBrowserParser(): array
+    {
+        $path = $this->repositoriesDir;
         $this->say('get fixtures paths in ' . ParserConfig::PROJECT_WHICHBROWSER_PARSER);
-        $basePath = $path . DIRECTORY_SEPARATOR . ParserConfig::PROJECT_WHICHBROWSER_PARSER;
-
+        $basePath = $path . ParserConfig::PROJECT_WHICHBROWSER_PARSER;
         $dirs = glob($basePath . DIRECTORY_SEPARATOR . 'tests/data/*', GLOB_ONLYDIR);
+
         $whichbrowserFixtures = [];
         foreach ($dirs as $dir) {
-            $whichbrowserFixtures = array_merge($whichbrowserFixtures, [...glob($dir . DIRECTORY_SEPARATOR . '*.{yaml,yml}', GLOB_BRACE)]);
+            $whichbrowserFixtures = array_merge($whichbrowserFixtures, [
+                ...glob($dir . DIRECTORY_SEPARATOR . '*.{yaml,yml}', GLOB_BRACE)
+            ]);
         }
 
-        // Mimmi20BrowserDetector get all paths
+        return $whichbrowserFixtures;
+    }
+
+    /**
+     * Mimmi20BrowserDetector get paths
+     * @return array
+     */
+    private function getFixturesMimmi20BrowserDetectorParser(): array
+    {
+        $path = $this->repositoriesDir;
         $this->say('get fixtures paths in ' . ParserConfig::PROJECT_MIMMI20_BROWSER_DETECTOR);
-        $basePath = $path . DIRECTORY_SEPARATOR . ParserConfig::PROJECT_MIMMI20_BROWSER_DETECTOR;
+        $basePath = $path . ParserConfig::PROJECT_MIMMI20_BROWSER_DETECTOR;
 
         $ridi = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($basePath . DIRECTORY_SEPARATOR . 'tests/data'));
         $mimmi20Fixtures = [];
@@ -80,8 +104,19 @@ class Initialization extends Tasks
             }
             $mimmi20Fixtures[] = $file->getPathname();
         }
+        return $mimmi20Fixtures;
+    }
 
-        // save paths in file;
+    /**
+     * Init paths fixtures
+     */
+    public function initFixtures()
+    {
+        $matomoFixtures = $this->getFixturesMatomoDeviceParser();
+        $whichbrowserFixtures = $this->getFixturesWhichBrowserParser();
+        $mimmi20Fixtures = $this->getFixturesMimmi20BrowserDetectorParser();
+
+        // save paths in file
         $json = [
             ParserConfig::PROJECT_MATOMO_DEVICE_DETECTOR => [
                 'files' => [...$matomoFixtures]
@@ -95,15 +130,6 @@ class Initialization extends Tasks
         ];
 
         file_put_contents(__DIR__ . '/../../data/paths.json', json_encode($json));
-    }
-
-    /**
-     * Run all parsers
-     */
-    public function initStat()
-    {
-        $path = __DIR__ . '/../Parser/';
-//        $this->taskExec('php ' . $path . 'MotamoDeviceDetector.php')->run();
     }
 
 }
