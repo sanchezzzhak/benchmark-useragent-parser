@@ -6,7 +6,7 @@ require_once __DIR__ . '/CacheFake.php';
 require_once __DIR__ . '/LoggerFake.php';
 require_once __DIR__ . '/../../functions.php';
 
-use App\Helpers\Benchmark;
+use App\Helper\Benchmark;
 use BrowserDetector\DetectorFactory;
 use UaResult\Result\Result;
 

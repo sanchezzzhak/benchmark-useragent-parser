@@ -3,7 +3,7 @@
 
 namespace App\Command;
 
-use App\Helpers\ParserHelper;
+use App\Helper\ParserHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

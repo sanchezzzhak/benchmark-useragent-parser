@@ -4,7 +4,7 @@ require_once __DIR__ . '/../../Helpers/Benchmark.php';
 require_once __DIR__ . '/../../GitRepository/matomo/device-detector/vendor/autoload.php';
 require_once __DIR__ . '/../../functions.php';
 
-use App\Helpers\Benchmark;
+use App\Helper\Benchmark;
 use DeviceDetector\DeviceDetector;
 use DeviceDetector\Parser\Client\Browser;
 use DeviceDetector\Parser\OperatingSystem;

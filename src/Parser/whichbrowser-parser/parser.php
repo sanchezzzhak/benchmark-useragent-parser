@@ -3,7 +3,7 @@ require_once __DIR__ . '/../../Helpers/Benchmark.php';
 require_once __DIR__ . '/../../GitRepository/whichbrowser/parser/vendor/autoload.php';
 require_once __DIR__ . '/../../functions.php';
 
-use App\Helpers\Benchmark;
+use App\Helper\Benchmark;
 use WhichBrowser\Parser;
 
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers;
+namespace App\Helper;
 
 use Symfony\Component\Console\Helper\Helper;
 

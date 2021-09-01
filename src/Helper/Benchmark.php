@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers;
+namespace App\Helper;
 
 /**
  * https://stackoverflow.com/questions/19973037/benchmark-memory-usage-in-php
@@ -11,7 +11,7 @@ class Benchmark
     private static int $max = 0;
     private static int $memory = 0;
 
-    public static function memoryTick()
+    public static function memoryTick(): void
     {
         self::$memory = memory_get_usage() - self::$memory;
         self::$max = self::$memory > self::$max ? self::$memory : self::$max;
@@ -24,9 +24,9 @@ class Benchmark
         self::$memory = memory_get_usage();
         self::$max = 0;
 
-        register_tick_function('call_user_func_array', [Benchmark::class, 'memoryTick'], []);
+        register_tick_function('call_user_func_array', [__CLASS__, 'memoryTick'], []);
         $start = microtime(true);
-        is_array($args) ? call_user_func_array($function, $args) : call_user_func($function);
+        is_array($args) ? call_user_func_array($function, $args) : $function();
         $time = microtime(true) - $start;
         unregister_tick_function('call_user_func_array');
 

@@ -6,7 +6,7 @@ namespace App\Robo;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Robo\Tasks;
-use App\Helpers\ParserConfig;
+use App\Helper\ParserConfig;
 
 class Initialization extends Tasks
 {
