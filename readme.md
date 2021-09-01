@@ -1,7 +1,7 @@
 Info
 ---
 * scoring when parsing a useragent, categories:
-* For each definition 1 point is awarded
+* For each definition 1 point is 🏆 awarded
 
 ##### Basic nomination
 | Parser Name | OS Name | Browser Name | Device Type | Scores |
@@ -13,17 +13,20 @@ Info
 | Parser Name | Device Type | Device brand | Device model | Scores |
 
 
-[View reports online](https://sanchezzzhak.github.io/benchmark-useragent-parser/site/)  (I'm in the process...)
-   
-Before start    
+Install 
 ---
-* 1 `composer install --dev`
+| Command | Description |
+| --- | --- |
+| `composer install --dev`                      |                         |
+| `php bin/console doctrine:migrations:migrate` | to apply all migrations | 
  
 Commands  
 ---
-* 2 `php src/robo.php init:repositories`     - update all repositories
-* 3 `php src/robo.php init:fixtures`         - generate paths fixtures
-* 4 `php bin/console robbing:useragents`    - robbing new useragents to database
+| Command | Description |
+| --- | --- |
+| `php src/robo.php init:repositories`  | update all repositories |
+| `php src/robo.php init:fixtures`      | generate paths fixtures |
+| `php bin/console robbing:useragents`  | robbing new useragents to database |
 
 
 Single run parser

@@ -7,6 +7,12 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=BenchmarkResultRepository::class)
+ * @ORM\Table(indexes={
+ *     @ORM\Index(name="idx_benchmark_result_user_agent", columns={"user_agent"}),
+ *     @ORM\Index(name="idx_benchmark_result_matomo_id", columns={"matomo_id"}),
+ *     @ORM\Index(name="idx_benchmark_result_mimmi20_id", columns={"mimmi20_id"}),
+ *     @ORM\Index(name="idx_benchmark_result_whichbrowser_id", columns={"whichbrowser_id"})
+ * })
  */
 class BenchmarkResult
 {
