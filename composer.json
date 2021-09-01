@@ -44,15 +44,15 @@
         "twig/twig": "^2.12|^3.0"
     },
     "require-dev": {
+        "consolidation/robo": "*",
         "phpunit/phpunit": "^9.5",
         "symfony/browser-kit": "5.3.*",
         "symfony/css-selector": "5.3.*",
         "symfony/debug-bundle": "5.3.*",
-        "symfony/maker-bundle": "^1.0",
+        "symfony/maker-bundle": "^1.33",
         "symfony/phpunit-bridge": "^5.3",
         "symfony/stopwatch": "5.3.*",
-        "symfony/web-profiler-bundle": "5.3.*",
-        "consolidation/robo": "*"
+        "symfony/web-profiler-bundle": "5.3.*"
     },
     "config": {
         "optimize-autoloader": true,
@@ -76,18 +76,6 @@
         "symfony/polyfill-iconv": "*",
         "symfony/polyfill-php72": "*"
     },
-    /*"scripts": {
-        "auto-scripts": {
-            "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd"
-        },
-        "post-install-cmd": [
-            "@auto-scripts"
-        ],
-        "post-update-cmd": [
-            "@auto-scripts"
-        ]
-    },*/
     "conflict": {
         "symfony/symfony": "*"
     },
