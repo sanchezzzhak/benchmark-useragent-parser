@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Entity\BenchmarkResult;
+use App\Helper\ParserConfig;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -66,6 +67,7 @@ class Robbing extends Command
         return [];
     }
 
+
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $sourceFile = dirname(__DIR__, 2) . '/data/paths.json';
@@ -78,6 +80,9 @@ class Robbing extends Command
         $fixtureContent = file_get_contents($sourceFile);
         $repositoryFixtures = json_decode($fixtureContent, true);
         foreach ($repositoryFixtures as $repositoryId => $item) {
+
+            $sourceParserId = ParserConfig::getSourceIdByRepository($repositoryId);
+
             $output->writeln(sprintf('-> <info>grab repository: %s</info>', $repositoryId));
             foreach ($item['files'] as $file) {
                 if (empty($file)) {
@@ -92,10 +97,9 @@ class Robbing extends Command
                     if (empty($useragent)) {
                         continue;
                     }
-
-                    $sourceParserId = 0;
                     $benchmarkResult = $benchmarkRepository->findOneBy([
-                        'user_agent' => $useragent
+                        'user_agent' => $useragent,
+                        'source_parser_id' => $sourceParserId
                     ]);
                     // save
                     if ($benchmarkResult === null ){
