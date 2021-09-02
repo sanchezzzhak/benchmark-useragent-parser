@@ -90,7 +90,7 @@ class Robbing extends Command
                 }
                 $useragents = $this->parseFixtureFile($repositoryId, $file);
 
-                $output->writeln(sprintf('--> <info>grab file: %s</info>', $file));
+                $output->writeln(sprintf('--> <info>:🗃 file: %s</info>', $file));
                 $progressBar = new ProgressBar($output, count($useragents));
                 foreach ($useragents as $useragent) {
                     $progressBar->advance();

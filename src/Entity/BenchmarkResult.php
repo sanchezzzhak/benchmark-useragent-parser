@@ -9,9 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass=BenchmarkResultRepository::class)
  * @ORM\Table(indexes={
  *     @ORM\Index(name="idx_benchmark_result_user_agent", columns={"user_agent"}),
- *     @ORM\Index(name="idx_benchmark_result_matomo_id", columns={"matomo_id"}),
- *     @ORM\Index(name="idx_benchmark_result_mimmi20_id", columns={"mimmi20_id"}),
- *     @ORM\Index(name="idx_benchmark_result_whichbrowser_id", columns={"whichbrowser_id"})
+ *     @ORM\Index(name="idx_benchmark_result_source_parser_id", columns={"source_parser_id"})
  * })
  */
 class BenchmarkResult
@@ -27,21 +25,6 @@ class BenchmarkResult
      * @ORM\Column(type="string", length=500, nullable=true)
      */
     private $user_agent;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $matomo_id;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $whichbrowser_id;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $mimmi20_id;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -71,42 +54,6 @@ class BenchmarkResult
     public function setUserAgent(?string $user_agent): self
     {
         $this->user_agent = $user_agent;
-
-        return $this;
-    }
-
-    public function getMatomoId(): ?int
-    {
-        return $this->matomo_id;
-    }
-
-    public function setMatomoId(?int $matomo_id): self
-    {
-        $this->matomo_id = $matomo_id;
-
-        return $this;
-    }
-
-    public function getWhichbrowserId(): ?int
-    {
-        return $this->whichbrowser_id;
-    }
-
-    public function setWhichbrowserId(?int $whichbrowser_id): self
-    {
-        $this->whichbrowser_id = $whichbrowser_id;
-
-        return $this;
-    }
-
-    public function getMimmi20Id(): ?int
-    {
-        return $this->mimmi20_id;
-    }
-
-    public function setMimmi20Id(?int $mimmi20_id): self
-    {
-        $this->mimmi20_id = $mimmi20_id;
 
         return $this;
     }

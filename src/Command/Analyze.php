@@ -31,7 +31,7 @@ class Analyze extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $basePath = realpath(__DIR__ . '/../Parser');
+        $basePath = dirname(__DIR__) . '/Parser';
         $reportFolderName = date('Y-m-d');
         $reportFolder = sprintf('data/%s', $reportFolderName);
 
@@ -39,7 +39,9 @@ class Analyze extends Command
         $output->writeln("report folder: {$reportFolder}");
 
         if (!is_dir($reportFolder)) {
-            mkdir($reportFolder, 0777, $recursive = false);
+            if (!mkdir($reportFolder, 0777, $recursive = false) && !is_dir($reportFolder)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $reportFolder));
+            }
         }
 
         $scriptFolders = glob($basePath . '/*', GLOB_ONLYDIR);
@@ -69,6 +71,7 @@ class Analyze extends Command
                     throw new \Exception($process->getErrorOutput());
                 }
             }
+
             if (is_file($folder . DIRECTORY_SEPARATOR . "parser.js")) {
 
             }
