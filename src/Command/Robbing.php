@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Entity\BenchmarkResult;
 use App\Helper\ParserConfig;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,6 +22,15 @@ class Robbing extends Command
     {
         $this->entityManager = $entityManager;
         parent::__construct();
+    }
+
+    protected function configure()
+    {
+        $this->addArgument(
+            'checkExist',
+            InputArgument::REQUIRED,
+            'Check insert [yes/no]?'
+        );
     }
 
     private function parseFixtureFile(string $repositoryId, string $file): array
@@ -77,6 +87,8 @@ class Robbing extends Command
 
         $output->writeln(sprintf('<info>parse paths for file: %s</info>', $sourceFile));
 
+        $checkExist = strtolower($input->getArgument('checkExist')) === 'yes';
+
         $fixtureContent = file_get_contents($sourceFile);
         $repositoryFixtures = json_decode($fixtureContent, true);
         foreach ($repositoryFixtures as $repositoryId => $item) {
@@ -97,19 +109,22 @@ class Robbing extends Command
                     if (empty($useragent)) {
                         continue;
                     }
-                    $benchmarkResult = $benchmarkRepository->findOneBy([
-                        'user_agent' => $useragent,
-                        'source_parser_id' => $sourceParserId
-                    ]);
+                    $benchmarkResult = null;
+                    if ($checkExist) {
+                        $benchmarkResult = $benchmarkRepository->findOneBy([
+                            'user_agent' => $useragent,
+                            'source_parser_id' => $sourceParserId
+                        ]);
+                    }
                     // save
-                    if ($benchmarkResult === null ){
+                    if ($benchmarkResult === null) {
                         $benchmarkResult = new BenchmarkResult();
                         $benchmarkResult->setUserAgent($useragent);
                         $benchmarkResult->setSourceParserId($sourceParserId);
                         $entityManager->persist($benchmarkResult);
-                        $entityManager->flush();
                     }
                 }
+                $entityManager->flush();
                 $progressBar->finish();
                 $output->writeln(PHP_EOL);
             }
