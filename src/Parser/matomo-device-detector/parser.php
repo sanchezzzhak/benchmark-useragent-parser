@@ -1,14 +1,55 @@
 <?php
 
-require_once __DIR__ . '/../../Helpers/Benchmark.php';
-require_once __DIR__ . '/../../GitRepository/matomo/device-detector/vendor/autoload.php';
-require_once __DIR__ . '/../../functions.php';
 
+
+require_once __DIR__ . '/../../functions.php';
+require_once dirname(__DIR__).'/../../vendor/autoload_runtime.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
+
+use App\Entity\BenchmarkResult;
+use App\Kernel;
 use App\Helper\Benchmark;
 use DeviceDetector\DeviceDetector;
 use DeviceDetector\Parser\Client\Browser;
 use DeviceDetector\Parser\OperatingSystem;
+use Doctrine\ORM\EntityManager;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
+return function (array $context) {
+
+
+
+    $kernel = new Kernel($context['APP_ENV'] ?? 'dev', (bool) $context['APP_DEBUG']);
+    $command = new Command('process');
+    $command->setCode(function (InputInterface $input, OutputInterface $output) use($kernel) {
+
+        static $parser;
+        if (!$parser) {
+            $parser = new DeviceDetector();
+        }
+
+        /** @var EntityManager $em */
+        $em = $kernel->getContainer()->get('doctrine.orm.entity_manager');
+        $repo = $em->getRepository(BenchmarkResult::class);
+        $query = $repo->createQueryBuilder('br')->getQuery();
+        // batch read
+        foreach($query->toIterable() as $row) {
+            dd($row);
+        }
+
+    });
+
+
+    $app = new Application($kernel);
+    $app->add($command);
+    $app->setDefaultCommand('process', true);
+    return $app;
+};
+
+/*
 $options = getopt(null, [
     "fixtures::", // use paths fixtures useragents
     "files::",    // use files useragents
@@ -25,10 +66,7 @@ if ($fileRawPath === null && $fixtureRawPath === null) {
 
 function createReport(string $useragent)
 {
-    static $parser;
-    if (!$parser) {
-        $parser = new DeviceDetector();
-    }
+
 
     $info = Benchmark::benchmarkWithCallback(function () use ($parser, $useragent) {
         $parser->setUserAgent($useragent);
@@ -72,3 +110,4 @@ if ($fixtureRawPath !== null) {
     runTestsFixture($fixtureRawPath, $reportName);
 }
 
+*/

@@ -1,16 +1,7 @@
 <?php
 use Symfony\Component\Yaml\Yaml;
 
-webNotSupportedRunning();
-
-function webNotSupportedRunning(): void
-{
-    if ('cli' !== php_sapi_name()) {
-        echo 'web not supported running' . PHP_EOL;
-        exit;
-    }
-}
-
+/*
 function parseFixtureFile(string $repositoryId, string $file): array
 {
     try {
@@ -106,3 +97,4 @@ function runTestsFixture($fixtureRawPath, $reportName)
     }
     fclose($fh);
 }
+*/
