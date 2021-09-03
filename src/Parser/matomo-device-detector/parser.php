@@ -10,17 +10,16 @@ use App\Entity\DeviceDetectorResult;
 use App\Helper\ParserConfig;
 use App\Kernel;
 use App\Helper\Benchmark;
-
-use DeviceDetector\DeviceDetector;
-use DeviceDetector\Parser\Device\AbstractDeviceParser;
-use DeviceDetector\Parser\Client\Browser;
-use DeviceDetector\Parser\OperatingSystem;
-
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+
+use DeviceDetector\DeviceDetector;
+use DeviceDetector\Parser\Device\AbstractDeviceParser;
+use DeviceDetector\Parser\Client\Browser;
+use DeviceDetector\Parser\OperatingSystem;
 
 return function (array $context) {
 
@@ -71,6 +70,7 @@ return function (array $context) {
                 if (!is_array($detectResult)) {
                     continue;
                 }
+                $model->setBotName($detectResult['name'] ?? '');
                 $model->setIsBot(true);
                 $model->setDataJson(json_encode($detectResult));
                 $em->persist($model);
