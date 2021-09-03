@@ -89,49 +89,8 @@ class Robbing extends Command
 
         $checkExist = strtolower($input->getArgument('checkExist')) === 'yes';
 
-        $fixtureContent = file_get_contents($sourceFile);
-        $repositoryFixtures = json_decode($fixtureContent, true);
-        foreach ($repositoryFixtures as $repositoryId => $item) {
 
-            $sourceParserId = ParserConfig::getSourceIdByRepository($repositoryId);
 
-            $output->writeln(sprintf('-> <info>grab repository: %s</info>', $repositoryId));
-            foreach ($item['files'] as $file) {
-                if (empty($file)) {
-                    continue;
-                }
-                $useragents = $this->parseFixtureFile($repositoryId, $file);
-
-                $output->writeln(sprintf('--> <info>:🗃 file: %s</info>', $file));
-                $progressBar = new ProgressBar($output, count($useragents));
-                foreach ($useragents as $useragent) {
-                    $progressBar->advance();
-                    if (empty($useragent)) {
-                        continue;
-                    }
-                    $benchmarkResult = null;
-                    if ($checkExist) {
-                        $benchmarkResult = $benchmarkRepository->findOneBy([
-                            'user_agent' => $useragent,
-                            'source_parser_id' => $sourceParserId
-                        ]);
-                    }
-                    // save
-                    if ($benchmarkResult === null) {
-                        $benchmarkResult = new BenchmarkResult();
-                        $benchmarkResult->setUserAgent($useragent);
-                        $benchmarkResult->setSourceParserId($sourceParserId);
-                        $entityManager->persist($benchmarkResult);
-                    }
-                }
-                $entityManager->flush();
-                $progressBar->finish();
-                $output->writeln(PHP_EOL);
-            }
-
-        }
-
-        return 0;
     }
 
 }

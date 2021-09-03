@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helper;
+namespace app\helpers;
 
 /**
  * https://stackoverflow.com/questions/19973037/benchmark-memory-usage-in-php

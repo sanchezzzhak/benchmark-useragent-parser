@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Helper;
+namespace app\helpers;
 
 
 class ParserConfig

@@ -1,15 +1,9 @@
 <?php
 
-namespace App\Helper;
+namespace app\helpers;
 
-use Symfony\Component\Console\Helper\Helper;
-
-class ParserHelper extends Helper
+class ParserHelper
 {
-    public function getName()
-    {
-        return 'parser';
-    }
 
     public function formatBytes(float $bytes, int $precision = 2): string
     {
