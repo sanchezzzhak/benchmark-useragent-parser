@@ -31,9 +31,9 @@ Commands
 
 Single run parser
 ---
-* `php src/Parser/matomo-device-detector/parser.php --fixtures="data/paths.json"`
-* `php src/Parser/whichbrowser-parser/parser.php --fixtures="data/paths.json"`
-* `php src/Parser/mimmi20-browser-detector/parser.php --fixtures="data/paths.json"`
+* `php src/Parser/matomo-device-detector/parser.php`
+* `php src/Parser/whichbrowser-parser/parser.php`
+* `php src/Parser/mimmi20-browser-detector/parser.php`
 
 
 Results For 2021-03-04
