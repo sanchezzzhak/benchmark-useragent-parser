@@ -7,6 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=DeviceDetectorResultRepository::class)
+ * @ORM\Table(indexes={
+ *     @ORM\Index(name="idx_device_detector_result_bench_id", columns={"bench_id"})
+ * })
  */
 class DeviceDetectorResult
 {
@@ -23,7 +26,7 @@ class DeviceDetectorResult
     private $bench_id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="float")
      */
     private $time;
 
@@ -55,7 +58,7 @@ class DeviceDetectorResult
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $ут�engine_name;
+    private $engine_name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -102,6 +105,11 @@ class DeviceDetectorResult
      */
     private $bot_name;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $client_type;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -119,12 +127,12 @@ class DeviceDetectorResult
         return $this;
     }
 
-    public function getTime(): ?int
+    public function getTime(): ?float
     {
         return $this->time;
     }
 
-    public function setTime(int $time): self
+    public function setTime(float $time): self
     {
         $this->time = $time;
 
@@ -191,14 +199,14 @@ class DeviceDetectorResult
         return $this;
     }
 
-    public function getут�engineName(): ?string
+    public function getEngineName(): ?string
     {
-        return $this->ут�engine_name;
+        return $this->engine_name;
     }
 
-    public function setут�engineName(?string $ут�engine_name): self
+    public function setEngineName(?string $engine_name): self
     {
-        $this->ут�engine_name = $ут�engine_name;
+        $this->engine_name = $engine_name;
 
         return $this;
     }
@@ -307,6 +315,18 @@ class DeviceDetectorResult
     public function setBotName(?string $bot_name): self
     {
         $this->bot_name = $bot_name;
+
+        return $this;
+    }
+
+    public function getClientType(): ?string
+    {
+        return $this->client_type;
+    }
+
+    public function setClientType(?string $client_type): self
+    {
+        $this->client_type = $client_type;
 
         return $this;
     }
