@@ -28,10 +28,19 @@ return function (array $context) {
         $repoTests = $em->getRepository(BenchmarkResult::class);
         $repoResult = $em->getRepository(DeviceDetectorResult::class);
 
-        $findOrCreateDeviceResult = fn ($id) => $repoResult->findOneBy(['bench_id' => $id]) ?? new DeviceDetectorResult;
+        $parserId = ParserConfig::getSourceIdByRepository(
+            ParserConfig::PROJECT_WHICHBROWSER_PARSER
+        );
+
+        $findOrCreateDeviceResult = fn ($id) =>
+            $repoResult->findOneBy([
+                'bench_id' => $id, 'parser_id' => $parserId
+            ]) ?? new DeviceDetectorResult;
+
         $query = $repoTests->createQueryBuilder('br')->getQuery();
         /** @var Parser $parser */
         $parser = null;
+
 
         // batch read
         /** @var BenchmarkResult $row */
@@ -59,11 +68,7 @@ return function (array $context) {
             if ($model->getBenchId() === null) {
                 $model->setBenchId($row->getId());
                 $model->setScore(0);
-                $model->setParserId(
-                    ParserConfig::getSourceIdByRepository(
-                        ParserConfig::PROJECT_WHICHBROWSER_PARSER
-                    )
-                );
+                $model->setParserId($parserId);
             }
 
             try {
