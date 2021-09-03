@@ -1,6 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../../functions.php';
 require_once dirname(__DIR__) . '/../../vendor/autoload_runtime.php';
 require_once __DIR__ . '/../../GitRepository/whichbrowser/parser/bootstrap.php';
 

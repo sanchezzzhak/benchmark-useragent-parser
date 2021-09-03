@@ -1,6 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../../functions.php';
 require_once dirname(__DIR__) . '/../../vendor/autoload_runtime.php';
 require_once __DIR__ . '/../../GitRepository/matomo/device-detector/autoload.php';
 require_once __DIR__ . '/../../GitRepository/matomo/device-detector/vendor/mustangostang/spyc/Spyc.php';

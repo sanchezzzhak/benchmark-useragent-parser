@@ -19,6 +19,13 @@ class BenchmarkResultRepository extends ServiceEntityRepository
         parent::__construct($registry, BenchmarkResult::class);
     }
 
+    public function searchByForm(...$params) {
+
+
+
+    }
+
+
     // /**
     //  * @return BenchmarkResult[] Returns an array of BenchmarkResult objects
     //  */
