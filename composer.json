@@ -20,7 +20,8 @@
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "matomo/device-detector": "@dev",
         "whichbrowser/parser": "@dev",
-        "mimmi20/browser-detector": "@dev"
+        "mimmi20/browser-detector": "@dev",
+        "symfony/yaml": "^5.3"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
