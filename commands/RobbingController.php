@@ -26,7 +26,6 @@ class RobbingController extends Controller
         $this->repositoriesDir = \Yii::getAlias('@vendor/');
     }
 
-
     /**
      * MatomoDeviceDetector get all paths
      * @return array
@@ -164,7 +163,7 @@ class RobbingController extends Controller
                 }
                 $useragents = $this->parseFixtureFile($repositoryId, $file);
 
-                $this->stdout(sprintf('--> <info>:🗃 file: %s</info>', $file));
+                $this->stdout(sprintf('--> <info>:🗃 file: %s</info>', $file) . PHP_EOL);
 //                $progressBar = new ProgressBar($output, count($useragents));
                 foreach ($useragents as $useragent) {
 //                    $progressBar->advance();

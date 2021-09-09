@@ -77,4 +77,22 @@ class DeviceDetectorResult extends \yii\db\ActiveRecord
             'bot_name' => 'Bot Name',
         ];
     }
+
+    public static function findOrCreate(int $id, int $parserId): self
+    {
+        $params = ['bench_id' => $id, 'parser_id' => $parserId];
+
+        $model = self::find()
+            ->where($params)
+            ->limit(1)
+            ->one();
+
+        if ($model === null) {
+            $model = new self($params);
+        }
+
+        return $model;
+    }
+
+
 }

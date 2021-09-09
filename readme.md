@@ -17,7 +17,7 @@ Install
 ---
 | Command | Description |
 | --- | --- |
-| `composer install --dev`                      |                         |
+| `composer install`                      |                         |
 | `php bin/console doctrine:migrations:migrate` | to apply all migrations | 
  
 Commands  
