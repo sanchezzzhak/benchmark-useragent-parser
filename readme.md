@@ -18,22 +18,14 @@ Install
 | Command | Description |
 | --- | --- |
 | `composer install`                      |                         |
-| `php bin/console doctrine:migrations:migrate` | to apply all migrations | 
+| `php yii migrate` | to apply all migrations | 
  
 Commands  
 ---
 | Command | Description |
 | --- | --- |
-| `php src/robo.php init:repositories`  | update all repositories |
-| `php src/robo.php init:fixtures`      | generate paths fixtures |
-| `php bin/console robbing:useragents`  | robbing new useragents to database |
-
-
-Single run parser
----
-* `php src/Parser/matomo-device-detector/parser.php`
-* `php src/Parser/whichbrowser-parser/parser.php`
-* `php src/Parser/mimmi20-browser-detector/parser.php`
+| `php yii robbing`  | robbing new useragents to database |
+| `php yii matomo-parser`  | analyze all useragents and save result to db |
 
 
 Results For 2021-03-04
