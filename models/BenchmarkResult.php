@@ -43,4 +43,10 @@ class BenchmarkResult extends \yii\db\ActiveRecord
             'source_id' => 'Source ID',
         ];
     }
+
+    public function getParseResults()
+    {
+        return $this->hasMany(DeviceDetectorResult::class, ['bench_id' => 'id']);
+    }
+
 }
