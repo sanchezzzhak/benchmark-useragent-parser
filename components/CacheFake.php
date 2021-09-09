@@ -1,5 +1,7 @@
 <?php
 
+namespace app\components;
+
 use Psr\SimpleCache\CacheInterface;
 
 class CacheFake implements CacheInterface

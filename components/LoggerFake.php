@@ -1,4 +1,6 @@
 <?php
+namespace app\components;
+
 use Psr\Log\LoggerInterface;
 
 class LoggerFake implements LoggerInterface
