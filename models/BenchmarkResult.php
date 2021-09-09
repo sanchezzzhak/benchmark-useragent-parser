@@ -10,6 +10,7 @@ use Yii;
  * @property int $id
  * @property string|null $user_agent
  * @property int|null $source_id
+ * @property DeviceDetectorResult[] $parseResults
  */
 class BenchmarkResult extends \yii\db\ActiveRecord
 {
