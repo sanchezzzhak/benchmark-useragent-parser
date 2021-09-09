@@ -27,6 +27,7 @@ Commands
 | `php yii robbing false` | robbing new useragents to database (params:  true - check exist ua in db)  |
 | `php yii matomo-parser`  | analyze all useragents and save result to db |
 | `php yii mimmi20-parser`  | analyze all useragents and save result to db |
+| `php yii whichbrowser-parser`  | analyze all useragents and save result to db |
 
 
 Results For 2021-03-04
