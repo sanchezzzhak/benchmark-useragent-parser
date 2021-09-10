@@ -47,7 +47,7 @@ class Mimmi20ParserController extends Controller
             $model = DeviceDetectorResult::findOrCreate($row->id, $parserId);
             $model->time = $info['time'];
             $model->memory = $info['memory'];
-
+            $model->is_bot = false;
 
             $browser = $result->getBrowser();
             $deviceResult = $result->toArray();

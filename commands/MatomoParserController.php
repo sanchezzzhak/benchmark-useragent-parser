@@ -43,10 +43,9 @@ class MatomoParserController extends Controller
             $model = DeviceDetectorResult::findOrCreate($row->id, $parserId);
             $model->time = $info['time'];
             $model->memory = $info['memory'];
-
+            $model->is_bot = false;
 
             if ($parser->isBot()) {
-
                 $detectResult = $parser->getBot();
                 if (!is_array($detectResult)) {
                     continue;
