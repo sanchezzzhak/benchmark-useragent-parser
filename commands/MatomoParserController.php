@@ -22,7 +22,7 @@ class MatomoParserController extends Controller
     /**
      * @return int
      */
-    public function actionIndex()
+    public function actionIndex($log = false)
     {
         $parserId =  ParserConfig::getSourceIdByRepository(
             ParserConfig::PROJECT_MATOMO_DEVICE_DETECTOR);
@@ -34,8 +34,7 @@ class MatomoParserController extends Controller
         /** @var BenchmarkResult $row */
         foreach ($query->each() as $row) {
             $useragent = $row->user_agent;
-            $this->stdout(sprintf('#%s parse %s', $row->id, $useragent) . PHP_EOL);
-
+            $log && $this->stdout(sprintf('#%s parse %s', $row->id, $useragent) . PHP_EOL);
 
             $info = Benchmark::benchmarkWithCallback(function () use ($parser, $useragent) {
                 $parser->setUserAgent($useragent);

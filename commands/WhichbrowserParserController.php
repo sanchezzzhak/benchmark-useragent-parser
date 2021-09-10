@@ -3,6 +3,7 @@
 
 namespace app\commands;
 
+use app\helpers\Benchmark;
 use app\helpers\ParserConfig;
 use app\models\BenchmarkResult;
 use app\models\DeviceDetectorResult;
@@ -13,7 +14,7 @@ use WhichBrowser\Parser;
 class WhichbrowserParserController extends Controller
 {
 
-    public function actionIndex()
+    public function actionIndex($log = false)
     {
         $parserId = ParserConfig::getSourceIdByRepository(
             ParserConfig::PROJECT_WHICHBROWSER_PARSER
@@ -23,7 +24,7 @@ class WhichbrowserParserController extends Controller
         /** @var BenchmarkResult $row */
         foreach ($query->each() as $row) {
             $useragent = $row->user_agent;
-            $this->stdout(sprintf('#%s parse %s', $row->id, $useragent) . PHP_EOL);
+            $log && $this->stdout(sprintf('#%s parse %s', $row->id, $useragent) . PHP_EOL);
 
             $parser = null;
             $useragentHeader = 'UserAgent: ' . $useragent;
