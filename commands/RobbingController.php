@@ -10,6 +10,7 @@ use RecursiveIteratorIterator;
 use yii\console\Controller;
 use yii\console\ExitCode;
 use Symfony\Component\Yaml\Yaml;
+use yii\helpers\Console;
 
 /**
  * Class HelloController
@@ -134,9 +135,17 @@ class RobbingController extends Controller
         return [];
     }
 
-
-    public function actionIndex($checkExist = false)
+    public function actionIndex()
     {
+        $checkExist = $this->confirm('Check the useragent for a duplicate?');
+
+        $messages = array_map(function($item) {
+            return "id {$item['id']} repository {$item[0]}\n";
+        }, ParserConfig::REPOSITORIES);
+        $message = sprintf("Specify id separated by separator `,` which sets to skip,\n%s", implode('', $messages));
+        $skipParsers = Console::input($message);
+        $skipParsers = explode(',', $skipParsers);
+
         $matomoFixtures = $this->getFixturesMatomoDeviceParser();
         $whichbrowserFixtures = $this->getFixturesWhichBrowserParser();
         $mimmi20Fixtures = $this->getFixturesMimmi20BrowserDetectorParser();
@@ -153,7 +162,9 @@ class RobbingController extends Controller
             ],
         ];
         foreach ($repositoryFixtures as $repositoryId => $item) {
-
+            if (in_array((string)$repositoryId, $skipParsers)) {
+                continue;
+            }
             $sourceParserId = ParserConfig::getSourceIdByRepository($repositoryId);
 
             $this->stdout(sprintf('-> <info>grab repository: %s</info>' . PHP_EOL, $repositoryId));
@@ -190,7 +201,7 @@ class RobbingController extends Controller
             }
         }
 
-        return 0;
+        return ExitCode::OK;
     }
 
 }
