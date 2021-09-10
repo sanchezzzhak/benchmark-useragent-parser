@@ -18,8 +18,8 @@ class FinderUserAgentGrid extends AbstractGrid implements GridInterface
             'label' => 'User Agent',
             'attribute' => 'user_agent',
             'format' => 'raw',
-            'headerOptions' => ['colspan' => 13],
-            'contentOptions' => ['colspan' => 13],
+            'headerOptions' => ['colspan' => 14],
+            'contentOptions' => ['colspan' => 14],
             'value' => function (BenchmarkResult $model) {
                 return $this->renderHtmlTextArea($model->user_agent);
             },
@@ -62,6 +62,7 @@ class FinderUserAgentGrid extends AbstractGrid implements GridInterface
         $content[] = Html::tag('tr',
             ""
             . Html::tag('th', 'Providers')
+            . Html::tag('th', 'Bot Name')
             . Html::tag('th', 'IsBot')
             . Html::tag('th', 'Time')
             . Html::tag('th', 'Memory')
@@ -83,6 +84,7 @@ class FinderUserAgentGrid extends AbstractGrid implements GridInterface
             $content[] = Html::tag('tr',
                 ""
                 . Html::tag('td', ParserConfig::getNameById($result->parser_id))
+                . Html::tag('td', $result->bot_name)
                 . Html::tag('td', $result->is_bot
                     ? '<i class="bi bi-check2-circle" style="font-size: 30px;"></i>'
                     : '', ['class' => 'text-center'])
