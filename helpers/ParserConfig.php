@@ -4,6 +4,8 @@
 namespace app\helpers;
 
 
+use yii\helpers\ArrayHelper;
+
 class ParserConfig
 {
     public const PROJECT_MATOMO_DEVICE_DETECTOR = 'matomo/device-detector';
@@ -14,19 +16,28 @@ class ParserConfig
         self::PROJECT_MATOMO_DEVICE_DETECTOR => [
             'https://github.com/matomo-org/device-detector.git',
             'master',
-            'id' => 1
+            'id' => 1,
+            'name' => 'matomo/device-detector'
         ],
         self::PROJECT_WHICHBROWSER_PARSER => [
             'https://github.com/WhichBrowser/Parser-PHP.git',
             'master',
-            'id' => 2
+            'id' => 2,
+            'name' => 'whichbrowser/parser'
         ],
         self::PROJECT_MIMMI20_BROWSER_DETECTOR => [
             'https://github.com/mimmi20/BrowserDetector.git',
             'master',
-            'id' => 3
+            'id' => 3,
+            'name' => 'mimmi20/browser-detector'
         ]
     ];
+
+    public static function getNameById(int $repositoryId) {
+        $map = ArrayHelper::index(self::REPOSITORIES, 'id');
+        return $map[$repositoryId]['name'] ?? '';
+    }
+
 
     /**
      * @param string $repositoryId

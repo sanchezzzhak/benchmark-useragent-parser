@@ -1,53 +1,53 @@
 <?php
 
-/* @var $this yii\web\View */
+namespace app\views\site;
 
-$this->title = 'My Yii Application';
+use app\forms\FinderUserAgentForm;
+use app\grids\FinderUserAgentGrid;
+use yii\bootstrap4\Html;
+use yii\grid\GridView;
+use yii\widgets\ActiveForm;
+
+$this->title = 'Find UserAgent';
+
+/**
+ * @var $grid FinderUserAgentGrid
+ * @var $model FinderUserAgentForm
+ */
+
 ?>
-<div class="site-index">
+<br><br><br>
+<div class="">
+    <?php $form = ActiveForm::begin([
+        'method' => 'get',
+    ]); ?>
 
-    <div class="jumbotron text-center bg-transparent">
-        <h1 class="display-4">Congratulations!</h1>
-
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
-    </div>
-
-    <div class="body-content">
-
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-outline-secondary" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-outline-secondary" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-outline-secondary" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
-            </div>
+    <div class="row">
+        <div class="col-4">
+            <?= $form->field($model, 'userAgent') ?>
         </div>
+        <div class="col-4">
+            <?= $form->field($model, 'sourceId')
+                ->dropDownList($model->getSourceIdOptions(), [
+                    'prompt' => 'Select repository'
+                ]) ?>
+        </div>
+        <div class="col-4">
 
+        </div>
     </div>
+    <?= Html::submitButton('Apply Filter', ['class' => 'btn btn-primary']) ?>
+
+    <?php ActiveForm::end(); ?>
 </div>
+<hr>
+<?= GridView::widget([
+    'dataProvider' => $grid->getProvider(),
+    'tableOptions' => [
+        'class' => 'table table-striped'
+    ],
+    'columns' => $grid->columns(),
+    'afterRow' => [$grid, 'afterResult'],
+    'rowOptions' => ['style' => 'background: darkseagreen;']
+]) ?>
+

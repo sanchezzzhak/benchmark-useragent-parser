@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\forms\FinderUserAgentForm;
+use app\grids\FinderUserAgentGrid;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -36,7 +38,12 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $model = new FinderUserAgentForm();
+        $grid = new FinderUserAgentGrid([
+            'provider' => $model->search(Yii::$app->request->get()),
+        ]);
+
+        return $this->render('index', compact('model', 'grid'));
     }
 
 }

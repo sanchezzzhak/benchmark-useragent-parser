@@ -5,7 +5,7 @@ namespace app\helpers;
 class ParserHelper
 {
 
-    public function formatBytes(float $bytes, int $precision = 2): string
+    public static function formatBytes(float $bytes, int $precision = 2): string
     {
         $base = log($bytes, 1024);
         $suffixes = ['byte', 'Kb', 'Mb', 'Gb', 'Tb'];

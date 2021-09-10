@@ -17,8 +17,9 @@ Install
 ---
 | Command | Description |
 | --- | --- |
-| `composer install`                      |                         |
+| `composer install` |     |
 | `php yii migrate` | to apply all migrations | 
+| `php yii serve/index` | run web server | 
  
 Commands  
 ---
