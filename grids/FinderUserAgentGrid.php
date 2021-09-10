@@ -7,9 +7,25 @@ use app\helpers\ParserHelper;
 use app\models\BenchmarkResult;
 use yii\grid\DataColumn;
 use yii\helpers\Html;
+use yii\helpers\Json;
 
 class FinderUserAgentGrid extends AbstractGrid implements GridInterface
 {
+
+    public function getConfig(): array
+    {
+        return[
+            'dataProvider' => $this->getProvider(),
+            'tableOptions' => [
+                'class' => 'table table-striped'
+            ],
+            'columns' => $this->columns(),
+            'afterRow' => [$this, 'afterResult'],
+            'rowOptions' => ['style' => 'background: darkseagreen;']
+        ];
+    }
+
+
 
     private function userAgentColumn(): array
     {
@@ -100,7 +116,11 @@ class FinderUserAgentGrid extends AbstractGrid implements GridInterface
                 . Html::tag('td', $result->client_version)
                 . Html::tag('td', $result->engine_name)
                 . Html::tag('td', $result->engine_version)
-                . Html::tag('td',  '<button class="btn btn-dark btn-sm">Detail</button>')
+                . Html::tag('td',  Html::button('Detail', [
+                    'class' => 'btn btn-dark btn-sm',
+                    'data-action' => 'detail',
+                    'data-json' => $result->data_json
+                ]))
             );
         }
 

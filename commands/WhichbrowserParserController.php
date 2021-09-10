@@ -63,6 +63,9 @@ class WhichbrowserParserController extends Controller
                 $model->client_version = $detectResult['browser']['version'] ?? '';
             }
 
+            $model->os_name = $detectResult['os']['name'] ?? '';
+            $model->os_version = $detectResult['os']['version'] ?? '';
+
             $model->engine_name = $detectResult['engine']['name'] ?? '';
             $model->engine_version = $detectResult['engine']['version'] ?? '';
 

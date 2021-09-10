@@ -14,7 +14,7 @@ class FinderUserAgentForm extends Model
     public $userAgent;
     public $sourceId;
 
-    private const PAGE_SIZE = 1000;
+    private const PAGE_SIZE = 500;
 
     public function rules()
     {
