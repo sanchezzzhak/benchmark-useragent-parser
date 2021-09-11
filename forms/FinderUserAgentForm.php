@@ -17,6 +17,12 @@ class FinderUserAgentForm extends Model
     public $parserId;
     public $modelName;
     public $brandName;
+    public $deviceType;
+    public $clientType;
+    public $clientName;
+    public $clientVersion;
+    public $osName;
+    public $osVersion;
 
     public $notModelName = false;
     public $emptyModelName = false;
@@ -26,7 +32,17 @@ class FinderUserAgentForm extends Model
     public function rules()
     {
         return [
-            [['userAgent', 'modelName', 'brandName'], 'string'],
+            [[
+                'userAgent',
+                'modelName',
+                'brandName',
+                'clientType',
+                'clientVersion',
+                'clientName',
+                'deviceType',
+                'osName',
+                'osVersion'
+            ], 'string'],
             [['sourceId', 'parserId'], 'number'],
             [['notModelName', 'emptyModelName'], 'boolean'],
         ];
@@ -65,6 +81,12 @@ class FinderUserAgentForm extends Model
 
         $query->andFilterCompare('device_detector_result.parser_id', $this->parserId);
         $query->andFilterCompare('device_detector_result.brand_name', $this->brandName, 'like');
+        $query->andFilterCompare('device_detector_result.device_type', $this->deviceType, 'like');
+        $query->andFilterCompare('device_detector_result.client_type', $this->clientType, 'like');
+        $query->andFilterCompare('device_detector_result.client_name', $this->clientName, 'like');
+        $query->andFilterCompare('device_detector_result.client_version', $this->clientVersion, 'like');
+        $query->andFilterCompare('device_detector_result.os_name', $this->osName, 'like');
+        $query->andFilterCompare('device_detector_result.os_version', $this->osVersion, 'like');
 
         $query->innerJoinWith(['parseResults']);
         $query->groupBy('benchmark_result.id');

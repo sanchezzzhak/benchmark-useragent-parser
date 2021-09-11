@@ -30,11 +30,28 @@ $templateAddonBase = sprintf("{label}\n %s {input}\n{hint}\n{error} ", ' <div cl
     ]); ?>
 
     <div class="row">
-
         <div class="col-3">
             <div></div>
             <?= $form->field($model, 'userAgent') ?>
+        </div>
+        <div class="col-3">
+            <?= $form->field($model, 'deviceType') ?>
+        </div>
+        <div class="col-3">
+            <?= $form->field($model, 'clientType') ?>
+        </div>
+        <div class="col-3">
+            <div></div>
+            <?= $form->field($model, 'brandName') ?>
+        </div>
+    </div>
 
+    <div class="row">
+        <div class="col-3">
+            <?= $form->field($model, 'parserId')
+                ->dropDownList($model->getSourceIdOptions(), [
+                    'prompt' => 'Select result UA repository'
+                ]) ?>
         </div>
         <div class="col-3">
             <div></div>
@@ -42,29 +59,24 @@ $templateAddonBase = sprintf("{label}\n %s {input}\n{hint}\n{error} ", ' <div cl
                 ->dropDownList($model->getSourceIdOptions(), [
                     'prompt' => 'Select source UA repository'
                 ]) ?>
-
         </div>
-
-        <div class="col-3">
-            <div></div>
-            <?= $form->field($model, 'brandName') ?>
-
-        </div>
-
+        <div class="col-3"><?= $form->field($model, 'clientName') ?></div>
         <div class="col-3">
             <div class="legend"><?= Html::activeCheckbox($model, 'emptyModelName') ?></div>
             <?= $form->field($model, 'modelName', [
                 'class' => ActiveAddonField::class
             ])->addon(Html::activeCheckbox($model, 'notModelName', ['label' => false])) ?>
-
         </div>
     </div>
     <div class="row">
         <div class="col-3">
-            <?= $form->field($model, 'parserId')
-                ->dropDownList($model->getSourceIdOptions(), [
-                    'prompt' => 'Select result UA repository'
-                ]) ?>
+            <?= $form->field($model, 'osName') ?>
+        </div>
+        <div class="col-3">
+            <?= $form->field($model, 'osVersion') ?>
+        </div>
+        <div class="col-3">
+            <?= $form->field($model, 'clientVersion') ?>
         </div>
     </div>
     <?= Html::submitButton('Apply Filter', ['class' => 'btn btn-primary']) ?>
