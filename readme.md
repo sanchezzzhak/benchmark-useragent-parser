@@ -12,23 +12,23 @@ Info
 ##### Device nomination
 | Parser Name | Device Type | Device brand | Device model | Scores |
 
-
 Install 
 ---
 | Command | Description |
 | --- | --- |
 | `composer install` |     |
+| `php yii` | show all available commands  |
 | `php yii migrate` | to apply all migrations | 
-| `php yii serve/index` | run web server | 
+| `php yii serve` | run web server | 
  
 Commands  
 ---
 | Command | Description |
 | --- | --- |
-| `php yii robbing  | robbing new useragents to database |
-| `php yii matomo-parser`  | analyze all useragents and save result to db |
-| `php yii mimmi20-parser`  | analyze all useragents and save result to db |
-| `php yii whichbrowser-parser`  | analyze all useragents and save result to db |
+| `php yii robbing` | robbing new useragents to database |
+| `php yii matomo-parser` | analyze all useragents and save result to db |
+| `php yii mimmi20-parser`| analyze all useragents and save result to db |
+| `php yii whichbrowser-parser` | analyze all useragents and save result to db |
 
 
 Results For 2021-03-04
@@ -39,3 +39,6 @@ soon...
 Who wants to contribute.
 ---
 then...
+
+
+Algoritm memory and time banchmark
