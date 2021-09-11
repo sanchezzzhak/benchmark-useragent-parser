@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "benchmark_result".
@@ -12,7 +13,7 @@ use Yii;
  * @property int|null $source_id
  * @property DeviceDetectorResult[] $parseResults
  */
-class BenchmarkResult extends \yii\db\ActiveRecord
+class BenchmarkResult extends ActiveRecord
 {
     /**
      * {@inheritdoc}

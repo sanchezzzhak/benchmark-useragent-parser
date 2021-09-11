@@ -32,7 +32,7 @@ AppAsset::register($this);
         'brandUrl' => Yii::$app->homeUrl,
         'innerContainerOptions' => ['class' => 'container-fluid'],
         'options' => [
-            'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',
+            'class' => 'navbar navbar-expand-md navbar-dark bg-dark',
         ],
     ]);
     echo Nav::widget([

@@ -7,24 +7,41 @@ use app\models\BenchmarkResult;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\data\DataProviderInterface;
+use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 
 class FinderUserAgentForm extends Model
 {
     public $userAgent;
     public $sourceId;
+    public $parserId;
+    public $modelName;
+    public $brandName;
+
+    public $notModelName = false;
+    public $emptyModelName = false;
 
     private const PAGE_SIZE = 500;
 
     public function rules()
     {
         return [
-            [['userAgent'], 'string'],
-            [['sourceId'], 'number'],
+            [['userAgent', 'modelName', 'brandName'], 'string'],
+            [['sourceId', 'parserId'], 'number'],
+            [['notModelName', 'emptyModelName'], 'boolean'],
         ];
     }
 
-    public function getSourceIdOptions(): array {
+    public function attributeLabels()
+    {
+
+        $labels = parent::attributeLabels();
+        $labels['emptyModelName'] = 'All empty Model Name';
+        return $labels;
+    }
+
+    public function getSourceIdOptions(): array
+    {
         return ArrayHelper::map(ParserConfig::REPOSITORIES, 'id', 'name');
     }
 
@@ -32,8 +49,22 @@ class FinderUserAgentForm extends Model
     {
         $this->load($params, $formName);
         $query = BenchmarkResult::find();
-        $query->andFilterCompare('user_agent', $this->userAgent, 'like');
-        $query->andFilterCompare('source_id', $this->sourceId);
+
+        $query->andFilterCompare('benchmark_result.user_agent', $this->userAgent, 'like');
+        $query->andFilterCompare('benchmark_result.source_id', $this->sourceId);
+
+        if (!$this->notModelName) {
+            $query->andFilterCompare('device_detector_result.model_name', $this->modelName, 'like');
+        } else {
+            $query->andFilterCompare('device_detector_result.model_name', $this->modelName, 'not like');
+        }
+
+        if ($this->emptyModelName) {
+            $query->andFilterWhere(['IN', 'device_detector_result.model_name', ['', new Expression('NULL')]]);
+        }
+
+        $query->andFilterCompare('device_detector_result.parser_id', $this->parserId);
+        $query->andFilterCompare('device_detector_result.brand_name', $this->brandName, 'like');
 
         $query->innerJoinWith(['parseResults']);
         $query->groupBy('benchmark_result.id');
