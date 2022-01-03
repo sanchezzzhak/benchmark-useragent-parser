@@ -31,14 +31,8 @@ Commands
 | `php yii whichbrowser-parser` | analyze all useragents and save result to db |
 
 
-Results For 2021-03-04
----
-soon...
-
-
-Who wants to contribute.
----
-then...
-
-
-Algoritm memory and time banchmark
+After executing the above commands, you can view the results online
+```
+cd project & cd web/
+php -S localhost:8080
+```
