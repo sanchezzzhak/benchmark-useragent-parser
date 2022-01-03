@@ -36,3 +36,11 @@ After executing the above commands, you can view the results online
 cd project & cd web/
 php -S localhost:8080
 ```
+
+<details>
+<summary>Preview:</summary>
+ 
+![image](https://user-images.githubusercontent.com/1337066/147969697-4710707d-0ef5-49c9-be96-df03f87fe741.png)
+ 
+</details>
+
