@@ -98,7 +98,6 @@ JS
 );
 ?>
 
-
 <?= Modal::widget([
     'title' => 'Detail parse result',
     'id' => 'detail-parse'

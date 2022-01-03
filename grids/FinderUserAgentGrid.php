@@ -37,7 +37,7 @@ class FinderUserAgentGrid extends AbstractGrid implements GridInterface
             'headerOptions' => ['colspan' => 14],
             'contentOptions' => ['colspan' => 14],
             'value' => function (BenchmarkResult $model) {
-                return $this->renderHtmlTextArea($model->user_agent);
+                return $this->renderHtmlTextArea($model->user_agent, ['onclick' => 'return true']);
             },
 
         ];

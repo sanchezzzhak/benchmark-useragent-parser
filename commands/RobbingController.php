@@ -91,35 +91,58 @@ class RobbingController extends Controller
         return $mimmi20Fixtures;
     }
 
+    private function parseMatomoFixtureFile(string $file)
+    {
+        $data = Yaml::parseFile($file);
+        if (is_array($data)) {
+            return array_map(fn ($item) => $item['user_agent'] ?? '', $data);
+        }
+        return null;
+    }
+
+    private function parseWhichBrowserFixtureFile(string $file)
+    {
+        $data = Yaml::parseFile($file);
+        if (is_array($data)) {
+            return array_map(function ($item) {
+                $useragent = '';
+                if (is_string($item['headers']) && preg_match('~User-Agent: (.*)$~i', $item['headers'], $match)) {
+                    $useragent = $match[0] ?? '';
+                } else if (is_array($item['headers'])) {
+                    $useragent = $item['headers']['User-Agent'] ?? '';
+                }
+                return $useragent;
+            }, $data);
+        }
+        return null;
+    }
+
+    private function parseMimmi20FixtureFile(string $file)
+    {
+        $data = json_decode(file_get_contents($file), true);
+        if (is_array($data)) {
+            return array_map(fn ($item) => $item['headers']['user-agent'] ?? '', $data);
+        }
+        return null;
+    }
+
     private function parseFixtureFile(string $repositoryId, string $file): array
     {
         try {
-            if ($repositoryId === 'matomo/device-detector') {
-                $data = Yaml::parseFile($file);
-                if (is_array($data)) {
-                    return array_map(fn ($item) => $item['user_agent'] ?? '', $data);
-                }
-            }
-            if ($repositoryId === 'whichbrowser/parser') {
-                $data = Yaml::parseFile($file);
-                if (is_array($data)) {
-                    return array_map(function ($item) {
-                        $useragent = '';
-                        if (is_string($item['headers']) && preg_match('~User-Agent: (.*)$~i', $item['headers'], $match)) {
-                            $useragent = $match[0] ?? '';
-                        } else if (is_array($item['headers'])) {
-                            $useragent = $item['headers']['User-Agent'] ?? '';
-                        }
-                        return $useragent;
-                    }, $data);
-                }
+
+            if ($repositoryId === ParserConfig::PROJECT_MATOMO_DEVICE_DETECTOR &&
+                ($result = $this->parseMatomoFixtureFile($file)) !== null) {
+                return $result;
             }
 
-            if ($repositoryId === 'mimmi20/browser-detector') {
-                $data = json_decode(file_get_contents($file), true);
-                if (is_array($data)) {
-                    return array_map(fn ($item) => $item['headers']['user-agent'] ?? '', $data);
-                }
+            if ($repositoryId === ParserConfig::PROJECT_WHICHBROWSER_PARSER &&
+                ($result = $this->parseWhichBrowserFixtureFile($file)) !== null) {
+                return $result;
+            }
+
+            if ($repositoryId === ParserConfig::PROJECT_MIMMI20_BROWSER_DETECTOR &&
+                ($result = $this->parseMimmi20FixtureFile($file)) !== null) {
+                return $result;
             }
 
         } catch (Exception $exception) {
