@@ -12,6 +12,7 @@ use DeviceDetector\Parser\Device\AbstractDeviceParser;
 use DeviceDetector\Parser\OperatingSystem;
 use yii\console\ExitCode;
 use yii\console\Controller;
+use yii\helpers\Console;
 
 /**
  * Class MatomoParserController
@@ -20,19 +21,35 @@ use yii\console\Controller;
 class MatomoParserController extends Controller
 {
     /**
+     * @param int $log
+     * @param int $skip
      * @return int
      */
-    public function actionIndex($log = false)
+    public function actionIndex(int $log = 0, $skip = 0)
     {
         $parserId =  ParserConfig::getSourceIdByRepository(
             ParserConfig::PROJECT_MATOMO_DEVICE_DETECTOR);
 
         $query = BenchmarkResult::find();
+        $queryCount = clone $query;
+        $count = $queryCount->count();
+
+        $this->stdout(sprintf('Total useragents %s', $count) . PHP_EOL);
+
         AbstractDeviceParser::setVersionTruncation(AbstractDeviceParser::VERSION_TRUNCATION_NONE);
         $parser = new DeviceDetector();
 
         /** @var BenchmarkResult $row */
+        $i = 0;
         foreach ($query->each() as $row) {
+            $i++;
+            if ($skip > $i) {
+                continue;
+            }
+            if ($i % 100 === 0) {
+                $this->stdout(sprintf('%s/%s', $i, $count) . PHP_EOL);
+            }
+
             $useragent = $row->user_agent;
             $log && $this->stdout(sprintf('#%s parse %s', $row->id, $useragent) . PHP_EOL);
 

@@ -14,15 +14,29 @@ use WhichBrowser\Parser;
 class WhichbrowserParserController extends Controller
 {
 
-    public function actionIndex($log = false)
+    public function actionIndex(int $log = 0, int $skip = 0)
     {
         $parserId = ParserConfig::getSourceIdByRepository(
             ParserConfig::PROJECT_WHICHBROWSER_PARSER
         );
         $query = BenchmarkResult::find();
+        $queryCount = clone $query;
+        $count = $queryCount->count();
 
+        $this->stdout(sprintf('Total useragents %s', $count) . PHP_EOL);
+
+        $i =0;
         /** @var BenchmarkResult $row */
         foreach ($query->each() as $row) {
+
+            $i++;
+            if ($skip > $i) {
+                continue;
+            }
+            if ($i % 100 === 0) {
+                $this->stdout(sprintf('%s/%s', $i, $count) . PHP_EOL);
+            }
+
             $useragent = $row->user_agent;
             $log && $this->stdout(sprintf('#%s parse %s', $row->id, $useragent) . PHP_EOL);
 
