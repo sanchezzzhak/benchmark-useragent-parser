@@ -7,7 +7,13 @@ Info
 | Parser Name | OS Name | Browser Name | Device Type | Scores |
 
 ##### Browser nomination
-| Parser Name | Browser Name | Browser version | Browser engine | Scores |
+| Parser Name | Count | Browsers | Versions | Engines | Scores |
+| ---- | ---- | ---- | ---- | ---- | ---- |
+| matomo/device-detector | 336911 | 323641 | 289943 | 258677 | 872261 |
+| mimmi20/browser-detector | 189964 | 185565 | 176950 | 182138 | 544653 |
+| whichbrowser/parser | 130083 | 112777 | 81299 | 117583 | 311659 |
+
+
 
 ##### Device nomination
 | Parser Name | Device Type | Device brand | Device model | Scores |

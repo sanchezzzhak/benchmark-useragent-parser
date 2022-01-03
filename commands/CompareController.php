@@ -5,8 +5,11 @@ namespace app\commands;
 
 
 use app\models\BenchmarkResult;
+use app\models\Offer;
 use yii\console\Controller;
 use app\helpers\ParserConfig;
+use yii\console\Markdown;
+use yii\console\widgets\Table;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Console;
 
@@ -68,18 +71,102 @@ class CompareController extends Controller
 
         Console::output('Processing...');
 
-
         /** @var BenchmarkResult $model */
         foreach ($query->each(100) as $model) {
             $useragentCounter++;
             foreach ($model->parseResults as $result) {
                 $parseId = $result->parser_id;
                 $total[$parseId]['useragents'] = $useragentCounter;
+
+                if (!empty($result->brand_name)) {
+                    $total[$parseId][self::SCORE_DEVICE_BRAND]++;
+                }
+                if (!empty($result->device_type)) {
+                    $total[$parseId][self::SCORE_DEVICE_TYPE]++;
+                }
+                if ($result->is_bot) {
+                    $total[$parseId][self::SCORE_BOT]++;
+                }
+                if (!empty($result->os_name)) {
+                    $total[$parseId][self::SCORE_OS]++;
+                }
+                if (!empty($result->os_version)) {
+                    $total[$parseId][self::SCORE_OS_VERSION]++;
+                }
+                if (!empty($result->client_name)) {
+                    $total[$parseId][self::SCORE_BROWSER]++;
+                }
+                if (!empty($result->client_version)) {
+                    $total[$parseId][self::SCORE_BROWSER_VERSION]++;
+                }
+                if (!empty($result->engine_name)) {
+                    $total[$parseId][self::SCORE_BROWSER_ENGINE]++;
+                }
+                if (!empty($result->engine_version)) {
+                    $total[$parseId][self::SCORE_BROWSER_ENGINE_VERSION]++;
+                }
             }
-
         }
-        var_dump($total);
 
+        $tableBrowser = $this->getTableBrowserNomination($total);
+
+        $file = __DIR__ . '/../readme.md';
+        $readme = file_get_contents($file);
+        $readme = preg_replace(
+            '~^#{5} Browser nomination(?:.*?)\n#####~ims',
+            "##### Browser nomination\n" . $tableBrowser . "\n#####",
+            $readme, 1);
+
+        file_put_contents($file, $readme);
+    }
+
+    private function getTableBrowserNomination(array $total)
+    {
+        $browserNomination = [];
+        foreach ($total as $parserId => $row) {
+            $browserNomination[] = [
+                'Parser' => ParserConfig::getNameById($parserId),
+                'Count' => $row['useragents'],
+                'Browsers'   => $row[self::SCORE_BROWSER],
+                'Versions'   => $row[self::SCORE_BROWSER_VERSION],
+                'Engines'   => $row[self::SCORE_BROWSER_ENGINE],
+                'Scores' => $row[self::SCORE_BROWSER] + $row[self::SCORE_BROWSER_VERSION] + $row[self::SCORE_BROWSER_ENGINE]
+            ];
+        }
+        $browserNomination = $this->sortByScore($browserNomination);
+
+        $tableBrowser = "| Parser Name | Count | Browsers | Versions | Engines | Scores |\n";
+        $tableBrowser.= "| ---- | ---- | ---- | ---- | ---- | ---- |\n";
+
+        foreach ($browserNomination as $row) {
+            $tableBrowser .= sprintf(
+                    '| %s | %s | %s | %s | %s | %s |',
+                    $row['Parser'],
+                    $row['Count'],
+                    $row['Browsers'],
+                    $row['Versions'],
+                    $row['Engines'],
+                    $row['Scores'],
+                ) . PHP_EOL;
+        }
+
+        $tableBrowser.= PHP_EOL;
+        $tableBrowser.= PHP_EOL;
+
+        return $tableBrowser;
+    }
+
+    private function sortByScore($rows)
+    {
+        uasort($rows, static function ($a, $b) {
+            $posA = (int)($a['Scores'] ?? 0);
+            $posB = (int)($b['Scores'] ?? 0);
+            if($posA === $posB) {
+                return 0;
+            }
+            return $posA < $posB ? 1: -1;
+        });
+        return $rows;
     }
 
 
