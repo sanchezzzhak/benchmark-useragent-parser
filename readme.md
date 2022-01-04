@@ -56,7 +56,6 @@ Info
 | `php yii mimmi20-parser`| analyze all useragents and save result to db |
 | `php yii whichbrowser-parser` | analyze all useragents and save result to db |
 
-
 After executing the above commands, you can view the results online
 ```
 cd project & cd web/
@@ -70,3 +69,8 @@ php -S localhost:8080
  
 </details>
 
+##### Parsers
+
+* ![PHP](https://img.shields.io/badge/php-%23777BB4.svg?style=for-the-badge&logo=php&logoColor=white) [mimmi20/browser-detector](https://github.com/mimmi20/browser-detector)
+* ![PHP](https://img.shields.io/badge/php-%23777BB4.svg?style=for-the-badge&logo=php&logoColor=white) [matomo/device-detector](https://github.com/matomo-org/device-detector)
+* ![PHP](https://img.shields.io/badge/php-%23777BB4.svg?style=for-the-badge&logo=php&logoColor=white) [whichbrowser/parser](https://github.com/matomo-org/device-detector)
