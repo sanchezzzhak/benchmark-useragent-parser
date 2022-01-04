@@ -41,6 +41,7 @@ class CompareController extends Controller
         $tableBrowser = $this->getTableBrowserNomination($total);
         $tableBot = $this->getTableBotNomination($total);
         $tableOS = $this->getTableOsNomination($total);
+        $tableDevice = $this->getTableDeviceNomination($total);
 
         $file = __DIR__ . '/../readme.md';
         $readme = file_get_contents($file);
@@ -58,6 +59,11 @@ class CompareController extends Controller
         $readme = preg_replace(
             '~^#{5} OS nomination(?:.*?)\n#####~ims',
             "##### OS nomination\n" . $tableOS . "\n#####",
+            $readme, 1);
+
+        $readme = preg_replace(
+            '~^#{5} Device nomination(?:.*?)\n#####~ims',
+            "##### Device nomination\n" . $tableDevice . "\n#####",
             $readme, 1);
 
         file_put_contents($file, $readme);
@@ -147,6 +153,41 @@ class CompareController extends Controller
             }
         }
         return $total;
+    }
+
+    /**
+     * Scoring for the Device table
+     * @param array $total
+     * @return string
+     */
+    private function getTableDeviceNomination(array $total)
+    {
+        $deviceNomination = [];
+        foreach ($total as $parserId => $row) {
+            $deviceNomination[] = [
+                'Parser' => ParserConfig::getNameById($parserId),
+                'Count' => $row['useragents'],
+                'Device type'   => $row[self::SCORE_DEVICE_TYPE],
+                'Device brand' => $row[self::SCORE_DEVICE_BRAND],
+                'Device model' => $row[self::SCORE_DEVICE_MODEL],
+                'Scores' => $row[self::SCORE_DEVICE_TYPE] + $row[self::SCORE_DEVICE_BRAND] +  $row[self::SCORE_DEVICE_MODEL]
+            ];
+        }
+        $deviceNomination = $this->sortByScore($deviceNomination);
+        $tableOS = "| Parser Name | Count | Device types | Device brands | Device models | Scores |\n";
+        $tableOS.= "| ---- | ---- | ---- | ---- | ---- |\n";
+        foreach ($deviceNomination as $row) {
+            $tableOS .= sprintf(
+                    '| %s | %s | %s | %s | %s | %s |',
+                    $row['Parser'],
+                    $row['Count'],
+                    $row['Device type'],
+                    $row['Device brand'],
+                    $row['Device model'],
+                    $row['Scores'],
+                ) . PHP_EOL;
+        }
+        return $tableOS. PHP_EOL . PHP_EOL;
     }
 
     /**
