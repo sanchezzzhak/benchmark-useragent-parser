@@ -9,8 +9,8 @@ Info
 ##### Browser nomination
 | Parser Name | Count | Browsers | Versions | Engines | Scores |
 | ---- | ---- | ---- | ---- | ---- | ---- |
+| mimmi20/browser-detector | 346301 | 338054 | 324185 | 332446 | 994685 |
 | matomo/device-detector | 336911 | 323641 | 289943 | 258677 | 872261 |
-| mimmi20/browser-detector | 290933 | 285095 | 273298 | 279971 | 838364 |
 | whichbrowser/parser | 130083 | 112777 | 81299 | 117583 | 311659 |
 
 
