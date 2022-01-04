@@ -29,6 +29,43 @@ class CompareController extends Controller
     private const SCORE_DEVICE_MODEL = 'deviceModel';
     private const SCORE_DEVICE_TYPE = 'deviceType';
 
+    /**
+     *
+     */
+    public function actionIndex()
+    {
+        Console::output('Processing...');
+
+        $total = $this->getTotalReport();
+
+        $tableBrowser = $this->getTableBrowserNomination($total);
+        $tableBot = $this->getTableBotNomination($total);
+        $tableOS = $this->getTableOsNomination($total);
+
+        $file = __DIR__ . '/../readme.md';
+        $readme = file_get_contents($file);
+
+        $readme = preg_replace(
+            '~^#{5} Bot nomination(?:.*?)\n#####~ims',
+            "##### Bot nomination\n" . $tableBot . "\n#####",
+            $readme, 1);
+
+        $readme = preg_replace(
+            '~^#{5} Browser nomination(?:.*?)\n#####~ims',
+            "##### Browser nomination\n" . $tableBrowser . "\n#####",
+            $readme, 1);
+
+        $readme = preg_replace(
+            '~^#{5} OS nomination(?:.*?)\n#####~ims',
+            "##### OS nomination\n" . $tableOS . "\n#####",
+            $readme, 1);
+
+        file_put_contents($file, $readme);
+
+        echo json_encode($total, JSON_PRETTY_PRINT);
+
+    }
+
     private function setEmptyValues(&$total, $parserId) {
         $total[$parserId] = [];
         $total[$parserId]['useragents'] = 0;
@@ -57,42 +94,44 @@ class CompareController extends Controller
         }
     }
 
-    public function actionIndex()
+    private function getTotalReport(): array
     {
         $query = BenchmarkResult::find()->with([
             'parseResults'
         ]);
-
         $total = [];
         foreach (ParserConfig::REPOSITORIES as $repository) {
             $this->setEmptyValues($total, $repository['id']);
         }
         $useragentCounter = 0;
-
-        Console::output('Processing...');
-
         /** @var BenchmarkResult $model */
         foreach ($query->each(100) as $model) {
             $useragentCounter++;
             foreach ($model->parseResults as $result) {
                 $parseId = $result->parser_id;
                 $total[$parseId]['useragents'] = $useragentCounter;
-
-                if (!empty($result->brand_name)) {
-                    $total[$parseId][self::SCORE_DEVICE_BRAND]++;
-                }
+                // devices
                 if (!empty($result->device_type)) {
                     $total[$parseId][self::SCORE_DEVICE_TYPE]++;
                 }
+                if (!empty($result->brand_name)) {
+                    $total[$parseId][self::SCORE_DEVICE_BRAND]++;
+                }
+                if (!empty($result->model_name)) {
+                    $total[$parseId][self::SCORE_DEVICE_MODEL]++;
+                }
+                // bots
                 if ($result->is_bot) {
                     $total[$parseId][self::SCORE_BOT]++;
                 }
+                // oss
                 if (!empty($result->os_name)) {
                     $total[$parseId][self::SCORE_OS]++;
                 }
                 if (!empty($result->os_version)) {
                     $total[$parseId][self::SCORE_OS_VERSION]++;
                 }
+                // clients/browsers
                 if (!empty($result->client_name)) {
                     $total[$parseId][self::SCORE_BROWSER]++;
                 }
@@ -107,19 +146,81 @@ class CompareController extends Controller
                 }
             }
         }
-
-        $tableBrowser = $this->getTableBrowserNomination($total);
-
-        $file = __DIR__ . '/../readme.md';
-        $readme = file_get_contents($file);
-        $readme = preg_replace(
-            '~^#{5} Browser nomination(?:.*?)\n#####~ims',
-            "##### Browser nomination\n" . $tableBrowser . "\n#####",
-            $readme, 1);
-
-        file_put_contents($file, $readme);
+        return $total;
     }
 
+    /**
+     * Scoring for the OS table
+     * @param array $total
+     * @return string
+     */
+    private function getTableOsNomination(array $total)
+    {
+        $osNomination = [];
+        foreach ($total as $parserId => $row) {
+            $osNomination[] = [
+                'Parser' => ParserConfig::getNameById($parserId),
+                'Count' => $row['useragents'],
+                'OS'   => $row[self::SCORE_OS],
+                'OS Versions' => $row[self::SCORE_OS_VERSION],
+                'Scores' => $row[self::SCORE_OS_VERSION] + $row[self::SCORE_OS]
+            ];
+        }
+        $osNomination = $this->sortByScore($osNomination);
+        $tableOS = "| Parser Name | Count | OS | OS Versions | Scores |\n";
+        $tableOS.= "| ---- | ---- | ---- | ---- | ---- |\n";
+        foreach ($osNomination as $row) {
+            $tableOS .= sprintf(
+                    '| %s | %s | %s | %s | %s |',
+                    $row['Parser'],
+                    $row['Count'],
+                    $row['OS'],
+                    $row['OS Versions'],
+                    $row['Scores'],
+                ) . PHP_EOL;
+        }
+
+        return $tableOS. PHP_EOL . PHP_EOL;
+    }
+
+    /**
+     * Scoring for the Bots table
+     * @param array $total
+     * @return string
+     */
+    private function getTableBotNomination(array $total)
+    {
+        $botNomination = [];
+        foreach ($total as $parserId => $row) {
+            $botNomination[] = [
+                'Parser' => ParserConfig::getNameById($parserId),
+                'Count' => $row['useragents'],
+                'Bots'   => $row[self::SCORE_BOT],
+                'Scores' => $row[self::SCORE_BOT]
+            ];
+        }
+        $botNomination = $this->sortByScore($botNomination);
+        $tableBot = "| Parser Name | Count | Bots | Scores |\n";
+        $tableBot.= "| ---- | ---- | ---- | ---- |\n";
+
+        foreach ($botNomination as $row) {
+            $tableBot .= sprintf(
+                    '| %s | %s | %s | %s |',
+                    $row['Parser'],
+                    $row['Count'],
+                    $row['Bots'],
+                    $row['Scores'],
+                ) . PHP_EOL;
+        }
+
+        return $tableBot . PHP_EOL . PHP_EOL;
+    }
+
+    /**
+     * Scoring for the Browser table
+     * @param array $total
+     * @return string
+     */
     private function getTableBrowserNomination(array $total)
     {
         $browserNomination = [];
@@ -150,12 +251,14 @@ class CompareController extends Controller
                 ) . PHP_EOL;
         }
 
-        $tableBrowser.= PHP_EOL;
-        $tableBrowser.= PHP_EOL;
-
-        return $tableBrowser;
+        return $tableBrowser . PHP_EOL . PHP_EOL;
     }
 
+    /**
+     * Sorting DESC by key `Scores`
+     * @param $rows
+     * @return mixed
+     */
     private function sortByScore($rows)
     {
         uasort($rows, static function ($a, $b) {

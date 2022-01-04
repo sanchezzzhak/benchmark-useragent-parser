@@ -3,23 +3,28 @@ Info
 * scoring when parsing a useragent, categories:
 * For each definition 1 point is 🏆 awarded
 
-##### Basic nomination
-| Parser Name | OS Name | Browser Name | Device Type | Scores |
-
 ##### Browser nomination
 | Parser Name | Count | Browsers | Versions | Engines | Scores |
 | ---- | ---- | ---- | ---- | ---- | ---- |
 | mimmi20/browser-detector | 346301 | 338054 | 324185 | 332446 | 994685 |
 | matomo/device-detector | 336911 | 323641 | 289943 | 258677 | 872261 |
 | whichbrowser/parser | 130083 | 112777 | 81299 | 117583 | 311659 |
-
-
-
+##### Bot nomination
+| Parser Name | Count | Bots | Scores |
+| ---- | ---- | ---- | ---- |
+| mimmi20/browser-detector | 346301 | 4057 | 4057 |
+| matomo/device-detector | 336911 | 2812 | 2812 |
+| whichbrowser/parser | 130083 | 804 | 804 |
 ##### Device nomination
-| Parser Name | Device Type | Device brand | Device model | Scores |
-
-Install 
----
+| Parser Name | Count | Device type | Device brand | Device model | Scores |
+| ---- | ---- | ---- | ---- | ---- | ---- |
+##### OS nomination
+| Parser Name | Count | OS | OS Versions | Scores |
+| ---- | ---- | ---- | ---- | ---- |
+| mimmi20/browser-detector | 346301 | 340117 | 301464 | 641581 |
+| matomo/device-detector | 336911 | 318605 | 296130 | 614735 |
+| whichbrowser/parser | 130083 | 120146 | 115643 | 235789 |
+##### Install 
 | Command | Description |
 | --- | --- |
 | `composer install` |     |
