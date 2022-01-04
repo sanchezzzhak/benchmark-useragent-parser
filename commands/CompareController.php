@@ -118,7 +118,8 @@ class CompareController extends Controller
                 $total[$parseId]['useragents'] = $useragentCounter;
                 // devices
                 if (!empty($result->device_type)) {
-                    $total[$parseId][self::SCORE_DEVICE_TYPE]++;
+                    $aggregate = $result->device_type !== 'bot';
+                    $aggregate && $total[$parseId][self::SCORE_DEVICE_TYPE]++;
                 }
                 if (!empty($result->brand_name)) {
                     $total[$parseId][self::SCORE_DEVICE_BRAND]++;
