@@ -20,10 +20,12 @@ class CompareController extends Controller
     private const SCORE_OS_VERSION = 'osVersion';
     private const SCORE_OS_PLATFORM = 'osPlatform';
 
-    private const SCORE_BROWSER = 'browser';
-    private const SCORE_BROWSER_VERSION = 'browserVersion';
-    private const SCORE_BROWSER_ENGINE = 'browserEngine';
-    private const SCORE_BROWSER_ENGINE_VERSION = 'browserEngineVersion';
+    private const SCORE_CLIENT = 'client';
+    private const SCORE_CLIENT_BROWSER = 'browser';
+    private const SCORE_CLIENT_TYPE = 'clientType';
+    private const SCORE_CLIENT_VERSION = 'browserVersion';
+    private const SCORE_CLIENT_ENGINE = 'browserEngine';
+    private const SCORE_CLIENT_ENGINE_VERSION = 'browserEngineVersion';
 
     private const SCORE_DEVICE_BRAND = 'deviceBrand';
     private const SCORE_DEVICE_MODEL = 'deviceModel';
@@ -85,10 +87,12 @@ class CompareController extends Controller
             self::SCORE_OS,
             self::SCORE_OS_VERSION,
             self::SCORE_OS_PLATFORM,
-            self::SCORE_BROWSER,
-            self::SCORE_BROWSER_VERSION,
-            self::SCORE_BROWSER_ENGINE,
-            self::SCORE_BROWSER_ENGINE_VERSION,
+            self::SCORE_CLIENT,
+            self::SCORE_CLIENT_TYPE,
+            self::SCORE_CLIENT_BROWSER,
+            self::SCORE_CLIENT_VERSION,
+            self::SCORE_CLIENT_ENGINE,
+            self::SCORE_CLIENT_ENGINE_VERSION,
             self::SCORE_DEVICE_TYPE,
             self::SCORE_DEVICE_BRAND,
             self::SCORE_DEVICE_MODEL,
@@ -118,14 +122,16 @@ class CompareController extends Controller
                 $total[$parseId]['useragents'] = $useragentCounter;
                 // devices
                 if (!empty($result->device_type)) {
-                    $aggregate = $result->device_type !== 'bot';
+                    $aggregate = !in_array($result->device_type, ['unknown', 'bot']);
                     $aggregate && $total[$parseId][self::SCORE_DEVICE_TYPE]++;
                 }
                 if (!empty($result->brand_name)) {
-                    $total[$parseId][self::SCORE_DEVICE_BRAND]++;
+                    $aggregate = !in_array($result->brand_name, ['unknown']);
+                    $aggregate && $total[$parseId][self::SCORE_DEVICE_BRAND]++;
                 }
                 if (!empty($result->model_name)) {
-                    $total[$parseId][self::SCORE_DEVICE_MODEL]++;
+                    $aggregate = !in_array($result->model_name, ['unknown']);
+                    $aggregate && $total[$parseId][self::SCORE_DEVICE_MODEL]++;
                 }
                 // bots
                 if ($result->is_bot) {
@@ -140,16 +146,24 @@ class CompareController extends Controller
                 }
                 // clients/browsers
                 if (!empty($result->client_name)) {
-                    $total[$parseId][self::SCORE_BROWSER]++;
+                    $total[$parseId][self::SCORE_CLIENT]++;
+                }
+                if (!empty($result->client_type)) {
+                    $aggregate = !in_array($result->client_type, ['unknown']);
+                    $aggregate && $total[$parseId][self::SCORE_CLIENT_TYPE]++;
+
+                    if(strtolower($result->client_type) === 'browser') {
+                        $total[$parseId][self::SCORE_CLIENT_BROWSER]++;
+                    }
                 }
                 if (!empty($result->client_version)) {
-                    $total[$parseId][self::SCORE_BROWSER_VERSION]++;
+                    $total[$parseId][self::SCORE_CLIENT_VERSION]++;
                 }
                 if (!empty($result->engine_name)) {
-                    $total[$parseId][self::SCORE_BROWSER_ENGINE]++;
+                    $total[$parseId][self::SCORE_CLIENT_ENGINE]++;
                 }
                 if (!empty($result->engine_version)) {
-                    $total[$parseId][self::SCORE_BROWSER_ENGINE_VERSION]++;
+                    $total[$parseId][self::SCORE_CLIENT_ENGINE_VERSION]++;
                 }
             }
         }
@@ -270,25 +284,30 @@ class CompareController extends Controller
             $browserNomination[] = [
                 'Parser' => ParserConfig::getNameById($parserId),
                 'Count' => $row['useragents'],
-                'Browsers'   => $row[self::SCORE_BROWSER],
-                'Versions'   => $row[self::SCORE_BROWSER_VERSION],
-                'Engines'   => $row[self::SCORE_BROWSER_ENGINE],
-                'Scores' => $row[self::SCORE_BROWSER] + $row[self::SCORE_BROWSER_VERSION] + $row[self::SCORE_BROWSER_ENGINE]
+                self::SCORE_CLIENT   => $row[self::SCORE_CLIENT],
+                self::SCORE_CLIENT_BROWSER   => $row[self::SCORE_CLIENT_BROWSER],
+                self::SCORE_CLIENT_VERSION  => $row[self::SCORE_CLIENT_VERSION],
+                self::SCORE_CLIENT_ENGINE   => $row[self::SCORE_CLIENT_ENGINE],
+                'Scores' => $row[self::SCORE_CLIENT]
+                    + $row[self::SCORE_CLIENT_BROWSER]
+                    + $row[self::SCORE_CLIENT_VERSION]
+                    + $row[self::SCORE_CLIENT_ENGINE]
             ];
         }
         $browserNomination = $this->sortByScore($browserNomination);
 
-        $tableBrowser = "| Parser Name | Count | Browsers | Versions | Engines | Scores |\n";
-        $tableBrowser.= "| ---- | ---- | ---- | ---- | ---- | ---- |\n";
+        $tableBrowser = "| Parser Name | Count | Clients | Browsers | Versions | Engines | Scores |\n";
+        $tableBrowser.= "| ---- | ---- | ---- | ---- | ---- | ---- | ---- |\n";
 
         foreach ($browserNomination as $row) {
             $tableBrowser .= sprintf(
-                    '| %s | %s | %s | %s | %s | %s |',
+                    '| %s | %s | %s | %s | %s | %s | %s |',
                     $row['Parser'],
                     $row['Count'],
-                    $row['Browsers'],
-                    $row['Versions'],
-                    $row['Engines'],
+                    $row[self::SCORE_CLIENT],
+                    $row[self::SCORE_CLIENT_BROWSER],
+                    $row[self::SCORE_CLIENT_VERSION],
+                    $row[self::SCORE_CLIENT_ENGINE],
                     $row['Scores'],
                 ) . PHP_EOL;
         }

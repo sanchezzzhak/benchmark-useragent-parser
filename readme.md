@@ -4,11 +4,11 @@ Info
 * For each definition 1 point is 🏆 awarded
 
 ##### Browser nomination
-| Parser Name | Count | Browsers | Versions | Engines | Scores |
-| ---- | ---- | ---- | ---- | ---- | ---- |
-| mimmi20/browser-detector | 346301 | 338054 | 324185 | 332446 | 994685 |
-| matomo/device-detector | 336911 | 323641 | 289943 | 258677 | 872261 |
-| whichbrowser/parser | 130083 | 112777 | 81299 | 117583 | 311659 |
+| Parser Name | Count | Clients | Browsers | Versions | Engines | Scores |
+| ---- | ---- | ---- | ---- | ---- | ---- |  ---- |
+| mimmi20/browser-detector | 346301 | 338054 | 244429 | 324185 | 332446 | 1239114 |
+| matomo/device-detector | 336911 | 323641 | 265867 | 289943 | 258677 | 1138128 |
+| whichbrowser/parser | 130083 | 112777 | 77130 | 81299 | 117583 | 388789 |
 
 
 
@@ -24,9 +24,9 @@ Info
 ##### Device nomination
 | Parser Name | Count | Device types | Device brands | Device models | Scores |
 | ---- | ---- | ---- | ---- | ---- | ---- |
-| mimmi20/browser-detector | 346301 | 342244 | 342244 | 340514 | 1025002 |
+| mimmi20/browser-detector | 346301 | 340514 | 274721 | 340514 | 955749 |
 | matomo/device-detector | 336911 | 304588 | 264819 | 250600 | 820007 |
-| whichbrowser/parser | 130083 | 128469 | 101326 | 120963 | 350758 |
+| whichbrowser/parser | 130083 | 127665 | 101326 | 120963 | 349954 |
 
 
 
