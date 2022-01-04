@@ -47,8 +47,8 @@ Info
 | `php yii migrate` | to apply all migrations | 
 | `php yii serve` | run web server | 
  
-Commands  
----
+##### Commands  
+
 | Command | Description |
 | --- | --- |
 | `php yii robbing` | robbing new useragents to database |
