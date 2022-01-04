@@ -23,7 +23,7 @@ Info
 
 ##### Device nomination
 | Parser Name | Count | Device types | Device brands | Device models | Scores |
-| ---- | ---- | ---- | ---- | ---- |
+| ---- | ---- | ---- | ---- | ---- | ---- |
 | mimmi20/browser-detector | 346301 | 342244 | 342244 | 340514 | 1025002 |
 | matomo/device-detector | 336911 | 304588 | 264819 | 250600 | 820007 |
 | whichbrowser/parser | 130083 | 128469 | 101326 | 120963 | 350758 |

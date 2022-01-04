@@ -175,7 +175,7 @@ class CompareController extends Controller
         }
         $deviceNomination = $this->sortByScore($deviceNomination);
         $tableOS = "| Parser Name | Count | Device types | Device brands | Device models | Scores |\n";
-        $tableOS.= "| ---- | ---- | ---- | ---- | ---- |\n";
+        $tableOS.= "| ---- | ---- | ---- | ---- | ---- | ---- |\n";
         foreach ($deviceNomination as $row) {
             $tableOS .= sprintf(
                     '| %s | %s | %s | %s | %s | %s |',
