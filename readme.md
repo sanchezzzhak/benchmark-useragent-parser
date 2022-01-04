@@ -9,21 +9,36 @@ Info
 | mimmi20/browser-detector | 346301 | 338054 | 324185 | 332446 | 994685 |
 | matomo/device-detector | 336911 | 323641 | 289943 | 258677 | 872261 |
 | whichbrowser/parser | 130083 | 112777 | 81299 | 117583 | 311659 |
+
+
+
 ##### Bot nomination
 | Parser Name | Count | Bots | Scores |
 | ---- | ---- | ---- | ---- |
 | mimmi20/browser-detector | 346301 | 4057 | 4057 |
 | matomo/device-detector | 336911 | 2812 | 2812 |
 | whichbrowser/parser | 130083 | 804 | 804 |
+
+
+
 ##### Device nomination
-| Parser Name | Count | Device type | Device brand | Device model | Scores |
-| ---- | ---- | ---- | ---- | ---- | ---- |
+| Parser Name | Count | Device types | Device brands | Device models | Scores |
+| ---- | ---- | ---- | ---- | ---- |
+| mimmi20/browser-detector | 346301 | 342244 | 342244 | 340514 | 1025002 |
+| matomo/device-detector | 336911 | 304588 | 264819 | 250600 | 820007 |
+| whichbrowser/parser | 130083 | 128469 | 101326 | 120963 | 350758 |
+
+
+
 ##### OS nomination
 | Parser Name | Count | OS | OS Versions | Scores |
 | ---- | ---- | ---- | ---- | ---- |
 | mimmi20/browser-detector | 346301 | 340117 | 301464 | 641581 |
 | matomo/device-detector | 336911 | 318605 | 296130 | 614735 |
 | whichbrowser/parser | 130083 | 120146 | 115643 | 235789 |
+
+
+
 ##### Install 
 | Command | Description |
 | --- | --- |
