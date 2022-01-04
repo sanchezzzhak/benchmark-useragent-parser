@@ -10,7 +10,7 @@ Info
 | Parser Name | Count | Browsers | Versions | Engines | Scores |
 | ---- | ---- | ---- | ---- | ---- | ---- |
 | matomo/device-detector | 336911 | 323641 | 289943 | 258677 | 872261 |
-| mimmi20/browser-detector | 189964 | 185565 | 176950 | 182138 | 544653 |
+| mimmi20/browser-detector | 290933 | 285095 | 273298 | 279971 | 838364 |
 | whichbrowser/parser | 130083 | 112777 | 81299 | 117583 | 311659 |
 
 
