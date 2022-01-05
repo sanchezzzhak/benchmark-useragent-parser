@@ -97,6 +97,20 @@ class FinderUserAgentGrid extends AbstractGrid implements GridInterface
         ]);
 
         foreach ($results as $result) {
+
+            $actions = [];
+            $actions[] = Html::button('Detect', [
+                'class' => 'btn btn-danger btn-sm',
+                'data-action' => 're-detect',
+                'data-user-agent' => $model->user_agent,
+                'data-id' => $result->id,
+            ]);
+            $actions[] = Html::button('Detail', [
+                'class' => 'btn btn-dark btn-sm',
+                'data-action' => 'detail',
+                'data-json' => $result->data_json
+            ]);
+
             $content[] = Html::tag('tr',
                 ""
                 . Html::tag('td', ParserConfig::getNameById($result->parser_id))
@@ -116,11 +130,7 @@ class FinderUserAgentGrid extends AbstractGrid implements GridInterface
                 . Html::tag('td', $result->client_version)
                 . Html::tag('td', $result->engine_name)
                 . Html::tag('td', $result->engine_version)
-                . Html::tag('td',  Html::button('Detail', [
-                    'class' => 'btn btn-dark btn-sm',
-                    'data-action' => 'detail',
-                    'data-json' => $result->data_json
-                ]))
+                . Html::tag('td', implode(PHP_EOL, $actions))
             );
         }
 

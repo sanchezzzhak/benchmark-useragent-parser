@@ -88,11 +88,19 @@ $templateAddonBase = sprintf("{label}\n %s {input}\n{hint}\n{error} ", ' <div cl
 
 <?php
 $this->registerJs(<<<'JS'
-    $('.btn[data-action]').on('click', function (e) {
+    $('.btn[data-action="detail"]').on('click', function (e) {
       let json = JSON.parse($(this).attr('data-json'));
       $('#detail-parse').modal('show');
       $('#detail-parse').find('.modal-body')
       .html('<pre>' + JSON.stringify(json, null, 2) + '</pre>');
+    });
+
+    $('.btn[data-action="re-detect"]').on('click', function (e) {
+      $.ajax({
+        url:'/site/detect', method: 'get', data: {id: $(this).data('id'), ua: $(this).data('user-agent')}
+      }).done(function (data){
+        location.reload();
+      });
     });
 JS
 );
