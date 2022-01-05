@@ -2,8 +2,11 @@
 
 namespace app\controllers;
 
+use app\commands\MatomoParserController;
 use app\forms\FinderUserAgentForm;
 use app\grids\FinderUserAgentGrid;
+use app\helpers\ParserConfig;
+use app\models\BenchmarkResult;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -44,6 +47,25 @@ class SiteController extends Controller
         ]);
 
         return $this->render('index', compact('model', 'grid'));
+    }
+
+    public function actionDetect(int $id, int $parser)
+    {
+        $this->enableCsrfValidation = false;
+
+        $name = ParserConfig::getNameById($parser);
+        $row = BenchmarkResult::findOne(['id' => $id]);
+
+        switch ($name) {
+            case ParserConfig::PROJECT_MATOMO_DEVICE_DETECTOR:
+                $controller = new MatomoParserController($this->id, $this->module, []);
+                $controller->saveParseResult($row, $parser);
+                break;
+        }
+
+        return $this->asJson([
+
+        ]);
     }
 
 }

@@ -102,8 +102,8 @@ class FinderUserAgentGrid extends AbstractGrid implements GridInterface
             $actions[] = Html::button('Detect', [
                 'class' => 'btn btn-danger btn-sm',
                 'data-action' => 're-detect',
-                'data-user-agent' => $model->user_agent,
-                'data-id' => $result->id,
+                'data-parser' => $result->parser_id,
+                'data-id' => $model->id,
             ]);
             $actions[] = Html::button('Detail', [
                 'class' => 'btn btn-dark btn-sm',

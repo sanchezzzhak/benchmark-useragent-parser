@@ -7,6 +7,7 @@ use app\grids\FinderUserAgentGrid;
 use yii\bootstrap4\Html;
 use yii\bootstrap4\Modal;
 use yii\grid\GridView;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use app\forms\ActiveAddonField;
 
@@ -87,7 +88,10 @@ $templateAddonBase = sprintf("{label}\n %s {input}\n{hint}\n{error} ", ' <div cl
 <?= GridView::widget($grid->getConfig()) ?>
 
 <?php
-$this->registerJs(<<<'JS'
+
+$url = Url::to(['site/detect']);
+
+$this->registerJs(<<<JS
     $('.btn[data-action="detail"]').on('click', function (e) {
       let json = JSON.parse($(this).attr('data-json'));
       $('#detail-parse').modal('show');
@@ -96,9 +100,8 @@ $this->registerJs(<<<'JS'
     });
 
     $('.btn[data-action="re-detect"]').on('click', function (e) {
-      $.ajax({
-        url:'/site/detect', method: 'get', data: {id: $(this).data('id'), ua: $(this).data('user-agent')}
-      }).done(function (data){
+      $.ajax('$url', {method: 'get', data: {id: $(this).data('id'), parser: $(this).data('parser')}})
+      .done(function (data){
         location.reload();
       });
     });
