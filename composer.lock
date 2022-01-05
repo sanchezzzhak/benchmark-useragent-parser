@@ -449,12 +449,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/matomo-org/device-detector.git",
-                "reference": "2468a97d3b3f08c76b38473cb4030eda08c8bef2"
+                "reference": "6502da7084744d6793ba88de0caf605c64cc6d76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/matomo-org/device-detector/zipball/2468a97d3b3f08c76b38473cb4030eda08c8bef2",
-                "reference": "2468a97d3b3f08c76b38473cb4030eda08c8bef2",
+                "url": "https://api.github.com/repos/matomo-org/device-detector/zipball/6502da7084744d6793ba88de0caf605c64cc6d76",
+                "reference": "6502da7084744d6793ba88de0caf605c64cc6d76",
                 "shasum": ""
             },
             "require": {
@@ -511,7 +511,7 @@
                 "source": "https://github.com/matomo-org/matomo",
                 "wiki": "https://dev.matomo.org/"
             },
-            "time": "2022-01-02T15:53:35+00:00"
+            "time": "2022-01-04T19:04:43+00:00"
         },
         {
             "name": "mimmi20/browser-detector",
