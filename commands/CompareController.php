@@ -30,6 +30,10 @@ class CompareController extends Controller
     private const SCORE_DEVICE_BRAND = 'deviceBrand';
     private const SCORE_DEVICE_MODEL = 'deviceModel';
     private const SCORE_DEVICE_TYPE = 'deviceType';
+    private const SCORE_DEVICE_TYPE_SMARTPHONE = 'deviceTypeSmartphone';
+    private const SCORE_DEVICE_TYPE_FEATURE_PHONE = 'deviceTypeFeaturePhone';
+    private const SCORE_DEVICE_TYPE_TABLET = 'deviceTypeTablet';
+    private const SCORE_DEVICE_TYPE_TV = 'deviceTypeTv';
 
     /**
      *
@@ -74,7 +78,8 @@ class CompareController extends Controller
 
     }
 
-    private function setEmptyValues(&$total, $parserId) {
+    private function setEmptyValues(&$total, $parserId)
+    {
         $total[$parserId] = [];
         $total[$parserId]['useragents'] = 0;
         $total[$parserId]['time'] = 0;
@@ -94,6 +99,10 @@ class CompareController extends Controller
             self::SCORE_CLIENT_ENGINE,
             self::SCORE_CLIENT_ENGINE_VERSION,
             self::SCORE_DEVICE_TYPE,
+            self::SCORE_DEVICE_TYPE_SMARTPHONE,
+            self::SCORE_DEVICE_TYPE_FEATURE_PHONE,
+            self::SCORE_DEVICE_TYPE_TABLET,
+            self::SCORE_DEVICE_TYPE_TV,
             self::SCORE_DEVICE_BRAND,
             self::SCORE_DEVICE_MODEL,
         ];
@@ -121,18 +130,43 @@ class CompareController extends Controller
                 $parseId = $result->parser_id;
                 $total[$parseId]['useragents'] = $useragentCounter;
                 // devices
+                $data = json_decode($result->data_json, true);
+
                 if (!empty($result->device_type)) {
+                    $subType = $data['device']['subtype'] ?? null;
                     $aggregate = !in_array($result->device_type, ['unknown', 'bot']);
                     $aggregate && $total[$parseId][self::SCORE_DEVICE_TYPE]++;
+
+                    if (in_array($result->device_type, ['tv', 'television'])) {
+                        $total[$parseId][self::SCORE_DEVICE_TYPE_TV]++;
+                    }
+                    if (in_array($result->device_type, ['tablet'])) {
+                        $total[$parseId][self::SCORE_DEVICE_TYPE_TABLET]++;
+                    }
+
+                    $hasSmartphone = $result->device_type === 'smartphone'
+                        || ($result->device_type === 'mobile' && $subType === 'smart');
+                    if ($hasSmartphone) {
+                        $total[$parseId][self::SCORE_DEVICE_TYPE_SMARTPHONE]++;
+                    }
+
+                    $hasFeaturePhone = in_array($result->device_type, ['feature-phone', 'feature phone'])
+                        || ($result->device_type === 'mobile' && $subType === 'feature');
+                    if ($hasFeaturePhone) {
+                        $total[$parseId][self::SCORE_DEVICE_TYPE_FEATURE_PHONE]++;
+                    }
                 }
+
                 if (!empty($result->brand_name)) {
                     $aggregate = !in_array($result->brand_name, ['unknown']);
                     $aggregate && $total[$parseId][self::SCORE_DEVICE_BRAND]++;
                 }
+
                 if (!empty($result->model_name)) {
                     $aggregate = !in_array($result->model_name, ['unknown', 'general Mobile Phone', 'general Tablet']);
                     $aggregate && $total[$parseId][self::SCORE_DEVICE_MODEL]++;
                 }
+
                 // bots
                 if ($result->is_bot) {
                     $total[$parseId][self::SCORE_BOT]++;
@@ -152,7 +186,7 @@ class CompareController extends Controller
                     $aggregate = !in_array($result->client_type, ['unknown']);
                     $aggregate && $total[$parseId][self::SCORE_CLIENT_TYPE]++;
 
-                    if(strtolower($result->client_type) === 'browser') {
+                    if (strtolower($result->client_type) === 'browser') {
                         $total[$parseId][self::SCORE_CLIENT_BROWSER]++;
                     }
                 }
@@ -182,27 +216,33 @@ class CompareController extends Controller
             $deviceNomination[] = [
                 'Parser' => ParserConfig::getNameById($parserId),
                 'Count' => $row['useragents'],
-                'Device type'   => $row[self::SCORE_DEVICE_TYPE],
-                'Device brand' => $row[self::SCORE_DEVICE_BRAND],
-                'Device model' => $row[self::SCORE_DEVICE_MODEL],
-                'Scores' => $row[self::SCORE_DEVICE_TYPE] + $row[self::SCORE_DEVICE_BRAND] +  $row[self::SCORE_DEVICE_MODEL]
+                self::SCORE_DEVICE_TYPE => $row[self::SCORE_DEVICE_TYPE],
+                self::SCORE_DEVICE_BRAND => $row[self::SCORE_DEVICE_BRAND],
+                self::SCORE_DEVICE_MODEL => $row[self::SCORE_DEVICE_MODEL],
+                self::SCORE_DEVICE_TYPE_SMARTPHONE => $row[self::SCORE_DEVICE_TYPE_SMARTPHONE],
+                self::SCORE_DEVICE_TYPE_TABLET => $row[self::SCORE_DEVICE_TYPE_TABLET],
+                self::SCORE_DEVICE_TYPE_FEATURE_PHONE => $row[self::SCORE_DEVICE_TYPE_FEATURE_PHONE],
+                'Scores' => $row[self::SCORE_DEVICE_TYPE] + $row[self::SCORE_DEVICE_BRAND] + $row[self::SCORE_DEVICE_MODEL]
             ];
         }
         $deviceNomination = $this->sortByScore($deviceNomination);
-        $tableOS = "| Parser Name | Count | Device types | Device brands | Device models | Scores |\n";
-        $tableOS.= "| ---- | ---- | ---- | ---- | ---- | ---- |\n";
+        $tableOS = "| Parser Name | Count | Device types | Smartphones | Tables | Feature phones | Device brands | Device models | Scores |\n";
+        $tableOS .= "| ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |\n";
         foreach ($deviceNomination as $row) {
             $tableOS .= sprintf(
-                    '| %s | %s | %s | %s | %s | %s |',
+                    '| %s | %s | %s | %s | %s | %s | %s | %s | %s |',
                     $row['Parser'],
                     $row['Count'],
-                    $row['Device type'],
-                    $row['Device brand'],
-                    $row['Device model'],
+                    $row[self::SCORE_DEVICE_TYPE],
+                    $row[self::SCORE_DEVICE_TYPE_SMARTPHONE],
+                    $row[self::SCORE_DEVICE_TYPE_TABLET],
+                    $row[self::SCORE_DEVICE_TYPE_FEATURE_PHONE],
+                    $row[self::SCORE_DEVICE_BRAND],
+                    $row[self::SCORE_DEVICE_MODEL],
                     $row['Scores'],
                 ) . PHP_EOL;
         }
-        return $tableOS. PHP_EOL . PHP_EOL;
+        return $tableOS . PHP_EOL . PHP_EOL;
     }
 
     /**
@@ -217,26 +257,26 @@ class CompareController extends Controller
             $osNomination[] = [
                 'Parser' => ParserConfig::getNameById($parserId),
                 'Count' => $row['useragents'],
-                'OS'   => $row[self::SCORE_OS],
-                'OS Versions' => $row[self::SCORE_OS_VERSION],
+                self::SCORE_OS => $row[self::SCORE_OS],
+                self::SCORE_OS_VERSION => $row[self::SCORE_OS_VERSION],
                 'Scores' => $row[self::SCORE_OS_VERSION] + $row[self::SCORE_OS]
             ];
         }
         $osNomination = $this->sortByScore($osNomination);
         $tableOS = "| Parser Name | Count | OS | OS Versions | Scores |\n";
-        $tableOS.= "| ---- | ---- | ---- | ---- | ---- |\n";
+        $tableOS .= "| ---- | ---- | ---- | ---- | ---- |\n";
         foreach ($osNomination as $row) {
             $tableOS .= sprintf(
                     '| %s | %s | %s | %s | %s |',
                     $row['Parser'],
                     $row['Count'],
-                    $row['OS'],
-                    $row['OS Versions'],
+                    $row[self::SCORE_OS],
+                    $row[self::SCORE_OS_VERSION],
                     $row['Scores'],
                 ) . PHP_EOL;
         }
 
-        return $tableOS. PHP_EOL . PHP_EOL;
+        return $tableOS . PHP_EOL . PHP_EOL;
     }
 
     /**
@@ -251,20 +291,20 @@ class CompareController extends Controller
             $botNomination[] = [
                 'Parser' => ParserConfig::getNameById($parserId),
                 'Count' => $row['useragents'],
-                'Bots'   => $row[self::SCORE_BOT],
+                self::SCORE_BOT => $row[self::SCORE_BOT],
                 'Scores' => $row[self::SCORE_BOT]
             ];
         }
         $botNomination = $this->sortByScore($botNomination);
         $tableBot = "| Parser Name | Count | Bots | Scores |\n";
-        $tableBot.= "| ---- | ---- | ---- | ---- |\n";
+        $tableBot .= "| ---- | ---- | ---- | ---- |\n";
 
         foreach ($botNomination as $row) {
             $tableBot .= sprintf(
                     '| %s | %s | %s | %s |',
                     $row['Parser'],
                     $row['Count'],
-                    $row['Bots'],
+                    $row[self::SCORE_BOT],
                     $row['Scores'],
                 ) . PHP_EOL;
         }
@@ -284,10 +324,10 @@ class CompareController extends Controller
             $browserNomination[] = [
                 'Parser' => ParserConfig::getNameById($parserId),
                 'Count' => $row['useragents'],
-                self::SCORE_CLIENT   => $row[self::SCORE_CLIENT],
-                self::SCORE_CLIENT_BROWSER   => $row[self::SCORE_CLIENT_BROWSER],
-                self::SCORE_CLIENT_VERSION  => $row[self::SCORE_CLIENT_VERSION],
-                self::SCORE_CLIENT_ENGINE   => $row[self::SCORE_CLIENT_ENGINE],
+                self::SCORE_CLIENT => $row[self::SCORE_CLIENT],
+                self::SCORE_CLIENT_BROWSER => $row[self::SCORE_CLIENT_BROWSER],
+                self::SCORE_CLIENT_VERSION => $row[self::SCORE_CLIENT_VERSION],
+                self::SCORE_CLIENT_ENGINE => $row[self::SCORE_CLIENT_ENGINE],
                 'Scores' => $row[self::SCORE_CLIENT]
                     + $row[self::SCORE_CLIENT_BROWSER]
                     + $row[self::SCORE_CLIENT_VERSION]
@@ -297,7 +337,7 @@ class CompareController extends Controller
         $browserNomination = $this->sortByScore($browserNomination);
 
         $tableBrowser = "| Parser Name | Count | Clients | Browsers | Versions | Engines | Scores |\n";
-        $tableBrowser.= "| ---- | ---- | ---- | ---- | ---- | ---- | ---- |\n";
+        $tableBrowser .= "| ---- | ---- | ---- | ---- | ---- | ---- | ---- |\n";
 
         foreach ($browserNomination as $row) {
             $tableBrowser .= sprintf(
@@ -325,10 +365,10 @@ class CompareController extends Controller
         uasort($rows, static function ($a, $b) {
             $posA = (int)($a['Scores'] ?? 0);
             $posB = (int)($b['Scores'] ?? 0);
-            if($posA === $posB) {
+            if ($posA === $posB) {
                 return 0;
             }
-            return $posA < $posB ? 1: -1;
+            return $posA < $posB ? 1 : -1;
         });
         return $rows;
     }

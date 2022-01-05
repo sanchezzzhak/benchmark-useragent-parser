@@ -7,7 +7,7 @@ Info
 | Parser Name | Count | Clients | Browsers | Versions | Engines | Scores |
 | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
 | mimmi20/browser-detector | 346301 | 338054 | 244429 | 324185 | 332446 | 1239114 |
-| matomo/device-detector | 336911 | 323641 | 265867 | 289943 | 258677 | 1138128 |
+| matomo/device-detector | 346301 | 332954 | 274717 | 299014 | 267531 | 1174216 |
 | whichbrowser/parser | 346301 | 288155 | 210058 | 215506 | 299925 | 1013644 |
 
 
@@ -17,16 +17,16 @@ Info
 | ---- | ---- | ---- | ---- |
 | mimmi20/browser-detector | 346301 | 4057 | 4057 |
 | whichbrowser/parser | 346301 | 2948 | 2948 |
-| matomo/device-detector | 336911 | 2812 | 2812 |
+| matomo/device-detector | 346301 | 2854 | 2854 |
 
 
 
 ##### Device nomination
-| Parser Name | Count | Device types | Device brands | Device models | Scores |
-| ---- | ---- | ---- | ---- | ---- | ---- |
-| mimmi20/browser-detector | 346301 | 340514 | 274721 | 340514 | 955749 |
-| whichbrowser/parser | 346301 | 322858 | 237450 | 285449 | 845757 |
-| matomo/device-detector | 336911 | 304588 | 264824 | 250606 | 820018 |
+| Parser Name | Count | Device types | Smartphones | Tables | Feature phones | Device brands | Device models | Scores |
+| ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
+| mimmi20/browser-detector | 346301 | 340514 | 193607 | 44368 | 8537 | 274721 | 314040 | 929275 |
+| matomo/device-detector | 346301 | 318891 | 197851 | 59724 | 6346 | 273851 | 259476 | 852218 |
+| whichbrowser/parser | 346301 | 322858 | 221388 | 64188 | 14009 | 237450 | 285449 | 845757 |
 
 
 
@@ -34,7 +34,7 @@ Info
 | Parser Name | Count | OS | OS Versions | Scores |
 | ---- | ---- | ---- | ---- | ---- |
 | mimmi20/browser-detector | 346301 | 340117 | 301464 | 641581 |
-| matomo/device-detector | 336911 | 318605 | 296130 | 614735 |
+| matomo/device-detector | 346301 | 335595 | 305316 | 640911 |
 | whichbrowser/parser | 346301 | 301535 | 278230 | 579765 |
 
 
