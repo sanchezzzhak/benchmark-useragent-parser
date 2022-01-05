@@ -5,10 +5,10 @@ Info
 
 ##### Browser nomination
 | Parser Name | Count | Clients | Browsers | Versions | Engines | Scores |
-| ---- | ---- | ---- | ---- | ---- | ---- |  ---- |
+| ---- | ---- | ---- | ---- | ---- | ---- | ---- |
 | mimmi20/browser-detector | 346301 | 338054 | 244429 | 324185 | 332446 | 1239114 |
 | matomo/device-detector | 336911 | 323641 | 265867 | 289943 | 258677 | 1138128 |
-| whichbrowser/parser | 130083 | 112777 | 77130 | 81299 | 117583 | 388789 |
+| whichbrowser/parser | 346301 | 288155 | 210058 | 215506 | 299925 | 1013644 |
 
 
 
@@ -16,8 +16,8 @@ Info
 | Parser Name | Count | Bots | Scores |
 | ---- | ---- | ---- | ---- |
 | mimmi20/browser-detector | 346301 | 4057 | 4057 |
+| whichbrowser/parser | 346301 | 2948 | 2948 |
 | matomo/device-detector | 336911 | 2812 | 2812 |
-| whichbrowser/parser | 130083 | 804 | 804 |
 
 
 
@@ -25,8 +25,8 @@ Info
 | Parser Name | Count | Device types | Device brands | Device models | Scores |
 | ---- | ---- | ---- | ---- | ---- | ---- |
 | mimmi20/browser-detector | 346301 | 340514 | 274721 | 340514 | 955749 |
-| matomo/device-detector | 336911 | 304588 | 264819 | 250600 | 820007 |
-| whichbrowser/parser | 130083 | 127665 | 101326 | 120963 | 349954 |
+| whichbrowser/parser | 346301 | 322858 | 237450 | 285449 | 845757 |
+| matomo/device-detector | 336911 | 304588 | 264824 | 250606 | 820018 |
 
 
 
@@ -35,7 +35,7 @@ Info
 | ---- | ---- | ---- | ---- | ---- |
 | mimmi20/browser-detector | 346301 | 340117 | 301464 | 641581 |
 | matomo/device-detector | 336911 | 318605 | 296130 | 614735 |
-| whichbrowser/parser | 130083 | 120146 | 115643 | 235789 |
+| whichbrowser/parser | 346301 | 301535 | 278230 | 579765 |
 
 
 
