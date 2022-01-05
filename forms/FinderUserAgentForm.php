@@ -23,6 +23,7 @@ class FinderUserAgentForm extends Model
     public $clientVersion;
     public $osName;
     public $osVersion;
+    public $isBot;
 
     public $notModelName = false;
     public $emptyModelName = false;
@@ -43,7 +44,8 @@ class FinderUserAgentForm extends Model
                 'osName',
                 'osVersion'
             ], 'string'],
-            [['sourceId', 'parserId'], 'number'],
+            [['sourceId', 'parserId'], 'each', 'rule' => ['integer']],
+            [['isBot'], 'integer'],
             [['notModelName', 'emptyModelName'], 'boolean'],
         ];
     }
@@ -61,25 +63,35 @@ class FinderUserAgentForm extends Model
         return ArrayHelper::map(ParserConfig::REPOSITORIES, 'id', 'name');
     }
 
+    public function getBooleanOptions(): array
+    {
+        return [0 => 'No', 1 => 'Yes'];
+    }
+
     public function search(array $params = [], ?string $formName = null): DataProviderInterface
     {
         $this->load($params, $formName);
         $query = BenchmarkResult::find();
 
         $query->andFilterCompare('benchmark_result.user_agent', $this->userAgent, 'like');
-        $query->andFilterCompare('benchmark_result.source_id', $this->sourceId);
 
-        if (!$this->notModelName) {
-            $query->andFilterCompare('device_detector_result.model_name', $this->modelName, 'like');
-        } else {
-            $query->andFilterCompare('device_detector_result.model_name', $this->modelName, 'not like');
-        }
+        $query->andFilterWhere([
+            'benchmark_result.source_id' => $this->sourceId,
+            'device_detector_result.parser_id' => $this->parserId,
+            'device_detector_result.is_bot' => $this->isBot
+        ]);
+
+        $query->andFilterCompare(
+            'device_detector_result.model_name',
+            $this->modelName,
+            !$this->notModelName ? 'like' : 'not like'
+        );
 
         if ($this->emptyModelName) {
             $query->andFilterWhere(['IN', 'device_detector_result.model_name', ['', new Expression('NULL')]]);
         }
 
-        $query->andFilterCompare('device_detector_result.parser_id', $this->parserId);
+
         $query->andFilterCompare('device_detector_result.brand_name', $this->brandName, 'like');
         $query->andFilterCompare('device_detector_result.device_type', $this->deviceType, 'like');
         $query->andFilterCompare('device_detector_result.client_type', $this->clientType, 'like');

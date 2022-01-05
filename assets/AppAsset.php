@@ -22,8 +22,10 @@ class AppAsset extends AssetBundle
     public $css = [
         'css/site.css',
         'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css'
     ];
     public $js = [
+        'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',

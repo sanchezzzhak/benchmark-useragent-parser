@@ -130,7 +130,7 @@ class CompareController extends Controller
                     $aggregate && $total[$parseId][self::SCORE_DEVICE_BRAND]++;
                 }
                 if (!empty($result->model_name)) {
-                    $aggregate = !in_array($result->model_name, ['unknown']);
+                    $aggregate = !in_array($result->model_name, ['unknown', 'general Mobile Phone', 'general Tablet']);
                     $aggregate && $total[$parseId][self::SCORE_DEVICE_MODEL]++;
                 }
                 // bots

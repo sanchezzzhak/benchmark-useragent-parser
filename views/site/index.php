@@ -51,14 +51,18 @@ $templateAddonBase = sprintf("{label}\n %s {input}\n{hint}\n{error} ", ' <div cl
         <div class="col-3">
             <?= $form->field($model, 'parserId')
                 ->dropDownList($model->getSourceIdOptions(), [
-                    'prompt' => 'Select result UA repository'
+                    'prompt' => 'Select result UA repository',
+                    'data-widget' => 'select2',
+                    'multiple' => 'multiple'
                 ]) ?>
         </div>
         <div class="col-3">
             <div></div>
             <?= $form->field($model, 'sourceId')
                 ->dropDownList($model->getSourceIdOptions(), [
-                    'prompt' => 'Select source UA repository'
+                    'prompt' => 'Select source UA repository',
+                    'data-widget' => 'select2',
+                    'multiple' => 'multiple'
                 ]) ?>
         </div>
         <div class="col-3"><?= $form->field($model, 'clientName') ?></div>
@@ -78,6 +82,12 @@ $templateAddonBase = sprintf("{label}\n %s {input}\n{hint}\n{error} ", ' <div cl
         </div>
         <div class="col-3">
             <?= $form->field($model, 'clientVersion') ?>
+        </div>
+        <div class="col-3">
+            <?= $form->field($model, 'isBot')
+                ->dropDownList($model->getBooleanOptions(), [
+                    'prompt' => 'Select stage isBot',
+                ]) ?>
         </div>
     </div>
     <?= Html::submitButton('Apply Filter', ['class' => 'btn btn-primary']) ?>
@@ -105,6 +115,8 @@ $this->registerJs(<<<JS
         location.reload();
       });
     });
+    
+    $('select[data-widget="select2"]').select2()
 JS
 );
 ?>
