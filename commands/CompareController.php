@@ -4,36 +4,70 @@
 namespace app\commands;
 
 
+use app\helpers\ParserHelper;
 use app\models\BenchmarkResult;
-use app\models\Offer;
+use app\models\DeviceDetectorResult;
 use yii\console\Controller;
 use app\helpers\ParserConfig;
-use yii\console\Markdown;
-use yii\console\widgets\Table;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Console;
 
 class CompareController extends Controller
 {
-    private const SCORE_BOT = 'bots';
-    private const SCORE_OS = 'os';
-    private const SCORE_OS_VERSION = 'osVersion';
-    private const SCORE_OS_PLATFORM = 'osPlatform';
+    /*
+              'count' => 'count(id)',
+            'minTime' => 'min(time)',
+            'maxTime' => 'min(time)',
+            'avgTime' => 'avg(time)',
+            'totalTime' => 'sum(time)',
+            'minRam' => 'min(memory)',
+            'maxRam' => 'max(memory)',
+            'totalRam' => 'sum(memory)',
+            'avgRam' => 'avg(memory)',
+            'uniqueBotFound' => 'count(DISTINCT bot_name)',
+            'botFound' => 'count(is_bot)',
+            'deviceTypeFound' => 'count(device_type)',
+            'deviceBrandFound' => 'count(brand_name)',
+            'deviceModelFound' => 'count(model_name)',
+            'uniqueDeviceModelFound' => 'count(DISTINCT model_name)',
+            'osFound' => 'count(os_name)',
+            'osVersionFound' => 'count(os_version)',
+            'clientFound' => 'count(client_name)',
+            'clientTypeFound' => 'count(client_type)',
+            'clientVersionFound' => 'count(client_version)',
+            'engineFound' => 'count(engine_name)',
+            'engineVersionFound' => 'count(engine_version)',
+     */
 
-    private const SCORE_CLIENT = 'client';
-    private const SCORE_CLIENT_BROWSER = 'browser';
-    private const SCORE_CLIENT_TYPE = 'clientType';
-    private const SCORE_CLIENT_VERSION = 'browserVersion';
-    private const SCORE_CLIENT_ENGINE = 'browserEngine';
-    private const SCORE_CLIENT_ENGINE_VERSION = 'browserEngineVersion';
 
-    private const SCORE_DEVICE_BRAND = 'deviceBrand';
-    private const SCORE_DEVICE_MODEL = 'deviceModel';
-    private const SCORE_DEVICE_TYPE = 'deviceType';
-    private const SCORE_DEVICE_TYPE_SMARTPHONE = 'deviceTypeSmartphone';
-    private const SCORE_DEVICE_TYPE_FEATURE_PHONE = 'deviceTypeFeaturePhone';
-    private const SCORE_DEVICE_TYPE_TABLET = 'deviceTypeTablet';
-    private const SCORE_DEVICE_TYPE_TV = 'deviceTypeTv';
+    private const SCORE_COUNT = 'uaFound';
+
+    private const SCORE_AVG_TIME = 'avgTime';
+    private const SCORE_MAX_TIME = 'maxTime';
+    private const SCORE_MIN_TIME = 'minTime';
+    private const SCORE_TOTAL_TIME = 'totalTime';
+
+    private const SCORE_AVG_RAM = 'avgRam';
+    private const SCORE_MAX_RAM = 'maxRam';
+    private const SCORE_MIN_RAM = 'minRam';
+    private const SCORE_TOTAL_RAM = 'totalRam';
+
+
+    private const SCORE_BOT = 'botFound';
+    private const SCORE_BOT_UNIQUE = 'uniqueBotFound';
+
+    private const SCORE_OS = 'osFound';
+    private const SCORE_OS_VERSION = 'osVersionFound';
+
+    private const SCORE_CLIENT = 'clientFound';
+    private const SCORE_CLIENT_TYPE = 'clientTypeFound';
+    private const SCORE_CLIENT_VERSION = 'clientVersionFound';
+    private const SCORE_CLIENT_ENGINE = 'engineFound';
+    private const SCORE_CLIENT_ENGINE_VERSION = 'engineVersionFound';
+
+    private const SCORE_DEVICE_BRAND = 'deviceBrandFound';
+    private const SCORE_DEVICE_MODEL = 'deviceModelFound';
+    private const SCORE_DEVICE_TYPE = 'deviceTypeFound';
+    private const SCORE_DEVICE_MODEL_UNIQUE = 'uniqueDeviceModelFound';
 
     /**
      *
@@ -44,32 +78,90 @@ class CompareController extends Controller
 
         $total = $this->getTotalReport();
 
-        $tableBrowser = $this->getTableBrowserNomination($total);
-        $tableBot = $this->getTableBotNomination($total);
-        $tableOS = $this->getTableOsNomination($total);
-        $tableDevice = $this->getTableDeviceNomination($total);
+        $parsersNomination = $this->sortByScore($total);
+        $columns = [
+            'Parser Name',
+            'UA Count',
+
+            'Min time',
+            'Max time',
+            'Total time',
+            'Avg time',
+
+            'Min memory',
+            'Max memory',
+            'Total memory',
+            'Avg memory',
+
+            'Bots',
+            'Bot uniques',
+
+            'OS',
+            'OS versions',
+
+            'Client types',
+            'Client names',
+            'Client versions',
+            'Engine names',
+            'Engine versions',
+            'Device types',
+            'Brand names',
+            'Model names',
+            'Model unique names',
+        ];
+        $totalTable = "";
+        $totalTable .= "| " . implode(' | ', $columns) . PHP_EOL;
+        $totalTable .= "|" . str_repeat(' ---- |', count($columns)) . PHP_EOL;
+        foreach ($parsersNomination as $row) {
+
+            $count = $row[self::SCORE_COUNT];
+            $row = [
+                $row['Parser'],
+                $count,
+
+                $row[self::SCORE_MIN_TIME],
+                $row[self::SCORE_MAX_TIME],
+                round($row[self::SCORE_TOTAL_TIME], 2),
+                round($row[self::SCORE_AVG_TIME], 4),
+
+                ParserHelper::formatBytes($row[self::SCORE_MIN_RAM]) ,
+                ParserHelper::formatBytes($row[self::SCORE_MAX_RAM]) ,
+                ParserHelper::formatBytes($row[self::SCORE_TOTAL_RAM]) ,
+                ParserHelper::formatBytes($row[self::SCORE_AVG_RAM]) ,
+
+                $row[self::SCORE_BOT],
+                $row[self::SCORE_BOT_UNIQUE],
+
+                $this->valueWithPercent($count, $row[self::SCORE_OS]),
+                $this->valueWithPercent($count, $row[self::SCORE_OS_VERSION]),
+
+                $this->valueWithPercent($count, $row[self::SCORE_CLIENT_TYPE]),
+                $this->valueWithPercent($count, $row[self::SCORE_CLIENT]),
+                $this->valueWithPercent($count, $row[self::SCORE_CLIENT_VERSION]),
+                $this->valueWithPercent($count, $row[self::SCORE_CLIENT_ENGINE]),
+                $this->valueWithPercent($count, $row[self::SCORE_CLIENT_ENGINE_VERSION]),
+
+                $this->valueWithPercent($count, $row[self::SCORE_DEVICE_TYPE]),
+                $this->valueWithPercent($count, $row[self::SCORE_DEVICE_BRAND]),
+                $this->valueWithPercent($count, $row[self::SCORE_DEVICE_MODEL]),
+                $this->valueWithPercent($count, $row[self::SCORE_DEVICE_MODEL_UNIQUE]),
+            ];
+            $totalTable .= "|" . implode("| ", $row) . PHP_EOL;
+
+        }
+        $totalTable .= PHP_EOL . PHP_EOL;
 
         $file = __DIR__ . '/../readme.md';
         $readme = file_get_contents($file);
 
         $readme = preg_replace(
-            '~^#{5} Bot nomination(?:.*?)\n#####~ims',
-            "##### Bot nomination\n" . $tableBot . "\n#####",
+            '~^#{5} Last date scan(?:.*?)\n#####~ims',
+            "##### Last date scan\n" . date('Y/m/d') . "\n#####",
             $readme, 1);
 
         $readme = preg_replace(
-            '~^#{5} Browser nomination(?:.*?)\n#####~ims',
-            "##### Browser nomination\n" . $tableBrowser . "\n#####",
-            $readme, 1);
-
-        $readme = preg_replace(
-            '~^#{5} OS nomination(?:.*?)\n#####~ims',
-            "##### OS nomination\n" . $tableOS . "\n#####",
-            $readme, 1);
-
-        $readme = preg_replace(
-            '~^#{5} Device nomination(?:.*?)\n#####~ims',
-            "##### Device nomination\n" . $tableDevice . "\n#####",
+            '~^#{5} Total(?:.*?)\n#####~ims',
+            "##### Total\n" . $totalTable . "\n#####",
             $readme, 1);
 
         file_put_contents($file, $readme);
@@ -78,289 +170,61 @@ class CompareController extends Controller
 
     }
 
-    private function setEmptyValues(&$total, $parserId)
+    private function getReportByParser(int $parserId)
     {
-        $total[$parserId] = [];
-        $total[$parserId]['useragents'] = 0;
-        $total[$parserId]['time'] = 0;
-        $total[$parserId]['memory'] = 0;
-        $total[$parserId]['memoryMax'] = 0;
-        $total[$parserId]['timeMax'] = 0;
-
-        $attrTypes = [
-            self::SCORE_BOT,
-            self::SCORE_OS,
-            self::SCORE_OS_VERSION,
-            self::SCORE_OS_PLATFORM,
-            self::SCORE_CLIENT,
-            self::SCORE_CLIENT_TYPE,
-            self::SCORE_CLIENT_BROWSER,
-            self::SCORE_CLIENT_VERSION,
-            self::SCORE_CLIENT_ENGINE,
-            self::SCORE_CLIENT_ENGINE_VERSION,
-            self::SCORE_DEVICE_TYPE,
-            self::SCORE_DEVICE_TYPE_SMARTPHONE,
-            self::SCORE_DEVICE_TYPE_FEATURE_PHONE,
-            self::SCORE_DEVICE_TYPE_TABLET,
-            self::SCORE_DEVICE_TYPE_TV,
-            self::SCORE_DEVICE_BRAND,
-            self::SCORE_DEVICE_MODEL,
-        ];
-        foreach ($attrTypes as $type) {
-            if (!isset($this->total[$parserId][$type])) {
-                $total[$parserId][$type] = 0;
-            }
-        }
+        $q = DeviceDetectorResult::find();
+        $q->select([
+            'uaFound' => 'count(*)',
+            'minTime' => 'min(time)',
+            'maxTime' => 'max(time)',
+            'avgTime' => 'avg(time)',
+            'totalTime' => 'sum(time)',
+            'minRam' => 'min(memory)',
+            'maxRam' => 'max(memory)',
+            'totalRam' => 'sum(memory)',
+            'avgRam' => 'avg(memory)',
+            'uniqueBotFound' => 'count(DISTINCT bot_name)',
+            'botFound' => 'sum(is_bot)',
+            'deviceTypeFound' => 'count(device_type)',
+            'deviceBrandFound' => 'count(brand_name)',
+            'deviceModelFound' => 'count(model_name)',
+            'uniqueDeviceModelFound' => 'count(DISTINCT model_name)',
+            'osFound' => 'count(os_name)',
+            'osVersionFound' => 'count(os_version)',
+            'clientFound' => 'count(client_name)',
+            'clientTypeFound' => 'count(client_type)',
+            'clientVersionFound' => 'count(client_version)',
+            'engineFound' => 'count(engine_name)',
+            'engineVersionFound' => 'count(engine_version)',
+        ]);
+        $q->where(['parser_id' => $parserId]);
+        $q->groupBy('parser_id');
+        $q->asArray();
+        return $q->one();
     }
+
 
     private function getTotalReport(): array
     {
-        $query = BenchmarkResult::find()->with([
-            'parseResults'
-        ]);
         $total = [];
         foreach (ParserConfig::REPOSITORIES as $repository) {
-            $this->setEmptyValues($total, $repository['id']);
+            $parserId = (int)$repository['id'];
+            $report = $this->getReportByParser($parserId);
+            $total[$parserId] = $report;
+            $total[$parserId]['Parser'] = ParserConfig::getNameById($parserId);
+            $total[$parserId]['Scores'] = 0;
         }
-        $useragentCounter = 0;
-        /** @var BenchmarkResult $model */
-        foreach ($query->each(100) as $model) {
-            $useragentCounter++;
-            foreach ($model->parseResults as $result) {
-                $parseId = $result->parser_id;
-                $total[$parseId]['useragents'] = $useragentCounter;
-                // devices
-                $data = json_decode($result->data_json, true);
 
-                if (!empty($result->device_type)) {
-                    $subType = $data['device']['subtype'] ?? null;
-                    $aggregate = !in_array($result->device_type, ['unknown', 'bot']);
-                    $aggregate && $total[$parseId][self::SCORE_DEVICE_TYPE]++;
 
-                    if (in_array($result->device_type, ['tv', 'television'])) {
-                        $total[$parseId][self::SCORE_DEVICE_TYPE_TV]++;
-                    }
-                    if (in_array($result->device_type, ['tablet'])) {
-                        $total[$parseId][self::SCORE_DEVICE_TYPE_TABLET]++;
-                    }
-
-                    $hasSmartphone = $result->device_type === 'smartphone'
-                        || ($result->device_type === 'mobile' && $subType === 'smart');
-                    if ($hasSmartphone) {
-                        $total[$parseId][self::SCORE_DEVICE_TYPE_SMARTPHONE]++;
-                    }
-
-                    $hasFeaturePhone = in_array($result->device_type, ['feature-phone', 'feature phone'])
-                        || ($result->device_type === 'mobile' && $subType === 'feature');
-                    if ($hasFeaturePhone) {
-                        $total[$parseId][self::SCORE_DEVICE_TYPE_FEATURE_PHONE]++;
-                    }
-                }
-
-                if (!empty($result->brand_name)) {
-                    $aggregate = !in_array($result->brand_name, ['unknown']);
-                    $aggregate && $total[$parseId][self::SCORE_DEVICE_BRAND]++;
-                }
-
-                if (!empty($result->model_name)) {
-                    $aggregate = !in_array($result->model_name, ['unknown', 'general Mobile Phone', 'general Tablet']);
-                    $aggregate && $total[$parseId][self::SCORE_DEVICE_MODEL]++;
-                }
-
-                // bots
-                if ($result->is_bot) {
-                    $total[$parseId][self::SCORE_BOT]++;
-                }
-                // oss
-                if (!empty($result->os_name)) {
-                    $total[$parseId][self::SCORE_OS]++;
-                }
-                if (!empty($result->os_version)) {
-                    $total[$parseId][self::SCORE_OS_VERSION]++;
-                }
-                // clients/browsers
-                if (!empty($result->client_name)) {
-                    $total[$parseId][self::SCORE_CLIENT]++;
-                }
-                if (!empty($result->client_type)) {
-                    $aggregate = !in_array($result->client_type, ['unknown']);
-                    $aggregate && $total[$parseId][self::SCORE_CLIENT_TYPE]++;
-
-                    if (strtolower($result->client_type) === 'browser') {
-                        $total[$parseId][self::SCORE_CLIENT_BROWSER]++;
-                    }
-                }
-                if (!empty($result->client_version)) {
-                    $total[$parseId][self::SCORE_CLIENT_VERSION]++;
-                }
-                if (!empty($result->engine_name)) {
-                    $total[$parseId][self::SCORE_CLIENT_ENGINE]++;
-                }
-                if (!empty($result->engine_version)) {
-                    $total[$parseId][self::SCORE_CLIENT_ENGINE_VERSION]++;
-                }
-            }
-        }
         return $total;
-    }
-
-    /**
-     * Scoring for the Device table
-     * @param array $total
-     * @return string
-     */
-    private function getTableDeviceNomination(array $total)
-    {
-        $deviceNomination = [];
-        foreach ($total as $parserId => $row) {
-            $deviceNomination[] = [
-                'Parser' => ParserConfig::getNameById($parserId),
-                'Count' => $row['useragents'],
-                self::SCORE_DEVICE_TYPE => $row[self::SCORE_DEVICE_TYPE],
-                self::SCORE_DEVICE_BRAND => $row[self::SCORE_DEVICE_BRAND],
-                self::SCORE_DEVICE_MODEL => $row[self::SCORE_DEVICE_MODEL],
-                self::SCORE_DEVICE_TYPE_SMARTPHONE => $row[self::SCORE_DEVICE_TYPE_SMARTPHONE],
-                self::SCORE_DEVICE_TYPE_TABLET => $row[self::SCORE_DEVICE_TYPE_TABLET],
-                self::SCORE_DEVICE_TYPE_FEATURE_PHONE => $row[self::SCORE_DEVICE_TYPE_FEATURE_PHONE],
-                'Scores' => $row[self::SCORE_DEVICE_TYPE] + $row[self::SCORE_DEVICE_BRAND] + $row[self::SCORE_DEVICE_MODEL]
-            ];
-        }
-        $deviceNomination = $this->sortByScore($deviceNomination);
-        $tableOS = "| Parser Name | Count | Device types | Smartphones | Tables | Feature phones | Device brands | Device models | Scores |\n";
-        $tableOS .= "| ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |\n";
-        foreach ($deviceNomination as $row) {
-            $tableOS .= sprintf(
-                    '| %s | %s | %s | %s | %s | %s | %s | %s | %s |',
-                    $row['Parser'],
-                    $row['Count'],
-                    $row[self::SCORE_DEVICE_TYPE],
-                    $row[self::SCORE_DEVICE_TYPE_SMARTPHONE],
-                    $row[self::SCORE_DEVICE_TYPE_TABLET],
-                    $row[self::SCORE_DEVICE_TYPE_FEATURE_PHONE],
-                    $row[self::SCORE_DEVICE_BRAND],
-                    $row[self::SCORE_DEVICE_MODEL],
-                    $row['Scores'],
-                ) . PHP_EOL;
-        }
-        return $tableOS . PHP_EOL . PHP_EOL;
-    }
-
-    /**
-     * Scoring for the OS table
-     * @param array $total
-     * @return string
-     */
-    private function getTableOsNomination(array $total)
-    {
-        $osNomination = [];
-        foreach ($total as $parserId => $row) {
-            $osNomination[] = [
-                'Parser' => ParserConfig::getNameById($parserId),
-                'Count' => $row['useragents'],
-                self::SCORE_OS => $row[self::SCORE_OS],
-                self::SCORE_OS_VERSION => $row[self::SCORE_OS_VERSION],
-                'Scores' => $row[self::SCORE_OS_VERSION] + $row[self::SCORE_OS]
-            ];
-        }
-        $osNomination = $this->sortByScore($osNomination);
-        $tableOS = "| Parser Name | Count | OS | OS Versions | Scores |\n";
-        $tableOS .= "| ---- | ---- | ---- | ---- | ---- |\n";
-        foreach ($osNomination as $row) {
-            $tableOS .= sprintf(
-                    '| %s | %s | %s | %s | %s |',
-                    $row['Parser'],
-                    $row['Count'],
-                    $row[self::SCORE_OS],
-                    $row[self::SCORE_OS_VERSION],
-                    $row['Scores'],
-                ) . PHP_EOL;
-        }
-
-        return $tableOS . PHP_EOL . PHP_EOL;
-    }
-
-    /**
-     * Scoring for the Bots table
-     * @param array $total
-     * @return string
-     */
-    private function getTableBotNomination(array $total)
-    {
-        $botNomination = [];
-        foreach ($total as $parserId => $row) {
-            $botNomination[] = [
-                'Parser' => ParserConfig::getNameById($parserId),
-                'Count' => $row['useragents'],
-                self::SCORE_BOT => $row[self::SCORE_BOT],
-                'Scores' => $row[self::SCORE_BOT]
-            ];
-        }
-        $botNomination = $this->sortByScore($botNomination);
-        $tableBot = "| Parser Name | Count | Bots | Scores |\n";
-        $tableBot .= "| ---- | ---- | ---- | ---- |\n";
-
-        foreach ($botNomination as $row) {
-            $tableBot .= sprintf(
-                    '| %s | %s | %s | %s |',
-                    $row['Parser'],
-                    $row['Count'],
-                    $row[self::SCORE_BOT],
-                    $row['Scores'],
-                ) . PHP_EOL;
-        }
-
-        return $tableBot . PHP_EOL . PHP_EOL;
-    }
-
-    /**
-     * Scoring for the Browser table
-     * @param array $total
-     * @return string
-     */
-    private function getTableBrowserNomination(array $total)
-    {
-        $browserNomination = [];
-        foreach ($total as $parserId => $row) {
-            $browserNomination[] = [
-                'Parser' => ParserConfig::getNameById($parserId),
-                'Count' => $row['useragents'],
-                self::SCORE_CLIENT => $row[self::SCORE_CLIENT],
-                self::SCORE_CLIENT_BROWSER => $row[self::SCORE_CLIENT_BROWSER],
-                self::SCORE_CLIENT_VERSION => $row[self::SCORE_CLIENT_VERSION],
-                self::SCORE_CLIENT_ENGINE => $row[self::SCORE_CLIENT_ENGINE],
-                'Scores' => $row[self::SCORE_CLIENT]
-                    + $row[self::SCORE_CLIENT_BROWSER]
-                    + $row[self::SCORE_CLIENT_VERSION]
-                    + $row[self::SCORE_CLIENT_ENGINE]
-            ];
-        }
-        $browserNomination = $this->sortByScore($browserNomination);
-
-        $tableBrowser = "| Parser Name | Count | Clients | Browsers | Versions | Engines | Scores |\n";
-        $tableBrowser .= "| ---- | ---- | ---- | ---- | ---- | ---- | ---- |\n";
-
-        foreach ($browserNomination as $row) {
-            $tableBrowser .= sprintf(
-                    '| %s | %s | %s | %s | %s | %s | %s |',
-                    $row['Parser'],
-                    $row['Count'],
-                    $row[self::SCORE_CLIENT],
-                    $row[self::SCORE_CLIENT_BROWSER],
-                    $row[self::SCORE_CLIENT_VERSION],
-                    $row[self::SCORE_CLIENT_ENGINE],
-                    $row['Scores'],
-                ) . PHP_EOL;
-        }
-
-        return $tableBrowser . PHP_EOL . PHP_EOL;
     }
 
     /**
      * Sorting DESC by key `Scores`
      * @param $rows
-     * @return mixed
+     * @return array
      */
-    private function sortByScore($rows)
+    private function sortByScore($rows): array
     {
         uasort($rows, static function ($a, $b) {
             $posA = (int)($a['Scores'] ?? 0);
@@ -371,6 +235,12 @@ class CompareController extends Controller
             return $posA < $posB ? 1 : -1;
         });
         return $rows;
+    }
+
+    private function valueWithPercent($total, $value): string
+    {
+        $percent = $total / 100;
+        return sprintf('%s (%s%%)', $value, round($value / $percent, 2));
     }
 
 

@@ -3,40 +3,14 @@ Info
 * scoring when parsing a useragent, categories:
 * For each definition 1 point is 🏆 awarded
 
-##### Browser nomination
-| Parser Name | Count | Clients | Browsers | Versions | Engines | Scores |
-| ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-| mimmi20/browser-detector | 346301 | 338054 | 244429 | 324185 | 332446 | 1239114 |
-| matomo/device-detector | 346301 | 332954 | 274717 | 299014 | 267531 | 1174216 |
-| whichbrowser/parser | 346301 | 288155 | 210058 | 215506 | 299925 | 1013644 |
-
-
-
-##### Bot nomination
-| Parser Name | Count | Bots | Scores |
-| ---- | ---- | ---- | ---- |
-| mimmi20/browser-detector | 346301 | 4057 | 4057 |
-| whichbrowser/parser | 346301 | 2948 | 2948 |
-| matomo/device-detector | 346301 | 2854 | 2854 |
-
-
-
-##### Device nomination
-| Parser Name | Count | Device types | Smartphones | Tables | Feature phones | Device brands | Device models | Scores |
-| ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-| mimmi20/browser-detector | 346301 | 340514 | 193607 | 44368 | 8537 | 274721 | 314040 | 929275 |
-| matomo/device-detector | 346301 | 318891 | 197851 | 59724 | 6346 | 273851 | 259476 | 852218 |
-| whichbrowser/parser | 346301 | 322858 | 221388 | 64188 | 14009 | 237450 | 285449 | 845757 |
-
-
-
-##### OS nomination
-| Parser Name | Count | OS | OS Versions | Scores |
-| ---- | ---- | ---- | ---- | ---- |
-| mimmi20/browser-detector | 346301 | 340117 | 301464 | 641581 |
-| matomo/device-detector | 346301 | 335595 | 305316 | 640911 |
-| whichbrowser/parser | 346301 | 301535 | 278230 | 579765 |
-
+##### Last date scan
+2022/01/06
+##### Total
+| Parser Name | UA Count | Min time | Max time | Total time | Avg time | Min memory | Max memory | Total memory | Avg memory | Bots | Bot uniques | OS | OS versions | Client types | Client names | Client versions | Engine names | Engine versions | Device types | Brand names | Model names | Model unique names
+| ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
+|matomo/device-detector| 346301| 0.0| 0.5067| 1019.66| 0.0029| 96 byte| 6.24 Mb| 72.74 Mb| 220.25 byte| 2854| 356| 343447 (99.18%)| 343447 (99.18%)| 343447 (99.18%)| 343447 (99.18%)| 343447 (99.18%)| 274733 (79.33%)| 274733 (79.33%)| 343447 (99.18%)| 343447 (99.18%)| 343447 (99.18%)| 24900 (7.19%)
+|whichbrowser/parser| 328153| 0.0003| 0.9174| 361.92| 0.0011| 96 byte| 10.2 Mb| 524.38 Mb| 1.64 Kb| 2948| 274| 320209 (97.58%)| 320209 (97.58%)| 325205 (99.1%)| 325205 (99.1%)| 325205 (99.1%)| 325205 (99.1%)| 325205 (99.1%)| 328153 (100%)| 325205 (99.1%)| 325205 (99.1%)| 32690 (9.96%)
+|mimmi20/browser-detector| 346301| 0.0009| 1.3124| 1183.21| 0.0034| 96 byte| 4.79 Mb| 2.8 Gb| 8.48 Kb| 4057| 685| 342244 (98.83%)| 342244 (98.83%)| 342244 (98.83%)| 342244 (98.83%)| 342244 (98.83%)| 342244 (98.83%)| 342244 (98.83%)| 342244 (98.83%)| 342244 (98.83%)| 342244 (98.83%)| 15998 (4.62%)
 
 
 ##### Install 

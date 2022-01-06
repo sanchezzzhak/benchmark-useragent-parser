@@ -59,7 +59,8 @@ class WhichbrowserParserController extends Controller
             ];
 
             $deviceType = $detectResult['device']['type'] ?? '';
-            $model->device_type = $deviceType;
+            $deviceSubType = $detectResult['device']['subtype'] ?? '';
+            $model->device_type = $deviceSubType !== '' ? sprintf('%s-%s', $deviceSubType, $deviceType) : $deviceType;
             $model->data_json = json_encode($detectResult);
 
             if ($deviceType === 'bot') {
