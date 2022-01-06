@@ -30,6 +30,7 @@ Info
 | `php yii matomo-parser` | analyze all useragents and save result to db |
 | `php yii mimmi20-parser`| analyze all useragents and save result to db |
 | `php yii whichbrowser-parser` | analyze all useragents and save result to db |
+| `php yii mobiledetectlib-parser` | analyze all useragents and save result to db |
 
 After executing the above commands, you can view the results online
 ```
@@ -49,6 +50,7 @@ php -S localhost:8080
 * ![PHP](https://img.shields.io/badge/php-%23777BB4.svg?style=for-the-badge&logo=php&logoColor=white) [mimmi20/browser-detector](https://github.com/mimmi20/browser-detector)
 * ![PHP](https://img.shields.io/badge/php-%23777BB4.svg?style=for-the-badge&logo=php&logoColor=white) [matomo/device-detector](https://github.com/matomo-org/device-detector)
 * ![PHP](https://img.shields.io/badge/php-%23777BB4.svg?style=for-the-badge&logo=php&logoColor=white) [whichbrowser/parser](https://github.com/WhichBrowser/Parser-PHP)
+* ![PHP](https://img.shields.io/badge/php-%23777BB4.svg?style=for-the-badge&logo=php&logoColor=white) [mobiledetect/mobiledetectlib](https://github.com/serbanghita/Mobile-Detect.git)
 
 
 [Database](https://drive.google.com/file/d/1OxqFXft5W_buBAhzLXJOrOy2rESUxHg6/view?usp=sharing) extract data.zip to runtime/*
