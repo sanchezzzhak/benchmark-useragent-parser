@@ -13,32 +13,6 @@ use yii\helpers\Console;
 
 class CompareController extends Controller
 {
-    /*
-              'count' => 'count(id)',
-            'minTime' => 'min(time)',
-            'maxTime' => 'min(time)',
-            'avgTime' => 'avg(time)',
-            'totalTime' => 'sum(time)',
-            'minRam' => 'min(memory)',
-            'maxRam' => 'max(memory)',
-            'totalRam' => 'sum(memory)',
-            'avgRam' => 'avg(memory)',
-            'uniqueBotFound' => 'count(DISTINCT bot_name)',
-            'botFound' => 'count(is_bot)',
-            'deviceTypeFound' => 'count(device_type)',
-            'deviceBrandFound' => 'count(brand_name)',
-            'deviceModelFound' => 'count(model_name)',
-            'uniqueDeviceModelFound' => 'count(DISTINCT model_name)',
-            'osFound' => 'count(os_name)',
-            'osVersionFound' => 'count(os_version)',
-            'clientFound' => 'count(client_name)',
-            'clientTypeFound' => 'count(client_type)',
-            'clientVersionFound' => 'count(client_version)',
-            'engineFound' => 'count(engine_name)',
-            'engineVersionFound' => 'count(engine_version)',
-     */
-
-
     private const SCORE_COUNT = 'uaFound';
 
     private const SCORE_AVG_TIME = 'avgTime';

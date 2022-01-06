@@ -21,6 +21,7 @@
         "matomo/device-detector": "@dev",
         "whichbrowser/parser": "@dev",
         "mimmi20/browser-detector": "@dev",
+        "mobiledetect/mobiledetectlib": "@dev",
         "symfony/yaml": "^5.3"
     },
     "require-dev": {

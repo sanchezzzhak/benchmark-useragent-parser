@@ -11,6 +11,7 @@ class ParserConfig
     public const PROJECT_MATOMO_DEVICE_DETECTOR = 'matomo/device-detector';
     public const PROJECT_WHICHBROWSER_PARSER = 'whichbrowser/parser';
     public const PROJECT_MIMMI20_BROWSER_DETECTOR = 'mimmi20/browser-detector';
+    public const PROJECT_MOBILEDETECTLIB = 'mobiledetect/mobiledetectlib';
 
     public const REPOSITORIES = [
         self::PROJECT_MATOMO_DEVICE_DETECTOR => [
@@ -30,6 +31,12 @@ class ParserConfig
             'master',
             'id' => 3,
             'name' => 'mimmi20/browser-detector'
+        ],
+        self::PROJECT_MOBILEDETECTLIB => [
+            'https://github.com/serbanghita/Mobile-Detect.git',
+            'master',
+            'id' => 4,
+            'name' => 'mobiledetect/mobiledetectlib'
         ]
     ];
 
