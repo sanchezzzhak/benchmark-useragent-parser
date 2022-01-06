@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\commands\MatomoParserController;
+use app\commands\Mimmi20ParserController;
 use app\forms\FinderUserAgentForm;
 use app\grids\FinderUserAgentGrid;
 use app\helpers\ParserConfig;
@@ -51,9 +52,20 @@ class SiteController extends Controller
         $name = ParserConfig::getNameById($parser);
         $row = BenchmarkResult::findOne(['id' => $id]);
 
+        if ($row === null) {
+            return $this->asJson([
+                'success' => false,
+                'error' => sprintf('Benchmark result record not found id[%s]', $id)
+            ]);
+        }
+
         switch ($name) {
             case ParserConfig::PROJECT_MATOMO_DEVICE_DETECTOR:
                 $controller = new MatomoParserController($this->id, $this->module, []);
+                $controller->saveParseResult($row, $parser);
+                break;
+            case ParserConfig::PROJECT_MIMMI20_BROWSER_DETECTOR:
+                $controller = new Mimmi20ParserController($this->id, $this->module, []);
                 $controller->saveParseResult($row, $parser);
                 break;
         }

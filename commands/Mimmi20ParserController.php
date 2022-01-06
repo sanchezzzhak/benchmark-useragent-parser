@@ -31,11 +31,6 @@ class Mimmi20ParserController extends Controller
 
         $this->stdout(sprintf('Total useragents %s', $count) . PHP_EOL);
 
-        $logger = new LoggerFake;
-        $cache = new CacheFake;
-        $detectorFactory = new DetectorFactory($cache, $logger);
-        $parser = $detectorFactory();
-
         $i =0;
         /** @var BenchmarkResult $row */
         foreach ($query->each() as $row) {
@@ -49,49 +44,74 @@ class Mimmi20ParserController extends Controller
 
             $useragent = $row->user_agent;
             $log && $this->stdout(sprintf('#%s parse %s', $row->id, $useragent) . PHP_EOL);
+            $this->saveParseResult($row, $parserId);
 
-            /** @var ResultInterface $result */
-            $result = null;
-            $info = Benchmark::benchmarkWithCallback(function () use ($parser, $useragent, &$result) {
-                $result = $parser($useragent);
-            });
-
-            $model = DeviceDetectorResult::findOrCreate($row->id, $parserId);
-            $model->time = $info['time'];
-            $model->memory = $info['memory'];
-            $model->is_bot = false;
-
-            $browser = $result->getBrowser();
-            $deviceResult = $result->toArray();
-
-            if(isset($deviceResult['headers'])) {
-                unset($deviceResult['headers']);
-            }
-
-            if ($browser->getType()->isBot()) {
-                $model->is_bot = true;
-                $model->data_json = json_encode($deviceResult);
-                $model->bot_name = $deviceResult['browser']['name'] ?? '';
-                $model->save();
-                continue;
-            }
-
-            $model->os_name  = $deviceResult['os']['name'] ?? '';
-            $model->os_version = $deviceResult['os']['version'] ?? '';
-            $model->engine_version = $deviceResult['engine']['version'] ?? '';
-            $model->engine_name = $deviceResult['engine']['name'] ?? '';
-
-            $model->client_name = $deviceResult['browser']['name'] ?? '';
-            $model->client_version = $deviceResult['browser']['version'] ?? '';
-            $model->client_type = $deviceResult['browser']['type'] ?? '';
-
-            $model->device_type = $deviceResult['device']['type'] ?? '';
-            $model->brand_name = $deviceResult['device']['brand'] ?? '';
-            $model->model_name = $deviceResult['device']['marketingName'] ?? '';
-            $model->data_json = json_encode($deviceResult);
-            $model->save();
         }
 
         return ExitCode::OK;
     }
+
+    private function getParser(): Detector
+    {
+        static $parser;
+        if ($parser === null) {
+            $logger = new LoggerFake;
+            $cache = new CacheFake;
+            $detectorFactory = new DetectorFactory($cache, $logger);
+            $parser = $detectorFactory();
+        }
+        return $parser;
+    }
+
+    /**
+     * @param BenchmarkResult $row
+     * @param int $parserId
+     * @return bool
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     */
+    public function saveParseResult(BenchmarkResult $row, int $parserId): bool
+    {
+        $parser = $this->getParser();
+        $useragent = $row->user_agent;
+        /** @var ResultInterface $result */
+        $result = null;
+        $info = Benchmark::benchmarkWithCallback(function () use ($parser, $useragent, &$result) {
+            $result = $parser($useragent);
+        });
+
+        $model = DeviceDetectorResult::findOrCreate($row->id, $parserId);
+        $model->time = $info['time'];
+        $model->memory = $info['memory'];
+        $model->is_bot = false;
+
+        $browser = $result->getBrowser();
+        $deviceResult = $result->toArray();
+
+        if(isset($deviceResult['headers'])) {
+            unset($deviceResult['headers']);
+        }
+
+        if ($browser->getType()->isBot()) {
+            $model->is_bot = true;
+            $model->data_json = json_encode($deviceResult);
+            $model->bot_name = $deviceResult['browser']['name'] ?? '';
+            return $model->save();
+        }
+
+        $model->os_name  = $deviceResult['os']['name'] ?? '';
+        $model->os_version = $deviceResult['os']['version'] ?? '';
+        $model->engine_version = $deviceResult['engine']['version'] ?? '';
+        $model->engine_name = $deviceResult['engine']['name'] ?? '';
+
+        $model->client_name = $deviceResult['browser']['name'] ?? '';
+        $model->client_version = $deviceResult['browser']['version'] ?? '';
+        $model->client_type = $deviceResult['browser']['type'] ?? '';
+
+        $model->device_type = $deviceResult['device']['type'] ?? '';
+        $model->brand_name = $deviceResult['device']['brand'] ?? '';
+        $model->model_name = $deviceResult['device']['marketingName'] ?? '';
+        $model->data_json = json_encode($deviceResult);
+        return $model->save();
+    }
+
 }
