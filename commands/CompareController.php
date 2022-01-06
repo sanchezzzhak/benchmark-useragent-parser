@@ -172,6 +172,12 @@ class CompareController extends Controller
 
     private function getReportByParser(int $parserId)
     {
+        $countSelect = static fn($column) => sprintf(
+            "count(case when %s not in('', 'unknown') and %s not null then 1 end)",
+            $column,
+            $column
+        );
+
         $q = DeviceDetectorResult::find();
         $q->select([
             'uaFound' => 'count(*)',
@@ -185,17 +191,17 @@ class CompareController extends Controller
             'avgRam' => 'avg(memory)',
             'uniqueBotFound' => 'count(DISTINCT bot_name)',
             'botFound' => 'sum(is_bot)',
-            'deviceTypeFound' => 'count(device_type)',
-            'deviceBrandFound' => 'count(brand_name)',
-            'deviceModelFound' => 'count(model_name)',
+            'deviceTypeFound' => $countSelect('device_type'),
+            'deviceBrandFound' => $countSelect('brand_name'),
+            'deviceModelFound' =>  $countSelect('model_name'),
             'uniqueDeviceModelFound' => 'count(DISTINCT model_name)',
-            'osFound' => 'count(os_name)',
-            'osVersionFound' => 'count(os_version)',
-            'clientFound' => 'count(client_name)',
-            'clientTypeFound' => 'count(client_type)',
-            'clientVersionFound' => 'count(client_version)',
-            'engineFound' => 'count(engine_name)',
-            'engineVersionFound' => 'count(engine_version)',
+            'osFound' => $countSelect('os_name'),
+            'osVersionFound' => $countSelect('os_version'),
+            'clientFound' => $countSelect('client_name'),
+            'clientTypeFound' => $countSelect('client_type'),
+            'clientVersionFound' =>  $countSelect('client_version'),
+            'engineFound' => $countSelect('engine_name'),
+            'engineVersionFound' => $countSelect('engine_version'),
         ]);
         $q->where(['parser_id' => $parserId]);
         $q->groupBy('parser_id');
