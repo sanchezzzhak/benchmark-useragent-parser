@@ -8,11 +8,11 @@ use app\helpers\ParserConfig;
 use app\models\BenchmarkResult;
 use app\models\DeviceDetectorResult;
 
-use Mobile_Detect;
+use foroco\BrowserDetection;
 use yii\console\Controller;
 use yii\console\ExitCode;
 
-class MobiledetectlibParserController extends Controller
+class ForocoParserController extends Controller
 {
     /**
      * @param int $log
@@ -22,7 +22,7 @@ class MobiledetectlibParserController extends Controller
     public function actionIndex(int $log = 0, int $skip = 0)
     {
         $parserId =  ParserConfig::getSourceIdByRepository(
-            ParserConfig::PROJECT_MOBILEDETECTLIB);
+            ParserConfig::PROJECT_FOROCO_BROWSERDETECTION);
 
         $count = BenchmarkResult::find()->count();
         $perPage = 500;
@@ -44,11 +44,11 @@ class MobiledetectlibParserController extends Controller
         return ExitCode::OK;
     }
 
-    private function getParser(): Mobile_Detect
+    private function getParser(): BrowserDetection
     {
         static $parser;
         if ($parser === null) {
-            $parser = new Mobile_Detect;
+            $parser = new BrowserDetection;
         }
         return $parser;
     }
@@ -63,34 +63,33 @@ class MobiledetectlibParserController extends Controller
     {
         $parser = $this->getParser();
         $useragent = $row->user_agent;
-        $result = null;
+        $result = [];
         $info = Benchmark::benchmarkWithCallback(function () use ($parser, $useragent, &$result) {
-             $parser->setUserAgent($useragent);
-
-             $isBot = $parser->isBot() || $parser->isMobileBot();
-
-            if ($isMobile = $parser->isMobile()) {
-                $deviceType = 'mobile';
-            } else if ($parser->isTablet()) {
-                $deviceType = 'tablet';
-            } else {
-                $deviceType = 'desktop';
-            }
-            $result = [
-                'device_type' => $deviceType,
-                'is_bot' => $isBot
-            ];
+           try {
+               $result = $parser->getAll($useragent);
+           } catch (\Exception $exception) {
+               echo $useragent . PHP_EOL;
+               echo $exception->getMessage() , ' in Line ' , $exception->getLine(),
+                   ' in File' . $exception->getFile() . PHP_EOL;
+               $result = [];
+           }
         });
-
-        var_dump($result, $parser->getMatchingRegex(), $parser->getMatchesArray());
-
 
         $model = DeviceDetectorResult::findOrCreate($row->id, $parserId);
         $model->time = $info['time'];
         $model->memory = $info['memory'];
-        $model->is_bot = $result['is_bot'];
+        $model->device_type = $result['device_type'] ?? null;
+
+        $model->os_name = $result['os_name'] ?? null;
+        $model->os_version = !empty($result['os_version']) ? (string)$result['os_version']: null;
+
+        $model->client_name = $result['browser_name'] ?? null;
+        $model->client_version = !empty($result['browser_version']) ? (string)$result['browser_version']: null;
 
         $model->data_json = json_encode($result);
-        return $model->save();
+        if(!$model->save()) {
+            var_dump($model->getErrors());
+        }
+        return false;
     }
 }
