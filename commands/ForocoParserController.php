@@ -78,6 +78,7 @@ class ForocoParserController extends Controller
         $model = DeviceDetectorResult::findOrCreate($row->id, $parserId);
         $model->time = $info['time'];
         $model->memory = $info['memory'];
+        $model->is_bot = false;
         $model->device_type = $result['device_type'] ?? null;
 
         $model->os_name = $result['os_name'] ?? null;

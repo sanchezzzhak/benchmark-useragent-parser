@@ -52,3 +52,15 @@ php -S localhost:8080
 * ![PHP](https://img.shields.io/badge/php-%23777BB4.svg?style=for-the-badge&logo=php&logoColor=white) [matomo/device-detector](https://github.com/matomo-org/device-detector)
 * ![PHP](https://img.shields.io/badge/php-%23777BB4.svg?style=for-the-badge&logo=php&logoColor=white) [whichbrowser/parser](https://github.com/WhichBrowser/Parser-PHP)
 * ![PHP](https://img.shields.io/badge/php-%23777BB4.svg?style=for-the-badge&logo=php&logoColor=white) [foroco/browser-detection](https://github.com/foroco/php-browser-detection.git)
+
+
+[Last Database Download](https://drive.google.com/file/d/1sWoFYNPpixcKjevbYMuMpsLyaV4HH-VT/view?usp=sharing) format mysqldump
+
+restore dump
+```
+mysql -u root -p benchmark-useragent-parser < filename.sql
+```
+or 
+```
+unzip -p dbdump.zip | mysql -u root -p benchmark-useragent-parser
+```
