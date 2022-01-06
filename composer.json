@@ -22,6 +22,8 @@
         "whichbrowser/parser": "@dev",
         "mimmi20/browser-detector": "@dev",
         "foroco/php-browser-detection": "@dev",
+        "sinergi/browser-detector": "@dev",
+        "browscap/browscap-php": "@dev",
         "symfony/yaml": "^5.3"
     },
     "require-dev": {

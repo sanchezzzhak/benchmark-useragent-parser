@@ -12,6 +12,7 @@ class ParserConfig
     public const PROJECT_WHICHBROWSER_PARSER = 'whichbrowser/parser';
     public const PROJECT_MIMMI20_BROWSER_DETECTOR = 'mimmi20/browser-detector';
     public const PROJECT_FOROCO_BROWSERDETECTION = 'foroco/browser-detection';
+    public const PROJECT_BROWSCAP = 'browscap/browscap';
 
     public const REPOSITORIES = [
         self::PROJECT_MATOMO_DEVICE_DETECTOR => [
@@ -37,6 +38,12 @@ class ParserConfig
             'master',
             'id' => 4,
             'name' => 'foroco/browser-detection'
+        ],
+        self::PROJECT_BROWSCAP => [
+            'https://github.com/browscap/browscap-php.git',
+            'master',
+            'id' => 5,
+            'name' => 'browscap/browscap'
         ]
     ];
 
