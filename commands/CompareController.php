@@ -172,11 +172,13 @@ class CompareController extends Controller
 
     private function getReportByParser(int $parserId)
     {
-        $countSelect = static fn($column) => sprintf(
-            "count(case when %s not in('', 'unknown') and %s not null then 1 end)",
-            $column,
-            $column
-        );
+        $countSelect = static fn($column) =>
+            "count(case when $column != '' and $column != 'unknown' then 1 end)";
+
+        $countDeviceType = static fn($column) => "count(case when $column != '' 
+            and $column != 'unknown' 
+            and $column != 'bot'
+        then 1 end)";
 
         $q = DeviceDetectorResult::find();
         $q->select([
@@ -191,7 +193,7 @@ class CompareController extends Controller
             'avgRam' => 'avg(memory)',
             'uniqueBotFound' => 'count(DISTINCT bot_name)',
             'botFound' => 'sum(is_bot)',
-            'deviceTypeFound' => $countSelect('device_type'),
+            'deviceTypeFound' => $countDeviceType('device_type'),
             'deviceBrandFound' => $countSelect('brand_name'),
             'deviceModelFound' =>  $countSelect('model_name'),
             'uniqueDeviceModelFound' => 'count(DISTINCT model_name)',
