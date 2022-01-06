@@ -20,32 +20,28 @@ use yii\console\ExitCode;
 class Mimmi20ParserController extends Controller
 {
 
-    public function actionIndex(int $log = 0, int $skip = 0) {
+    public function actionIndex(int $log = 0) {
 
         $parserId =  ParserConfig::getSourceIdByRepository(
             ParserConfig::PROJECT_MIMMI20_BROWSER_DETECTOR);
 
-        $query = BenchmarkResult::find();
-        $queryCount = clone $query;
-        $count = $queryCount->count();
+
+        $count = BenchmarkResult::find()->count();
+        $perPage = 500;
+        $totalPages = ceil($count / $perPage);
 
         $this->stdout(sprintf('Total useragents %s', $count) . PHP_EOL);
 
-        $i =0;
         /** @var BenchmarkResult $row */
-        foreach ($query->each() as $row) {
-            $i++;
-            if ($skip > $i) {
-                continue;
+        for ($i = 0; $i < $totalPages; $i++) {
+            $offset = $i * $perPage;
+            $rows = BenchmarkResult::find()->limit($perPage)->offset($offset)->all();
+            $this->stdout(sprintf('%s/%s', $offset, $count) . PHP_EOL);
+            foreach ($rows as $row) {
+                $useragent = $row->user_agent;
+                $log && $this->stdout(sprintf('#%s parse %s', $row->id, $useragent) . PHP_EOL);
+                $this->saveParseResult($row, $parserId);
             }
-            if ($i % 100 === 0) {
-                $this->stdout(sprintf('%s/%s', $i, $count) . PHP_EOL);
-            }
-
-            $useragent = $row->user_agent;
-            $log && $this->stdout(sprintf('#%s parse %s', $row->id, $useragent) . PHP_EOL);
-            $this->saveParseResult($row, $parserId);
-
         }
 
         return ExitCode::OK;

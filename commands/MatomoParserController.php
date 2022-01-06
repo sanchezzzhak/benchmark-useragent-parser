@@ -31,37 +31,31 @@ class MatomoParserController extends Controller
 
     /**
      * @param int $log
-     * @param int $skip
      * @return int
      */
-    public function actionIndex(int $log = 0, $skip = 0)
+    public function actionIndex(int $log = 0)
     {
         $parserId =  ParserConfig::getSourceIdByRepository(
             ParserConfig::PROJECT_MATOMO_DEVICE_DETECTOR);
 
-        $query = BenchmarkResult::find();
-        $queryCount = clone $query;
-        $count = $queryCount->count();
+        AbstractDeviceParser::setVersionTruncation(AbstractDeviceParser::VERSION_TRUNCATION_NONE);
+
+        $count = BenchmarkResult::find()->count();
+        $perPage = 500;
+        $totalPages = ceil($count / $perPage);
 
         $this->stdout(sprintf('Total useragents %s', $count) . PHP_EOL);
 
-        AbstractDeviceParser::setVersionTruncation(AbstractDeviceParser::VERSION_TRUNCATION_NONE);
-
-
         /** @var BenchmarkResult $row */
-        $i = 0;
-        foreach ($query->each() as $row) {
-            $i++;
-            if ($skip > $i) {
-                continue;
+        for ($i = 0; $i < $totalPages; $i++) {
+            $offset = $i * $perPage;
+            $rows = BenchmarkResult::find()->limit($perPage)->offset($offset)->all();
+            $this->stdout(sprintf('%s/%s', $offset, $count) . PHP_EOL);
+            foreach ($rows as $row) {
+                $useragent = $row->user_agent;
+                $log && $this->stdout(sprintf('#%s parse %s', $row->id, $useragent) . PHP_EOL);
+                $this->saveParseResult($row, $parserId);
             }
-            if ($i % 100 === 0) {
-                $this->stdout(sprintf('%s/%s', $i, $count) . PHP_EOL);
-            }
-
-            $useragent = $row->user_agent;
-            $log && $this->stdout(sprintf('#%s parse %s', $row->id, $useragent) . PHP_EOL);
-            $this->saveParseResult($row, $parserId);
         }
 
         return ExitCode::OK;
