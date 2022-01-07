@@ -49,28 +49,40 @@ $templateAddonBase = sprintf("{label}\n %s {input}\n{hint}\n{error} ", ' <div cl
 
     <div class="row">
         <div class="col-3">
-            <?= $form->field($model, 'parserId')
-                ->dropDownList($model->getSourceIdOptions(), [
-                    'prompt' => 'Select result UA repository',
-                    'data-widget' => 'select2',
-                    'multiple' => 'multiple'
-                ]) ?>
+            <?= $form->field($model, 'parserId', [
+                'class' => ActiveAddonField::class
+            ])
+            ->dropDownList($model->getSourceIdOptions(), [
+                'prompt' => 'Select result UA repository',
+                'data-widget' => 'select2',
+                'multiple' => 'multiple'
+            ])->addon(Html::activeCheckbox($model, 'excludeParserId', [
+                'label' => false,
+                'title' => 'exclude source'
+            ]))?>
         </div>
         <div class="col-3">
             <div></div>
-            <?= $form->field($model, 'sourceId')
-                ->dropDownList($model->getSourceIdOptions(), [
-                    'prompt' => 'Select source UA repository',
-                    'data-widget' => 'select2',
-                    'multiple' => 'multiple'
-                ]) ?>
+            <?= $form->field($model, 'sourceId', [
+                'class' => ActiveAddonField::class
+            ])->dropDownList($model->getSourceIdOptions(), [
+                'prompt' => 'Select source UA repository',
+                'data-widget' => 'select2',
+                'multiple' => 'multiple'
+            ])->addon(Html::activeCheckbox($model, 'excludeSourceId', [
+                'label' => false,
+                'title' => 'exclude source'
+            ]))?>
         </div>
         <div class="col-3"><?= $form->field($model, 'clientName') ?></div>
         <div class="col-3">
             <div class="legend"><?= Html::activeCheckbox($model, 'emptyModelName') ?></div>
             <?= $form->field($model, 'modelName', [
                 'class' => ActiveAddonField::class
-            ])->addon(Html::activeCheckbox($model, 'notModelName', ['label' => false])) ?>
+            ])->addon(Html::activeCheckbox($model, 'excludeModelName', [
+                'label' => false,
+                'title' => 'exclude model name'
+            ])) ?>
         </div>
     </div>
     <div class="row">

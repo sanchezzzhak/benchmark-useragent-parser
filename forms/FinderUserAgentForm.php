@@ -25,7 +25,9 @@ class FinderUserAgentForm extends Model
     public $osVersion;
     public $isBot;
 
-    public $notModelName = false;
+    public $excludeModelName = false;
+    public $excludeSourceId = false;
+    public $excludeParserId = false;
     public $emptyModelName = false;
 
     private const PAGE_SIZE = 500;
@@ -46,7 +48,7 @@ class FinderUserAgentForm extends Model
             ], 'string'],
             [['sourceId', 'parserId'], 'each', 'rule' => ['integer']],
             [['isBot'], 'integer'],
-            [['notModelName', 'emptyModelName'], 'boolean'],
+            [['excludeModelName', 'emptyModelName', 'excludeSourceId', 'excludeParserId'], 'boolean'],
         ];
     }
 
@@ -73,18 +75,28 @@ class FinderUserAgentForm extends Model
         $this->load($params, $formName);
         $query = BenchmarkResult::find();
 
-        $query->andFilterCompare('benchmark_result.user_agent', $this->userAgent, 'like');
-
+        $query->andFilterCompare(
+            'benchmark_result.user_agent',
+            $this->userAgent,
+            'like'
+        );
         $query->andFilterWhere([
-            'benchmark_result.source_id' => $this->sourceId,
-            'device_detector_result.parser_id' => $this->parserId,
             'device_detector_result.is_bot' => $this->isBot
         ]);
-
+        $query->andFilterWhere([
+            $this->excludeSourceId ? 'not in': 'in',
+            'benchmark_result.source_id',
+            $this->sourceId
+        ]);
+        $query->andFilterWhere([
+            $this->excludeParserId ? 'not in': 'in',
+            'device_detector_result.parser_id',
+            $this->parserId
+        ]);
         $query->andFilterCompare(
             'device_detector_result.model_name',
             $this->modelName,
-            !$this->notModelName ? 'like' : 'not like'
+            !$this->excludeModelName ? 'like' : 'not like'
         );
 
         if ($this->emptyModelName) {
